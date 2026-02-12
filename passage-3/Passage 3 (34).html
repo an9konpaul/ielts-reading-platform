@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Reading Test - Passage 3: The Role of Accidents in Business</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        .loading-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .spinner {
+            width: 64px;
+            height: 64px;
+            border: 4px solid #d1d5db;
+            border-top: 4px solid #111827;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 32px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .loading-subtitle {
+            color: #6b7280;
+        }
+
+        .start-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9998;
+        }
+
+        .start-content {
+            text-align: center;
+        }
+
+        .start-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 24px;
+        }
+
+        .start-subtitle {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        .start-button {
+            padding: 12px 32px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .start-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            background-color: #4a5568;
+            color: white;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+
+        .passage-info {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #e2e8f0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s;
+            color: #ee7272;
+        }
+
+        .logo:hover {
+            color: #90cdf4;
+        }
+
+        .logo i {
+            margin-right: 6px;
+            font-size: 1.3rem;
+        }
+
+        .timer {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+            min-width: 80px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .timer.warning {
+            color: #fed7d7;
+            background-color: rgba(245, 101, 101, 0.3);
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .passage-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #fafafa;
+            position: relative;
+        }
+
+        .resizer {
+            width: 4px;
+            background-color: #cbd5e0;
+            cursor: col-resize;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .resizer:hover {
+            background-color: #a0aec0;
+        }
+
+        .resizer::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 40px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23718096"><circle cx="8" cy="12" r="1"/><circle cx="16" cy="12" r="1"/><circle cx="8" cy="6" r="1"/><circle cx="16" cy="6" r="1"/><circle cx="8" cy="18" r="1"/><circle cx="16" cy="18" r="1"/></svg>') center/contain no-repeat;
+        }
+
+        .section-title {
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .passage-content {
+            background: white;
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .passage-content h3 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage-content p {
+            margin-bottom: 18px;
+            text-align: justify;
+            color: #4a5568;
+        }
+
+        .questions-container {
+            width: 45%;
+            min-width: 400px;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: white;
+            position: relative;
+        }
+
+        .question {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .question:last-child {
+            border-bottom: none;
+        }
+
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #2d3748;
+            font-size: 0.95rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .option:hover {
+            background-color: #f7fafc;
+            border-color: #cbd5e0;
+        }
+
+        .option input {
+            margin-right: 10px;
+            width: 16px;
+            height: 16px;
+        }
+
+        select.input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 100%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f7fafc;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .progress-container {
+            background-color: #4a5568;
+            padding: 4px 20px;
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .progress-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .progress-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .progress-item.current {
+            background-color: #63b3ed;
+            transform: scale(1.1);
+        }
+
+        .progress-item.answered {
+            background-color: #68d391;
+        }
+
+        .progress-item.correct {
+            background-color: #48bb78;
+        }
+
+        .progress-item.incorrect {
+            background-color: #f56565;
+        }
+
+        .progress-item:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .highlight {
+            background-color: #ffff00;
+            cursor: pointer;
+        }
+
+        #highlight-btn,
+        #remove-highlight-btn {
+            position: absolute;
+            z-index: 9999;
+            display: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            border: 1px solid #888;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        #highlight-btn {
+            background: #fffbe7;
+        }
+
+        #remove-highlight-btn {
+            background: #ffeaea;
+            color: #b00;
+            border-color: #b00;
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.95rem;
+        }
+
+        .btn i {
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: #4299e1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #3182ce;
+        }
+
+        .btn-secondary {
+            background-color: #edf2f7;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+        }
+
+        .btn-submit {
+            background-color: #48bb78;
+            color: white;
+            font-weight: 900;
+        }
+
+        .btn-submit:hover {
+            background-color: #459ef1;
+        }
+
+        .btn-submit:disabled {
+            background-color: #9ae6b4;
+            cursor: not-allowed;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .score-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2d3748;
+        }
+
+        .score-breakdown {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .input-field:focus {
+            border-color: #4299e1;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+        }
+
+        .question-group {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-group-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+
+        .answer-indicator {
+            background-color: #e6fffa;
+            border: 1px solid #38b2ac;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #234e52;
+        }
+
+        .answer-indicator.incorrect {
+            background-color: #fed7d7;
+            border-color: #e53e3e;
+            color: #742a2a;
+        }
+
+        .answer-indicator i {
+            margin-right: 5px;
+        }
+
+        @media (max-width: 1200px) {
+            .questions-container {
+                width: 50%;
+                min-width: 350px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .passage-container,
+            .questions-container {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .resizer {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-wrap: wrap;
+                gap: 10px;
+                padding: 10px 15px;
+            }
+
+            .logo {
+                font-size: 1.1rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8rem;
+            }
+
+            .btn {
+                padding: 5px 10px;
+                font-size: 0.85rem;
+            }
+
+            .progress-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-buttons {
+                margin-top: 10px;
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h2 class="loading-title">Your test will begin shortly</h2>
+            <p class="loading-subtitle">Please wait</p>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="startScreen" class="start-screen hidden">
+        <div class="start-content">
+            <h1 class="start-title">IELTSwithJurabek</h1>
+            <p class="start-subtitle">Ready to begin your reading test?</p>
+            <button class="start-button" onclick="startTest()">Start Test</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="testContainer">
+        <header>
+            <div class="passage-info">IELTSwithJurabek</div>
+            <div class="logo" onclick="window.open('https://t.me/IELTSwithJurabek', '_blank')">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Click for more TESTS</span>
+            </div>
+            <div class="timer">
+                <i class="fas fa-clock"></i>
+                <span>20:00</span>
+            </div>
+        </header>
+
+        <button id="highlight-btn" type="button">Highlight</button>
+        <button id="remove-highlight-btn" type="button">Remove Highlight</button>
+
+        <div class="main-content">
+            <!-- Reading Passage -->
+            <div class="passage-container" role="region" aria-label="Reading Passage">
+                <h2 class="section-title">READING PASSAGE 3</h2>
+                <div class="passage-content" id="passage">
+                    <h3>The Role of Accidents in Business</h3>
+                    <p>In 1894 Dr John Kellogg and his brother, Will, were supervising a hospital and health spa in
+                        Michigan. The patients were on a restricted diet. One day, the brothers left cooked wheat
+                        unattended for more than 24 hours. When they returned, they saw what they had done. It was no
+                        good to eat, but they decided to run the stale wheat through rollers, just to see how it would
+                        turn out. Normally, the process produced long sheets, but they were surprised to discover that
+                        this time the rollers created flat flakes. They baked them, and then tried the same thing with
+                        corn. From this accidental discovery came the cornflakes that generations have now been eating
+                        for breakfast.</p>
+                    <p>Accidents happen; there is nothing predictable and orderly about innovation. Nobel laureate Sir
+                        Alan Hodgkin, who discovered how nerve cells transmit electrical impulses between the skin and
+                        the brain, commented: 'I believe that the record of my published papers conveys an impression of
+                        directedness and planning which does not at all coincide with the actual sequence of events.'
+                    </p>
+                    <p>The same rule applies in business. The mistake that gave us cornflakes keeps repeating itself in
+                        the history of disruptive innovation, the kind that transforms markets. Louis Daguerre, for
+                        instance, discovered the technique that gave us photography in the 1830s, when drops of mercury
+                        from a shattered thermometer produced a photographic image. The microwave was discovered when
+                        Percy Spencer, a scientist with Raytheon, was testing a new vacuum tube and discovered that the
+                        sweet in his pocket had melted. The artificial sweetener, saccharin, was the unintentional
+                        result of a medical scientist’s work on a chemical treatment for gastric ulcers. While working
+                        for the firm 3M, researcher Art Fry had no idea he was taking the first steps towards Post-It
+                        Notes when he used bits of adhesive office paper that could be easily lifted off the page to
+                        replace the scrap paper bookmarks that kept falling out of his hymn book.</p>
+                    <p>Breakthrough and disruptive innovation are rarely driven by orderly process. Usually they come
+                        out of a chaotic, haphazard mess, which is why big companies, full of managers schooled in
+                        business programmes designed to eliminate random variation and mistakes, struggle with them. In
+                        these sorts of environments, accidents are called failures and are discouraged.</p>
+                    <p>It is no surprise then that research from the late British economist Paul Geroski and London
+                        Business School's Constantinos Markides found that companies that were skilled at innovation
+                        were usually not that skilled when it came to commercialisation, and vice versa. Their book,
+                        <em>Fast Second</em>, divides businesses into ‘colonists and consolidators'. Small and nimble,
+                        colonists are adept at creating market niches but are terrible institution builders.
+                        Consolidators, with their strong cultures of discipline and cost control, know how to take
+                        clever ideas from other firms and turn them into mass-market items. Microsoft is a prime
+                        instance of this.
+                    </p>
+                    <p>With companies spending hundreds of billions of dollars on research and development, US academics
+                        Robert Austin and Lee Devin examined how managers can encourage productive slip-ups. In their
+                        article <em>Accident, Intention and Expectation in the Innovation Process</em>, they argue that
+                        business processes actually prevent helpful mis-steps from occurring. According to their
+                        catalogue of accidents, not all false steps and mishaps are equal. Accidents, they say, come
+                        from unlikely mental associations such as memories and vague connections, looking for something
+                        and finding it in an unexpected way, looking for one thing and finding something else, and not
+                        looking for anything but finding something valuable.</p>
+                    <p>Accident-prone innovation, they say, requires companies to get outside the ‘cone of expectation'.
+                        It means throwing together groups from diverse backgrounds, and combining ideas in unpredictable
+                        ways. Other strategies also include having systems that watch out for accidents and examine them
+                        for value, generating them when they don't happen often enough, seizing on the useful ones,
+                        capturing their valuable features, and building on them to add value and give potential for
+                        useful accidents.</p>
+                    <p>All this, however, requires thinking that is often counter-intuitive to the way businesses
+                        operate. In other words, it is the kind of thinking that goes against the beliefs of most
+                        business managers. It runs counter to the notion frequently pushed by consultants that you can
+                        ‘harness’ creativity and direct it to line up with intention. ‘The cost of accidents that do not
+                        prove valuable are often of concern to people in business,’ they write. ‘In business, people
+                        tend to call such efforts failure.’</p>
+                    <p>There are tentative signs that more companies are starting to realise that failure can lead to
+                        commercial gain, and that this is part of the risk-taking that underpins innovation. Australia’s
+                        largest brewing company, for example, made a bad error when it launched a new beer called Empire
+                        Lager, pitched at younger consumers. Having spent a fortune creating a beer with a sweeter
+                        taste, designing a great-looking bottle and a television campaign, Foster's was left with a
+                        drink that no-one wanted to buy. The target market was more interested in brands built up by
+                        word of mouth.</p>
+                    <p>Instead of wiping the unsuccessful product launch, Foster's used this lesson learned to go on and
+                        develop other brands instead. One of them, Pure Blonde, is now ranked as Australia's
+                        fifth-largest beer brand. Unlike Empire Lager, there has been almost no promotion and its sales
+                        are generated more by word of mouth.</p>
+                    <p>Other companies are taking similar steps to study their own slip-ups. Intuit, the company behind
+                        financial tools such as Quicken, holds regular ‘When Learning Hurts’ sessions. But this sort of
+                        transformation is never easy. In a market that focuses on the short-term, convincing employees
+                        and shareholders to tolerate failure and not play it safe is a big thing to ask.</p>
+                </div>
+            </div>
+
+            <div class="resizer" id="resizer"></div>
+
+            <!-- Questions -->
+            <div class="questions-container" id="questions" role="region" aria-label="Questions">
+                <h2 class="section-title">Questions 27-40</h2>
+                <p>You should spend about 20 minutes on Questions 27-40, which are based on Reading Passage 3.</p>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 27–31</div>
+                    <p>Do the following statements agree with the claims of the writer in Reading Passage 3?<br>
+                        Write <strong>YES</strong> if the statement agrees with the claims of the writer,<br>
+                        <strong>NO</strong> if the statement contradicts the claims of the writer, or<br>
+                        <strong>NOT GIVEN</strong> if it is impossible to say what the writer thinks about this.
+                    </p>
+                    <div class="question" data-question="27">
+                        <div class="question-text">27. The delay in the process used by the Kellogg brothers affected
+                            the final product.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q27" value="YES">YES</label>
+                            <label class="option"><input type="radio" name="q27" value="NO">NO</label>
+                            <label class="option"><input type="radio" name="q27" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="28">
+                        <div class="question-text">28. Sir Alan Hodgkin is an example of someone whose work proceeded in
+                            a logical and systematic way.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q28" value="YES">YES</label>
+                            <label class="option"><input type="radio" name="q28" value="NO">NO</label>
+                            <label class="option"><input type="radio" name="q28" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="29">
+                        <div class="question-text">29. Daguerre is an exception to the general rule of innovation.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q29" value="YES">YES</label>
+                            <label class="option"><input type="radio" name="q29" value="NO">NO</label>
+                            <label class="option"><input type="radio" name="q29" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="30">
+                        <div class="question-text">30. The discovery of saccharin occurred by accident during drug
+                            research.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q30" value="YES">YES</label>
+                            <label class="option"><input type="radio" name="q30" value="NO">NO</label>
+                            <label class="option"><input type="radio" name="q30" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="31">
+                        <div class="question-text">31. The company 3M should have supported Art Fry by funding his idea
+                            of Post-It Notes.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q31" value="YES">YES</label>
+                            <label class="option"><input type="radio" name="q31" value="NO">NO</label>
+                            <label class="option"><input type="radio" name="q31" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 32–35</div>
+                    <p>Complete each sentence with the correct ending, A-H, below.<br>
+                        Write the correct letter, A-H, in boxes 32–35 on your answer sheet.</p>
+                    <div class="options">
+                        <div class="option"><strong>A</strong> can be found in unusual thoughts and chance events.</div>
+                        <div class="option"><strong>B</strong> can be taught in business schools.</div>
+                        <div class="option"><strong>C</strong> has made a success from someone else's invention.</div>
+                        <div class="option"><strong>D</strong> is designed to nurture differences.</div>
+                        <div class="option"><strong>E</strong> is unlikely to lead to creative innovation.</div>
+                        <div class="option"><strong>F</strong> says that all mistakes are the same.</div>
+                        <div class="option"><strong>G</strong> shows that businesses are good at either inventing or
+                            selling.</div>
+                        <div class="option"><strong>H</strong> suggests ways of increasing the number of mistakes.</div>
+                    </div>
+                    <div class="question" data-question="32">
+                        <div class="question-text">32. The usual business environment</div>
+                        <select name="q32" class="input-field">
+                            <option value="" disabled selected>Select ending</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                            <option value="F">F</option>
+                            <option value="G">G</option>
+                            <option value="H">H</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="33">
+                        <div class="question-text">33. Geroski and Markides's book</div>
+                        <select name="q33" class="input-field">
+                            <option value="" disabled selected>Select ending</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                            <option value="F">F</option>
+                            <option value="G">G</option>
+                            <option value="H">H</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="34">
+                        <div class="question-text">34. Microsoft is an example of a company which</div>
+                        <select name="q34" class="input-field">
+                            <option value="" disabled selected>Select ending</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                            <option value="F">F</option>
+                            <option value="G">G</option>
+                            <option value="H">H</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="35">
+                        <div class="question-text">35. The origin of useful accidents</div>
+                        <select name="q35" class="input-field">
+                            <option value="" disabled selected>Select ending</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                            <option value="F">F</option>
+                            <option value="G">G</option>
+                            <option value="H">H</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 36–40</div>
+                    <p>Choose the correct letter, A, B, C or D.<br>
+                        Write the correct letter in boxes 36–40 on your answer sheet.</p>
+                    <div class="question" data-question="36">
+                        <div class="question-text">36. How do Austin and Devin advise companies to get out of the 'cone
+                            of expectation'?</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q36" value="A">A by decreasing the number of
+                                company systems</label>
+                            <label class="option"><input type="radio" name="q36" value="B">B by forming teams of
+                                different types of people</label>
+                            <label class="option"><input type="radio" name="q36" value="C">C by hiring new and creative
+                                people</label>
+                            <label class="option"><input type="radio" name="q36" value="D">D by holding regular
+                                brainstorming meetings</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="37">
+                        <div class="question-text">37. In recommending 'counter-intuitive' thinking, what do Austin and
+                            Devin imply?</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q37" value="A">A that failing at business is
+                                bad for staff morale</label>
+                            <label class="option"><input type="radio" name="q37" value="B">B that innovation cannot be
+                                planned for</label>
+                            <label class="option"><input type="radio" name="q37" value="C">C that most businesses should
+                                be devoted to avoiding mistakes</label>
+                            <label class="option"><input type="radio" name="q37" value="D">D that the cost of mistakes
+                                is an important consideration</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="38">
+                        <div class="question-text">38. The writer describes the Empire Lager disaster in order to show
+                            that</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q38" value="A">A success can come out of a
+                                business failure.</label>
+                            <label class="option"><input type="radio" name="q38" value="B">B the majority of companies
+                                now value risk-taking.</label>
+                            <label class="option"><input type="radio" name="q38" value="C">C TV advertising works better
+                                on older people.</label>
+                            <label class="option"><input type="radio" name="q38" value="D">D young beer drinkers do not
+                                like a sweet taste.</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="39">
+                        <div class="question-text">39. Pure Blonde has been more successful than Empire Lager because
+                        </div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q39" value="A">A digital media other than TV
+                                were used.</label>
+                            <label class="option"><input type="radio" name="q39" value="B">B it was advertised under a
+                                different brand name.</label>
+                            <label class="option"><input type="radio" name="q39" value="C">C it was launched with very
+                                little advertising.</label>
+                            <label class="option"><input type="radio" name="q39" value="D">D the advertising budget was
+                                larger.</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="40">
+                        <div class="question-text">40. The writer concludes that creating a culture that learns from
+                            mistakes</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q40" value="A">A brings short-term financial
+                                gains</label>
+                            <label class="option"><input type="radio" name="q40" value="B">B can be very difficult for
+                                some companies</label>
+                            <label class="option"><input type="radio" name="q40" value="C">C holds no risk for
+                                workers</label>
+                            <label class="option"><input type="radio" name="q40" value="D">D is a popular move with
+                                shareholders</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-nav">
+                <div class="progress-items">
+                    <div class="progress-item current" data-question="27">27</div>
+                    <div class="progress-item" data-question="28">28</div>
+                    <div class="progress-item" data-question="29">29</div>
+                    <div class="progress-item" data-question="30">30</div>
+                    <div class="progress-item" data-question="31">31</div>
+                    <div class="progress-item" data-question="32">32</div>
+                    <div class="progress-item" data-question="33">33</div>
+                    <div class="progress-item" data-question="34">34</div>
+                    <div class="progress-item" data-question="35">35</div>
+                    <div class="progress-item" data-question="36">36</div>
+                    <div class="progress-item" data-question="37">37</div>
+                    <div class="progress-item" data-question="38">38</div>
+                    <div class="progress-item" data-question="39">39</div>
+                    <div class="progress-item" data-question="40">40</div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" id="prev-btn"><i class="fas fa-arrow-left"></i> Previous</button>
+                    <button class="btn btn-secondary" id="next-btn">Next <i class="fas fa-arrow-right"></i></button>
+                    <button class="btn btn-submit" id="submit-btn">Submit Test <i
+                            class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div class="modal" id="results-modal">
+        <div class="modal-content">
+            <h2>Test Results</h2>
+            <div class="score-display" id="score-display">0/14</div>
+            <div class="score-breakdown">
+                <div class="score-item">
+                    <span>Passage 3:</span>
+                    <span id="passage3-score">0/14</span>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="close-modal">Close</button>
+                <button class="btn btn-primary" id="review-answers">Review Answers</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const correctAnswers = {
+            q27: 'YES',
+            q28: 'NO',
+            q29: 'NO',
+            q30: 'YES',
+            q31: 'NOT GIVEN',
+            q32: 'E',
+            q33: 'G',
+            q34: 'C',
+            q35: 'A',
+            q36: 'B',
+            q37: 'D',
+            q38: 'A',
+            q39: 'C',
+            q40: 'B'
+        };
+
+        let lastSelection = null;
+        let highlightTarget = null;
+        let currentPanel = null;
+        let submitted = false;
+        let currentQuestion = 27;
+        let isResizing = false;
+        let seconds = 20 * 60;
+        let timerInterval;
+
+        const highlightBtn = document.getElementById('highlight-btn');
+        const removeHighlightBtn = document.getElementById('remove-highlight-btn');
+        const passagePanel = document.getElementById('passage');
+        const questionsPanel = document.getElementById('questions');
+        const resizer = document.getElementById('resizer');
+        const submitBtn = document.getElementById('submit-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resultsModal = document.getElementById('results-modal');
+        const scoreDisplay = document.getElementById('score-display');
+        const passage3Score = document.getElementById('passage3-score');
+        const closeModalBtn = document.getElementById('close-modal');
+        const reviewBtn = document.getElementById('review-answers');
+        const timerElement = document.querySelector('.timer span');
+        const timerContainer = document.querySelector('.timer');
+
+        function updateTimer() {
+            seconds--;
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            if (seconds <= 2 * 60) {
+                timerContainer.classList.add('warning');
+            }
+            if (seconds <= 0) {
+                clearInterval(timerInterval);
+                if (!submitted) {
+                    alert('Time is up! Submitting your test.');
+                    submitTest();
+                }
+            }
+        }
+
+        // Highlight functionality
+        function getValidSelection() {
+            const sel = window.getSelection();
+            if (!sel.rangeCount || sel.isCollapsed) return null;
+            const range = sel.getRangeAt(0);
+            if (passagePanel.contains(range.commonAncestorContainer)) {
+                currentPanel = passagePanel;
+            } else if (questionsPanel.contains(range.commonAncestorContainer)) {
+                currentPanel = questionsPanel;
+            } else {
+                return null;
+            }
+            return range;
+        }
+
+        function showHighlightBtn(range) {
+            const rect = range.getBoundingClientRect();
+            highlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            highlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            highlightBtn.style.display = 'block';
+        }
+
+        function hideHighlightBtn() {
+            highlightBtn.style.display = 'none';
+        }
+
+        function showRemoveBtn(span) {
+            const rect = span.getBoundingClientRect();
+            removeHighlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            removeHighlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            removeHighlightBtn.style.display = 'block';
+            highlightTarget = span;
+        }
+
+        function hideRemoveBtn() {
+            removeHighlightBtn.style.display = 'none';
+            highlightTarget = null;
+        }
+
+        highlightBtn.addEventListener('click', () => {
+            if (lastSelection) {
+                const span = document.createElement('span');
+                span.className = 'highlight';
+                span.appendChild(lastSelection.extractContents());
+                lastSelection.insertNode(span);
+                window.getSelection().removeAllRanges();
+                hideHighlightBtn();
+            }
+        });
+
+        removeHighlightBtn.addEventListener('click', () => {
+            if (highlightTarget) {
+                const parent = highlightTarget.parentNode;
+                while (highlightTarget.firstChild) {
+                    parent.insertBefore(highlightTarget.firstChild, highlightTarget);
+                }
+                parent.removeChild(highlightTarget);
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('selectionchange', () => {
+            hideHighlightBtn();
+            hideRemoveBtn();
+            const range = getValidSelection();
+            if (range) {
+                lastSelection = range;
+                showHighlightBtn(range);
+            } else {
+                lastSelection = null;
+            }
+        });
+
+        [passagePanel, questionsPanel].forEach(panel => {
+            panel.addEventListener('scroll', () => {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            });
+        });
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.target !== highlightBtn && e.target !== removeHighlightBtn) {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('highlight')) {
+                e.preventDefault();
+                showRemoveBtn(e.target);
+            }
+        });
+
+        // Resizer
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const container = document.querySelector('.main-content');
+            const containerRect = container.getBoundingClientRect();
+            const mouseX = e.clientX - containerRect.left;
+            const containerWidth = containerRect.width;
+            const leftPercentage = (mouseX / containerWidth) * 100;
+            const rightPercentage = 100 - leftPercentage;
+            if (leftPercentage >= 30 && leftPercentage <= 70) {
+                document.querySelector('.passage-container').style.flex = leftPercentage + '%';
+                document.querySelector('.questions-container').style.width = rightPercentage + '%';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            }
+        });
+
+        // Navigation
+        function scrollToQuestion(num) {
+            const el = document.querySelector(`[data-question="${num}"]`);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            updateCurrentQuestion(num);
+        }
+
+        function updateCurrentQuestion(num) {
+            currentQuestion = num;
+            document.querySelectorAll('.progress-item').forEach(item => {
+                item.classList.remove('current');
+                if (item.dataset.question == num) item.classList.add('current');
+            });
+            prevBtn.disabled = num <= 27;
+            nextBtn.disabled = num >= 40;
+        }
+
+        document.querySelectorAll('.progress-item').forEach(item => {
+            item.addEventListener('click', () => {
+                scrollToQuestion(parseInt(item.dataset.question));
+            });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 27) scrollToQuestion(currentQuestion - 1);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestion < 40) scrollToQuestion(currentQuestion + 1);
+        });
+
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('change', () => {
+                if (submitted) return;
+                const qNum = input.name.substring(1);
+                const item = document.querySelector(`.progress-item[data-question="${qNum}"]`);
+                if (item && !item.classList.contains('answered')) {
+                    item.classList.add('answered');
+                }
+            });
+        });
+
+        submitBtn.addEventListener('click', submitTest);
+
+        function submitTest() {
+            if (submitted) return;
+            if (!confirm('Are you sure you want to submit?')) return;
+
+            submitted = true;
+            clearInterval(timerInterval);
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Submitted';
+
+            let score = 0;
+            const results = {};
+
+            for (let i = 27; i <= 40; i++) {
+                const key = `q${i}`;
+                let user = '';
+                if (i <= 35) {
+                    const sel = document.querySelector(`input[name="${key}"]:checked`) || document.querySelector(`select[name="${key}"]`);
+                    user = sel ? sel.value : '';
+                } else {
+                    const sel = document.querySelector(`input[name="${key}"]:checked`);
+                    user = sel ? sel.value : '';
+                }
+                const correct = correctAnswers[key];
+                const isCorrect = user === correct;
+                if (isCorrect) score++;
+                results[key] = { userAnswer: user, correct, isCorrect };
+            }
+
+            scoreDisplay.textContent = `${score}/14`;
+            passage3Score.textContent = `${score}/14`;
+
+            for (let i = 27; i <= 40; i++) {
+                const item = document.querySelector(`.progress-item[data-question="${i}"]`);
+                const res = results[`q${i}`];
+                item.classList.remove('current', 'answered');
+                if (res.isCorrect) item.classList.add('correct');
+                else item.classList.add('incorrect');
+            }
+
+            window.testResults = results;
+            resultsModal.style.display = 'flex';
+        }
+
+        function showCorrectAnswers() {
+            if (!submitted) return;
+            document.querySelectorAll('.question').forEach(qEl => {
+                const qNum = qEl.dataset.question;
+                const res = window.testResults[`q${qNum}`];
+                if (!res) return;
+                const ind = qEl.querySelector('.answer-indicator');
+                if (ind) ind.remove();
+
+                const div = document.createElement('div');
+                div.className = 'answer-indicator';
+                if (res.isCorrect) {
+                    div.innerHTML = `<i class="fas fa-check"></i> Correct! You chose: <strong>${res.userAnswer}</strong>`;
+                } else {
+                    div.classList.add('incorrect');
+                    div.innerHTML = `<i class="fas fa-times"></i> Incorrect. You chose: <strong>${res.userAnswer || 'No answer'}</strong><br><strong>Correct:</strong> ${res.correct}`;
+                }
+                qEl.appendChild(div);
+            });
+        }
+
+        closeModalBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+        });
+
+        reviewBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+            showCorrectAnswers();
+            scrollToQuestion(27);
+        });
+
+        function startTest() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('testContainer').classList.remove('hidden');
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        setTimeout(() => {
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }, 2000);
+    </script>
+</body>
+
+</html>

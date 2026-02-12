@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        .loading-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #2563eb;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-title {
+            font-size: 1.2rem;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .loading-subtitle {
+            font-size: 1rem;
+            color: #9ca3af;
+        }
+
+        .start-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9998;
+        }
+
+        .start-content {
+            text-align: center;
+        }
+
+        .start-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 24px;
+        }
+
+        .start-subtitle {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        .start-button {
+            padding: 12px 32px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .start-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            background-color: #ffffff;
+            color: #333;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .passage-info {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .timer {
+            background-color: rgba(255, 193, 193, 0.5);
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+            min-width: 80px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #c53030;
+            border: 1px solid rgba(255, 120, 120, 0.3);
+        }
+
+        .timer.warning {
+            color: #9b2c2c;
+            background-color: rgba(254, 178, 178, 0.7);
+            border-color: rgba(245, 101, 101, 0.5);
+        }
+
+        .logo-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+            cursor: pointer;
+        }
+
+        .logo-area:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+        }
+
+        .logo-area i {
+            font-size: 1.1rem;
+        }
+
+        .progress-container {
+            background-color: #f8f9fa;
+            padding: 4px 20px;
+            z-index: 100;
+            flex-shrink: 0;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .progress-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .progress-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            border: 1px solid #cbd5e0;
+        }
+
+        .progress-item.current {
+            background-color: #4299e1;
+            color: white;
+            transform: scale(1.1);
+            border-color: #2b6cb0;
+        }
+
+        .progress-item.answered {
+            background-color: #9ae6b4;
+            color: #22543d;
+            border-color: #68d391;
+        }
+
+        .progress-item.correct {
+            background-color: #48bb78;
+            color: white;
+            border-color: #38a169;
+        }
+
+        .progress-item.incorrect {
+            background-color: #fed7d7;
+            color: #c53030;
+            border-color: #feb2b2;
+        }
+
+        .progress-item:hover {
+            background-color: #cbd5e0;
+            transform: scale(1.05);
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.95rem;
+            background-color: #f7fafc;
+            color: #4a5568;
+        }
+
+        .btn i {
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-primary {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-primary:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-secondary {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-submit {
+            background-color: #48bb78;
+            color: white;
+            font-weight: 900;
+            border: 1px solid #38a169;
+        }
+
+        .btn-submit:hover {
+            background-color: #38a169;
+            border-color: #2f855a;
+        }
+
+        .btn-submit:disabled {
+            background-color: #9ae6b4;
+            color: #718096;
+            cursor: not-allowed;
+            border: 1px solid #68d391;
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .passage-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #fafafa;
+            position: relative;
+        }
+
+        .resizer {
+            width: 4px;
+            background-color: #cbd5e0;
+            cursor: col-resize;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .resizer:hover {
+            background-color: #a0aec0;
+        }
+
+        .resizer::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 60px;
+            background-color: rgba(203, 213, 224, 0.5);
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        .questions-container {
+            width: 40%;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: white;
+            border-left: 1px solid #e2e8f0;
+        }
+
+        .passage {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .passage h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage-content p {
+            margin-top: 15px;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .passage h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage p {
+            margin-top: 20px;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        .question-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 6px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background-color: #ffffff;
+            transition: box-shadow 0.2s;
+        }
+
+        .question:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #2d3748;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .option:hover {
+            background-color: #f7fafc;
+            border-color: #cbd5e0;
+        }
+
+        .option input {
+            margin-right: 2px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 20%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        .input-field:focus {
+            border-color: #4299e1;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+        }
+
+        select.input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 20%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .answer-indicator {
+            background-color: #e6fffa;
+            border: 1px solid #38b2ac;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .answer-indicator.correct {
+            background-color: #e6fffa;
+            border-color: #38b2ac;
+            color: #234e52;
+        }
+
+        .answer-indicator.incorrect {
+            background-color: #fed7d7;
+            border-color: #fc8181;
+            color: #742a2a;
+        }
+
+        .question-group {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-group-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+
+        .highlight {
+            background-color: #ffff00;
+            cursor: pointer;
+        }
+
+        #highlight-btn,
+        #remove-highlight-btn {
+            position: absolute;
+            z-index: 9999;
+            display: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            border: 1px solid #888;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .score-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2d3748;
+        }
+
+        .score-breakdown {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .questions-container {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid #e2e8f0;
+            }
+
+            .resizer {
+                width: 100%;
+                height: 4px;
+                cursor: row-resize;
+            }
+
+            .resizer::before {
+                width: 60px;
+                height: 30px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .logo-area {
+                order: 1;
+            }
+
+            .passage-info {
+                order: 2;
+            }
+
+            .timer {
+                order: 3;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h2 class="loading-title">Your test will begin shortly</h2>
+            <p class="loading-subtitle">Please wait</p>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="startScreen" class="start-screen hidden">
+        <div class="start-content">
+            <h1 class="start-title">IELTSwithJurabek</h1>
+            <p class="start-subtitle">Ready to begin your reading test?</p>
+            <button class="start-button" onclick="startTest()">Start Test</button>
+        </div>
+    </div>
+
+    <!-- Test Container -->
+    <div class="container hidden" id="testContainer">
+        <header>
+            <div class="passage-info">IELTSwithJurabek</div>
+            <div class="timer">
+                <i class="fas fa-clock"></i>
+                <span>20:00</span>
+            </div>
+            <div class="logo-area" onclick="window.open('https://t.me/IELTSwithJurabek', '_blank')">
+                <i class="fas fa-paper-plane"></i>
+                <span>Click for more TESTS</span>
+            </div>
+            <div class="passage-info">Passage 3 of 3</div>
+        </header>
+
+        <button id="highlight-btn" type="button">Highlight</button>
+        <button id="remove-highlight-btn" type="button">Remove Highlight</button>
+
+        <div class="main-content">
+            <!-- Reading Passage -->
+            <div class="passage-container" role="region" aria-label="Reading Passage">
+                <h2 class="section-title">READING PASSAGE 3</h2>
+                <div class="passage-content" id="passage3">
+                    <h3>A closer examination of a study on verbal and non-verbal messages</h3>
+                    <p id="P1"><span class="label">A</span> A study of non-verbal communication carried out in 1967
+                        continues to be widely quoted today. David Lapalko looks at limitations in the original study.
+                    </p>
+                    <h4>Description of the Study</h4>
+                    <p id="P2"><span class="label">B</span> The findings of a study on verbal and non-verbal messages in
+                        communication by Albert Mehrabian and his colleagues at UCLA in 1967 have been quoted so
+                        frequently that they are now often regarded as a self-evident truth.</p>
+                    <p id="P3"><span class="label">C</span> In the first experiment, subjects were asked to listen to a
+                        recording of a female saying the word "maybe" in three tones of voice to convey liking,
+                        neutrality and disliking. The subjects were then shown photos of female faces expressing the
+                        same three emotions and were asked to guess the emotions in the recorded voice and the photos.
+                        It was found that the photos got more accurate responses than the voices. In the second
+                        experiment, subjects listened to nine recorded words spoken in different tones of voice. Three
+                        words had positive meanings (e.g. honey), three were neutral (e.g. oil) and three were negative
+                        (e.g. terrible). Again, the subjects had to guess the speaker's emotions. It was found that tone
+                        of voice carried more emotion than the individual words. From these experiments the researchers
+                        concluded that "the total impact of a message is based on 7% on the actual words used, 38% on
+                        the tone of voice, and 55% on body language (e.g. facial expression).</p>
+                    <h4>Methodological Issues</h4>
+                    <p id="P4"><span class="label">D</span> However, a closer look at the study reveals several
+                        limitations. The first is that the entire study involved only 62 subjects. Of these, 25 were
+                        used to select the words for the first experiment, while the key idea – comparing verbal and
+                        non-verbal communication – was determined by the remaining 37 subjects. All were female
+                        undergraduates who participated as part of their introductory psychology course, and their age
+                        and academic qualifications seem remarkably uniform. Thus, the findings may simply be a product
+                        of the nature of the sample.</p>
+                    <p id="P5"><span class="label">E</span> Critics have also pointed out that the 7-38-55 formula is
+                        flawed since it was pieced together from two different experiments, neither of which involved
+                        all three channels (verbal, vocal, and facial). In addition, in the first experiment the single
+                        word maybe was used throughout so it was impossible for the effects of changes in verbal input
+                        to be assessed. The researchers intentionally chose a neutral word so naturally the subjects
+                        found little meaning there. Clearly, such a methodology lacks validity. In the real world,
+                        people communicate in a particular context and speak in phrases and full-blown sentences, making
+                        extensive use of the multi-faceted vehicle of language.</p>
+                    <p id="P6"><span class="label">F</span> My concern is that interpretations of this study have gained
+                        such prominence in our pedagogical literature. This 7-38-55 formula appears in many basic texts,
+                        used for training in communication skills.</p>
+                    <h4>Lessons to consider</h4>
+                    <p id="P7"><span class="label">G</span> Clearly, one appealing aspect of the Mehrabian study is its
+                        numerical precision. Communication is a complex phenomenon, but it seems less so when we can
+                        rely on these three magical numbers. In contrast to the ambiguities of language, numbers seem to
+                        possess exactness. And the current appeal of the study has given the 7-38-55 formula enormous
+                        credibility. There is a certain mystique about non-verbal communication, and the continued
+                        references to this research sustain it, encouraging people to believe in the overwhelming
+                        importance of the non-verbal message compared with the verbal one. Yet we know that even one
+                        ill-chosen word to a colleague or friend can make or break a communicative effort. Words do
+                        matter. Bradley (1991), one of the few textbook writers to criticize the Mehrabian study, makes
+                        the same point when he observes, if we could communicate 93% of information and attitudes with
+                        vocal and facial cues, it would be wasteful to spend time learning a language.</p>
+                    <p id="P8"><span class="label">H</span> Mehrabian himself believes his research should not be
+                        interpreted to devalue the role of language in communication, saying: <em>"Please remember that
+                            all my findings… dealt with communications of feelings and attitudes… it is absurd to imply
+                            or suggest that the verbal portion of all communication constitutes only 7% of the message…
+                            anytime we communicate abstract relationships (e.g., x = y - the square of z) clearly 100%
+                            of the entire communication is verbal."</em> (Mehrabian, 1995)</p>
+                    <p id="P9"><span class="label">I</span> To be fair, many textbook writers attempt to be faithful to
+                        the context of Mehrabian’s research. For example, Stewart and D'Angelo (1988) write: "Mehrabian
+                        argues that when we're uncertain about what someone's feeling, or about how much we like him or
+                        her, we rely...only 7% on the words that are spoken". Others try to play down the specific
+                        percentages, saying that an understanding of the general importance of non-verbal cues is more
+                        important. Nonetheless, other textbook authors simply use the numbers without placing any limits
+                        on their meaning.</p>
+                    <h4>Conclusion</h4>
+                    <p id="P10"><span class="label">J</span> Since this relatively small study was first published it
+                        has achieved an influence far beyond its intended scope. We need to put it into its proper
+                        perspective and learn some important lessons from it regarding social science research,
+                        communication pedagogy, and the forces which have created widespread misunderstanding about
+                        communication.</p>
+                </div>
+            </div>
+
+            <div class="resizer" id="resizer"></div>
+
+            <!-- Questions -->
+            <div class="questions-container" id="questions" role="region" aria-label="Questions">
+                <h2 class="section-title">Questions 27-40</h2>
+                <p>You should spend about 20 minutes on Questions 27–40, which are based on Reading Passage 3.</p>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 27-30</div>
+                    <p>Complete the summary using the list of words and phrases, <strong>A–H</strong>, below. Write the
+                        correct letter, <strong>A–H</strong>, in boxes <strong>27–30</strong> on your answer sheet.</p>
+                    <p><strong>Mehrabian’s 1967 study</strong><br>
+                        Albert Mehrabian and his colleagues carried out an influential study comparing the <span
+                            class="question-text">27</span> <select name="q27">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="A">A. facial expressions</option>
+                            <option value="B">B. purposes</option>
+                            <option value="C">C. printed words</option>
+                            <option value="D">D. effects</option>
+                            <option value="E">E. word meanings</option>
+                            <option value="F">F. gender differences</option>
+                            <option value="G">G. feelings</option>
+                            <option value="H">H. characteristics</option>
+                        </select> of verbal and non-verbal communication. This involved two experiments. In both
+                        experiments, subjects had to identify the <span class="question-text">28</span> <select
+                            name="q28">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="A">A. facial expressions</option>
+                            <option value="B">B. purposes</option>
+                            <option value="C">C. printed words</option>
+                            <option value="D">D. effects</option>
+                            <option value="E">E. word meanings</option>
+                            <option value="F">F. gender differences</option>
+                            <option value="G">G. feelings</option>
+                            <option value="H">H. characteristics</option>
+                        </select> being communicated by other people. The two main areas focused on the first experiment
+                        were voice tones and <span class="question-text">29</span> <select name="q29">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="A">A. facial expressions</option>
+                            <option value="B">B. purposes</option>
+                            <option value="C">C. printed words</option>
+                            <option value="D">D. effects</option>
+                            <option value="E">E. word meanings</option>
+                            <option value="F">F. gender differences</option>
+                            <option value="G">G. feelings</option>
+                            <option value="H">H. characteristics</option>
+                        </select>, while the second focused mainly on voice tones and <span
+                            class="question-text">30</span> <select name="q30">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="A">A. facial expressions</option>
+                            <option value="B">B. purposes</option>
+                            <option value="C">C. printed words</option>
+                            <option value="D">D. effects</option>
+                            <option value="E">E. word meanings</option>
+                            <option value="F">F. gender differences</option>
+                            <option value="G">G. feelings</option>
+                            <option value="H">H. characteristics</option>
+                        </select>.
+                    </p>
+                    <p><strong>List of Words:</strong><br>
+                        A. facial expressions<br>
+                        B. purposes<br>
+                        C. printed words<br>
+                        D. effects<br>
+                        E. word meanings<br>
+                        F. gender differences<br>
+                        G. feelings<br>
+                        H. characteristics</p>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 31-35</div>
+                    <p>Do the following statements agree with the views of the writer in Reading Passage 3? In boxes
+                        <strong>31–35</strong> on your answer sheet, write:<br>
+                        <strong>YES</strong> – if the statement agrees with the views of the writer<br>
+                        <strong>NO</strong> – if the statement contradicts the views of the writer<br>
+                        <strong>NOT GIVEN</strong> – if it is impossible to say what the writer thinks about this
+                    </p>
+                    <div class="question" data-question="31">
+                        <div class="question-text">31. The fact that the subjects in the study came from a similar
+                            background was an advantage.</div>
+                        <div class="options">
+                            <label><input type="radio" name="q31" value="YES"> YES</label>
+                            <label><input type="radio" name="q31" value="NO"> NO</label>
+                            <label><input type="radio" name="q31" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="32">
+                        <div class="question-text">32. The two experiments should have been carried out in a different
+                            order.</div>
+                        <div class="options">
+                            <label><input type="radio" name="q32" value="YES"> YES</label>
+                            <label><input type="radio" name="q32" value="NO"> NO</label>
+                            <label><input type="radio" name="q32" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="33">
+                        <div class="question-text">33. The researchers’ choice of a neutral word was helpful in the
+                            context of the study.</div>
+                        <div class="options">
+                            <label><input type="radio" name="q33" value="YES"> YES</label>
+                            <label><input type="radio" name="q33" value="NO"> NO</label>
+                            <label><input type="radio" name="q33" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="34">
+                        <div class="question-text">34. The study would have been more valid if it had included a range
+                            of languages.</div>
+                        <div class="options">
+                            <label><input type="radio" name="q34" value="YES"> YES</label>
+                            <label><input type="radio" name="q34" value="NO"> NO</label>
+                            <label><input type="radio" name="q34" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="35">
+                        <div class="question-text">35. The study is too limited to be of any real use in communication
+                            training.</div>
+                        <div class="options">
+                            <label><input type="radio" name="q35" value="YES"> YES</label>
+                            <label><input type="radio" name="q35" value="NO"> NO</label>
+                            <label><input type="radio" name="q35" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 36-40</div>
+                    <p>Choose the correct letter, <strong>A, B, C, or D</strong>. Write the correct letter in boxes
+                        <strong>36–40</strong> on your answer sheet.
+                    </p>
+                    <div class="question" data-question="36">
+                        <div class="question-text">36. What does the writer say about the ‘numerical precision’ of
+                            Mehrabian’s study?</div>
+                        <div class="options">
+                            <label><input type="radio" name="q36" value="A"> A. It makes the claims more
+                                attractive.</label>
+                            <label><input type="radio" name="q36" value="B"> B. It is the strongest point of the
+                                study.</label>
+                            <label><input type="radio" name="q36" value="C"> C. It will appeal to superstitious
+                                people.</label>
+                            <label><input type="radio" name="q36" value="D"> D. It allows comparison between
+                                languages.</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="37">
+                        <div class="question-text">37. What does the writer say about the popularity of the 7-38-55
+                            formula?</div>
+                        <div class="options">
+                            <label><input type="radio" name="q37" value="A"> A. It is unlikely to maintain its present
+                                status.</label>
+                            <label><input type="radio" name="q37" value="B"> B. It is leading to an undervaluing of
+                                language.</label>
+                            <label><input type="radio" name="q37" value="C"> C. It should be applied in a more practical
+                                way.</label>
+                            <label><input type="radio" name="q37" value="D"> D. It may help understanding of non-verbal
+                                messages.</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="38">
+                        <div class="question-text">38. What point is Bradley making about language learning?</div>
+                        <div class="options">
+                            <label><input type="radio" name="q38" value="A"> A. Language could be learned more
+                                efficiently than it is.</label>
+                            <label><input type="radio" name="q38" value="B"> B. More research is needed into attitudes
+                                to communication.</label>
+                            <label><input type="radio" name="q38" value="C"> C. More time should be spent looking at
+                                tone and body language.</label>
+                            <label><input type="radio" name="q38" value="D"> D. Language must be important since we make
+                                an effort to acquire it.</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="39">
+                        <div class="question-text">39. What does Mehrabian himself say about his findings?</div>
+                        <div class="options">
+                            <label><input type="radio" name="q39" value="A"> A. They are relevant to only one area of
+                                communication.</label>
+                            <label><input type="radio" name="q39" value="B"> B. It is only in maths that 100% of
+                                communication is verbal.</label>
+                            <label><input type="radio" name="q39" value="C"> C. Feelings are more difficult to
+                                communicate than numerical facts.</label>
+                            <label><input type="radio" name="q39" value="D"> D. Non-verbal communication is the main
+                                part of the message.</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="40">
+                        <div class="question-text">40. What is the writer’s purpose in the paragraph beginning ‘To be
+                            fair…’?</div>
+                        <div class="options">
+                            <label><input type="radio" name="q40" value="A"> A. to justify the strong points of
+                                Mehrabian’s study</label>
+                            <label><input type="radio" name="q40" value="B"> B. to outline other research on non-verbal
+                                behaviour</label>
+                            <label><input type="radio" name="q40" value="C"> C. to present varying interpretations of
+                                Mehrabian’s study</label>
+                            <label><input type="radio" name="q40" value="D"> D. to show that textbooks tend to ignore
+                                non-verbal behaviour</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-nav">
+                <div class="progress-items">
+                    <div class="progress-item current" data-question="27">27</div>
+                    <div class="progress-item" data-question="28">28</div>
+                    <div class="progress-item" data-question="29">29</div>
+                    <div class="progress-item" data-question="30">30</div>
+                    <div class="progress-item" data-question="31">31</div>
+                    <div class="progress-item" data-question="32">32</div>
+                    <div class="progress-item" data-question="33">33</div>
+                    <div class="progress-item" data-question="34">34</div>
+                    <div class="progress-item" data-question="35">35</div>
+                    <div class="progress-item" data-question="36">36</div>
+                    <div class="progress-item" data-question="37">37</div>
+                    <div class="progress-item" data-question="38">38</div>
+                    <div class="progress-item" data-question="39">39</div>
+                    <div class="progress-item" data-question="40">40</div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" id="prev-btn" disabled><i class="fas fa-arrow-left"></i>
+                        Previous</button>
+                    <button class="btn btn-secondary" id="next-btn">Next <i class="fas fa-arrow-right"></i></button>
+                    <button class="btn btn-submit" id="submit-btn">Submit Test <i
+                            class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div class="modal" id="results-modal">
+        <div class="modal-content">
+            <h2>Test Results</h2>
+            <div class="score-display" id="score-display">0/14</div>
+            <div class="score-breakdown">
+                <div class="score-item">
+                    <span>Passage 3:</span>
+                    <span id="passage3-score">0/14</span>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="close-modal">Close</button>
+                <button class="btn btn-primary" id="review-answers">Review Answers</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Correct Answers for Questions 27-40
+        const correctAnswers = {
+            q27: "D",
+            q28: "G",
+            q29: "A",
+            q30: "E",
+            q31: "NO",
+            q32: "NOT GIVEN",
+            q33: "NO",
+            q34: "NOT GIVEN",
+            q35: "YES",
+            q36: "A",
+            q37: "B",
+            q38: "D",
+            q39: "A",
+            q40: "C"
+        };
+
+        let lastSelection = null;
+        let highlightTarget = null;
+        let currentPanel = null;
+        let submitted = false;
+        let currentQuestion = 27;
+        let isResizing = false;
+        let seconds = 20 * 60; // 20 minutes for Passage 3
+        let timerInterval;
+
+        const highlightBtn = document.getElementById('highlight-btn');
+        const removeHighlightBtn = document.getElementById('remove-highlight-btn');
+        const passagePanel = document.querySelector('.passage-container');
+        const questionsPanel = document.getElementById('questions');
+        const resizer = document.getElementById('resizer');
+        const submitBtn = document.getElementById('submit-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resultsModal = document.getElementById('results-modal');
+        const scoreDisplay = document.getElementById('score-display');
+        const passage3Score = document.getElementById('passage3-score');
+        const closeModalBtn = document.getElementById('close-modal');
+        const reviewBtn = document.getElementById('review-answers');
+        const timerElement = document.querySelector('.timer span');
+        const timerContainer = document.querySelector('.timer');
+
+        // Timer
+        function updateTimer() {
+            seconds--;
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            if (seconds <= 2 * 60) {
+                timerContainer.classList.add('warning');
+            }
+            if (seconds <= 0) {
+                clearInterval(timerInterval);
+                if (!submitted) {
+                    alert('Time is up! Submitting your test.');
+                    submitTest();
+                }
+            }
+        }
+
+        // Highlight functionality
+        function getValidSelection() {
+            const sel = window.getSelection();
+            if (!sel.rangeCount || sel.isCollapsed) return null;
+            const range = sel.getRangeAt(0);
+            if (passagePanel.contains(range.commonAncestorContainer)) {
+                currentPanel = passagePanel;
+            } else if (questionsPanel.contains(range.commonAncestorContainer)) {
+                currentPanel = questionsPanel;
+            } else {
+                return null;
+            }
+            return range;
+        }
+
+        function showHighlightBtn(range) {
+            const rect = range.getBoundingClientRect();
+            highlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            highlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            highlightBtn.style.display = 'block';
+        }
+
+        function hideHighlightBtn() {
+            highlightBtn.style.display = 'none';
+        }
+
+        function showRemoveBtn(span) {
+            const rect = span.getBoundingClientRect();
+            removeHighlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            removeHighlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            removeHighlightBtn.style.display = 'block';
+            highlightTarget = span;
+        }
+
+        function hideRemoveBtn() {
+            removeHighlightBtn.style.display = 'none';
+            highlightTarget = null;
+        }
+
+        highlightBtn.addEventListener('click', () => {
+            if (lastSelection) {
+                const span = document.createElement('span');
+                span.className = 'highlight';
+                span.appendChild(lastSelection.extractContents());
+                lastSelection.insertNode(span);
+                window.getSelection().removeAllRanges();
+                hideHighlightBtn();
+            }
+        });
+
+        removeHighlightBtn.addEventListener('click', () => {
+            if (highlightTarget) {
+                const parent = highlightTarget.parentNode;
+                while (highlightTarget.firstChild) {
+                    parent.insertBefore(highlightTarget.firstChild, highlightTarget);
+                }
+                parent.removeChild(highlightTarget);
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('selectionchange', () => {
+            hideHighlightBtn();
+            hideRemoveBtn();
+            const range = getValidSelection();
+            if (range) {
+                lastSelection = range;
+                showHighlightBtn(range);
+            } else {
+                lastSelection = null;
+            }
+        });
+
+        [passagePanel, questionsPanel].forEach(panel => {
+            panel.addEventListener('scroll', () => {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            });
+        });
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.target !== highlightBtn && e.target !== removeHighlightBtn) {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('highlight')) {
+                e.preventDefault();
+                showRemoveBtn(e.target);
+            }
+        });
+
+        // Resizer
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const container = document.querySelector('.main-content');
+            const containerRect = container.getBoundingClientRect();
+            const mouseX = e.clientX - containerRect.left;
+            const containerWidth = containerRect.width;
+            const leftPercentage = (mouseX / containerWidth) * 100;
+            const rightPercentage = 100 - leftPercentage;
+            if (leftPercentage >= 30 && leftPercentage <= 70) {
+                document.querySelector('.passage-container').style.flex = leftPercentage + '%';
+                document.querySelector('.questions-container').style.width = rightPercentage + '%';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            }
+        });
+
+        // Navigation
+        function scrollToQuestion(num) {
+            const el = document.querySelector(`[data-question="${num}"]`) || document.querySelector(`select[name="q${num}"]`);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            updateCurrentQuestion(num);
+        }
+
+        function updateCurrentQuestion(num) {
+            currentQuestion = num;
+            document.querySelectorAll('.progress-item').forEach(item => {
+                item.classList.remove('current');
+                if (item.dataset.question == num) item.classList.add('current');
+            });
+            prevBtn.disabled = num <= 27;
+            nextBtn.disabled = num >= 40;
+        }
+
+        document.querySelectorAll('.progress-item').forEach(item => {
+            item.addEventListener('click', () => {
+                scrollToQuestion(parseInt(item.dataset.question));
+            });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 27) scrollToQuestion(currentQuestion - 1);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestion < 40) scrollToQuestion(currentQuestion + 1);
+        });
+
+        // Event listener for marking questions as answered
+        document.querySelectorAll('select, input[type="radio"]').forEach(input => {
+            input.addEventListener('change', () => {
+                if (submitted) return;
+                const qNumMatch = input.name.match(/^q(\d+)$/);
+                if (qNumMatch) {
+                    const qNum = parseInt(qNumMatch[1]);
+                    const item = document.querySelector(`.progress-item[data-question="${qNum}"]`);
+                    if (item && !item.classList.contains('answered')) {
+                        const value = input.tagName === 'INPUT' ? input.value : input.value;
+                        if (value) {
+                            item.classList.add('answered');
+                        }
+                    }
+                }
+            });
+        });
+
+        submitBtn.addEventListener('click', submitTest);
+
+        function submitTest() {
+            if (submitted) return;
+            if (!confirm('Are you sure you want to submit?')) return;
+            submitted = true;
+            clearInterval(timerInterval);
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Submitted';
+            let score = 0;
+            const results = {};
+
+            // Process questions 27-30 (dropdowns)
+            for (let i = 27; i <= 30; i++) {
+                const key = `q${i}`;
+                let userAnswer = '';
+                let isCorrect = false;
+                const selectEl = document.querySelector(`select[name="${key}"]`);
+                if (selectEl && selectEl.value !== '') {
+                    userAnswer = selectEl.value;
+                    isCorrect = userAnswer === correctAnswers[key];
+                    selectEl.disabled = true;
+                }
+                if (isCorrect) score++;
+                results[key] = { userAnswer, correct: correctAnswers[key], isCorrect };
+            }
+
+            // Process questions 31-40 (radio buttons)
+            for (let i = 31; i <= 40; i++) {
+                const key = `q${i}`;
+                let userAnswer = '';
+                let isCorrect = false;
+                const checkedRadio = document.querySelector(`input[name="${key}"]:checked`);
+                if (checkedRadio) {
+                    userAnswer = checkedRadio.value;
+                    isCorrect = userAnswer === correctAnswers[key];
+                    document.querySelectorAll(`input[name="${key}"]`).forEach(radio => {
+                        radio.disabled = true;
+                    });
+                }
+                if (isCorrect) score++;
+                results[key] = { userAnswer, correct: correctAnswers[key], isCorrect };
+            }
+
+            scoreDisplay.textContent = `${score}/14`;
+            passage3Score.textContent = `${score}/14`;
+            for (let i = 27; i <= 40; i++) {
+                const item = document.querySelector(`.progress-item[data-question="${i}"]`);
+                const res = results[`q${i}`];
+                if (item && res) {
+                    item.classList.remove('current', 'answered');
+                    item.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+                }
+            }
+            window.testResults = results;
+            resultsModal.style.display = 'flex';
+        }
+
+        function showCorrectAnswers() {
+            if (!submitted) return;
+            document.querySelectorAll('.answer-indicator').forEach(el => el.remove());
+
+            // Process questions 27-30 (dropdowns)
+            for (let i = 27; i <= 30; i++) {
+                const key = `q${i}`;
+                const res = window.testResults[key];
+                if (!res) continue;
+                const selectEl = document.querySelector(`select[name="${key}"]`);
+                if (!selectEl) continue;
+                const targetElement = selectEl.parentNode;
+                const div = document.createElement('div');
+                div.className = 'answer-indicator';
+                div.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+                div.style.display = 'inline-block';
+                div.style.marginLeft = '10px';
+                if (res.isCorrect) {
+                    div.innerHTML = `<i class="fas fa-check"></i> Correct! You chose: <strong>${res.userAnswer || 'No answer'}</strong>`;
+                } else {
+                    const userDisplay = res.userAnswer || 'No answer';
+                    div.innerHTML = `<i class="fas fa-times"></i> Incorrect. You chose: <strong>${userDisplay}</strong><br><strong>Correct:</strong> ${res.correct}`;
+                }
+                targetElement.appendChild(div);
+            }
+
+            // Process questions 31-40 (radio buttons)
+            for (let i = 31; i <= 40; i++) {
+                const key = `q${i}`;
+                const res = window.testResults[key];
+                if (!res) continue;
+                const targetElement = document.querySelector(`[data-question="${i}"] .options`);
+                if (!targetElement) continue;
+                const div = document.createElement('div');
+                div.className = 'answer-indicator';
+                div.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+                if (res.isCorrect) {
+                    div.innerHTML = `<i class="fas fa-check"></i> Correct! You chose: <strong>${res.userAnswer || 'No answer'}</strong>`;
+                } else {
+                    const userDisplay = res.userAnswer || 'No answer';
+                    div.innerHTML = `<i class="fas fa-times"></i> Incorrect. You chose: <strong>${userDisplay}</strong><br><strong>Correct:</strong> ${res.correct}`;
+                }
+                targetElement.appendChild(div);
+            }
+        }
+
+        closeModalBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+        });
+
+        reviewBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+            showCorrectAnswers();
+            scrollToQuestion(27);
+        });
+
+        function startTest() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('testContainer').classList.remove('hidden');
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        setTimeout(() => {
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }, 2000);
+    </script>
+</body>
+
+</html>

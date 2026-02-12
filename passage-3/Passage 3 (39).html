@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A New Stage in the Study and Teaching of History - Reading Passage</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Existing CSS styles remain unchanged */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --header-bg: #2c3e50;
+            --header-text: #ecf0f1;
+            --passage-bg: #ffffff;
+            --questions-bg: #f1f5f9;
+            --border-color: #3498db;
+            --highlight-color: #ffeb3b;
+            --correct-color: #2ecc71;
+            --incorrect-color: #e74c3c;
+            --progress-incomplete: #bdc3c7;
+            --progress-complete: #2ecc71;
+            --button-bg: #3498db;
+            --button-hover: #2980b9;
+            --timer-bg: #3498db;
+            --timer-text: #fff;
+        }
+
+        .night-mode {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --header-bg: #1a1a1a;
+            --header-text: #f5f5f5;
+            --passage-bg: #1e1e1e;
+            --questions-bg: #252525;
+            --border-color: #424242;
+            --highlight-color: #0084ff;
+            --correct-color: #27ae60;
+            --incorrect-color: #c0392b;
+            --progress-incomplete: #616161;
+            --progress-complete: #27ae60;
+            --button-bg: #0088cc;
+            --button-hover: #006699;
+            --timer-bg: #0088cc;
+            --timer-text: #f5f5f5;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-area h1 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-right: 15px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            text-decoration: none;
+            background-color: #0088cc;
+            font-weight: 500;
+            transition: transform 0.2s, background-color 0.3s;
+        }
+
+        .social-link:hover {
+            transform: translateY(-2px);
+            background-color: #006699;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .timer-container {
+            background-color: var(--timer-bg);
+            color: var(--timer-text);
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .timer-controls button {
+            background: none;
+            border: none;
+            color: var(--timer-text);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .timer-controls button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .mode-toggle {
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+            font-size: 20px;
+            padding: 6px;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .mode-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .passage-container,
+        .questions-container {
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .passage-container {
+            width: 50%;
+            background-color: var(--passage-bg);
+            border-right: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .questions-container {
+            width: 50%;
+            background-color: var(--questions-bg);
+            position: relative;
+        }
+
+        .passage-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .passage-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .instructions {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid var(--border-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 0 4px 4px 0;
+            font-size: 0.95rem;
+        }
+
+        .passage-text {
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .passage-text p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .highlight {
+            background-color: var(--highlight-color);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 25px 0 15px;
+            color: var(--text-color);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .question-group {
+            margin-bottom: 30px;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: var(--passage-bg);
+            border-left: 4px solid var(--border-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .question-number {
+            display: inline-flex;
+            width: 32px;
+            height: 32px;
+            background-color: var(--progress-incomplete);
+            color: white;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .question.answered .question-number {
+            background-color: var(--progress-complete);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .option:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        .option input {
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+
+        .summary-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .summary-options span {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .summary-input {
+            display: inline-block;
+            width: 120px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--border-color);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 1em;
+            padding: 0 4px 2px 4px;
+            margin: 0 5px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .summary-input:focus {
+            border-bottom-color: var(--button-bg);
+        }
+
+        footer {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .progress-container {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            max-width: 70%;
+        }
+
+        .progress-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--progress-incomplete);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s;
+        }
+
+        .progress-item:hover {
+            transform: scale(1.1);
+        }
+
+        .progress-item.completed {
+            background-color: var(--progress-complete);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--button-bg);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--button-bg);
+            color: var(--button-bg);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .feedback-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .feedback-container {
+            background-color: var(--passage-bg);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .feedback-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--header-bg);
+            color: var(--header-text);
+        }
+
+        .feedback-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #close-feedback {
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+        }
+
+        .score-display {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-left: 10px;
+            color: var(--highlight-color);
+        }
+
+        .feedback-body {
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+
+        .feedback-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: var(--questions-bg);
+        }
+
+        .feedback-question {
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feedback-answer {
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        .correct {
+            background-color: rgba(46, 204, 113, 0.15);
+            color: var(--correct-color);
+            border: 1px solid var(--correct-color);
+        }
+
+        .incorrect {
+            background-color: rgba(231, 76, 60, 0.15);
+            color: var(--incorrect-color);
+            border: 1px solid var(--incorrect-color);
+        }
+
+        .feedback-explanation {
+            margin-top: 10px;
+            padding: 10px;
+            border-left: 3px solid var(--button-bg);
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+
+        /* Highlight Tooltip */
+        .highlight-tooltip {
+            position: absolute;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 1000;
+            cursor: pointer;
+            display: flex;
+            gap: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 5px;
+        }
+
+        .color-option {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+            transition: transform 0.2s;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .remove-highlight {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .passage-container,
+            .questions-container {
+                width: 100%;
+                height: auto;
+                max-height: 50vh;
+            }
+
+            .passage-container {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .progress-container {
+                max-width: 60%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .progress-container {
+                max-width: 100%;
+                justify-content: center;
+            }
+
+            .progress-item {
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .action-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo-area">
+            <h1>IELTS Reading Test</h1>
+            <a class="social-link" href="https://t.me/IELTSwithJurabek" target="_blank">
+                <i class="fab fa-telegram-plane"></i>
+                <span>IELTSwithJurabek</span>
+            </a>
+        </div>
+        <div class="header-controls">
+            <div class="timer-container">
+                <i class="fas fa-clock"></i>
+                <span id="timer">20:00</span>
+                <div class="timer-controls">
+                    <button id="start-timer" title="Start"><i class="fas fa-play"></i></button>
+                    <button id="pause-timer" title="Pause"><i class="fas fa-pause"></i></button>
+                    <button id="reset-timer" title="Reset"><i class="fas fa-redo"></i></button>
+                </div>
+            </div>
+            <button class="mode-toggle" id="night-mode-toggle" title="Toggle Night Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="passage-container">
+            <div class="passage-content">
+                <div class="passage-title">A New Stage in the Study and Teaching of History</div>
+                <div class="instructions">
+                    <p><strong>You should spend about 20 minutes on Questions 27-40, which are based on Reading Passage
+                            3 on pages 10 and 11.</strong></p>
+                </div>
+                <div class="passage-text" id="passage-text">
+                    <p>For hundreds of years, historians have relied on written or printed documents to provide the bulk
+                        of their source materials, and they have largely communicated with students and the wider public
+                        by writing books and journal articles. Today, however, the printed word is being superseded by a
+                        diversity of forms of communication, above all moving images on video or film.</p>
+                    <h3>A</h3>
+                    <p>The development of this new form of communication is leading to a growing gap between the
+                        practice of professional historians based in academia, and the practice of those aiming to
+                        popularise the study of history among the general public, and to encourage people to create
+                        their own records for the future. On the one hand, there are mainstream academics who continue
+                        to use only the written word as they examine more and more fields with an ever-increasing number
+                        of sophisticated methodologies. On the other hand, film and video, especially as broadcast on
+                        television, are probably the major influence on the public's consciousness of history, as they
+                        see film of events of fifty or a hundred years ago, events they had previously only read about.
+                    </p>
+                    <h3>B</h3>
+                    <p>In a related development, a great many people now document local and family events in the form of
+                        videos; many schools, too, produce video yearbooks. All these visual records may well prove to
+                        be invaluable sources of information for future historians. The glaring contradiction is that
+                        the two approaches—the academic and what we might term the popular—have intersected very little:
+                        with a few notable exceptions, professional historians have tended to avoid involvement in
+                        television programmes about history, and have even less impact on what is being captured and
+                        preserved on video. And the potential of moving images has wielded negligible influence on the
+                        academic study of history.</p>
+                    <h3>C</h3>
+                    <p>This gulf can be seen as resulting from the willingness or otherwise of individual historians to
+                        accept the validity of new forms of communication in the study of history. This is not the first
+                        time that the question has arisen. The study of history, as conceived of today, began with the
+                        transition from oral to literate culture, leading to the earliest written records and the
+                        earliest historical studies. The next great shift came with the advent of printing, which
+                        transformed everything. Today, as the printed word loses its dominance, historians are faced
+                        with a variety of forms of communication, ranging from simple audiotape to the promising
+                        complexities of videodiscs linked with computers. As yet, however, the use of moving images to
+                        record current events for the benefit of future historians does not even have a commonly agreed
+                        name.</p>
+                    <h3>D</h3>
+                    <p>This does not mean that mainstream historians have totally rejected the use of moving images as
+                        sources: the majority seem intrigued by the idea, and valuable research has been carried out
+                        into the history and analysis of films with a broad circulation, using them as a source of
+                        information on the social and intellectual history of the twentieth century. Journals such as
+                        <em>American History Review</em> have played a significant role in this field.
+                    </p>
+                    <h3>E</h3>
+                    <p>Yet the number of historians using moving images in their research or teaching is very small. The
+                        barrier seems to be that the profession is structured around the medium of the written word, and
+                        is somewhat insulated in its academic setting. The use of moving images presents a substantial
+                        challenge to this setting and its assumptions. As a result, historians have rejected the
+                        training, the institutions, the motivations and the professional structures that would be needed
+                        in order to use moving images effectively. Above all, they have rejected the necessity to learn
+                        complicated new skills.</p>
+                    <h3>F</h3>
+                    <p>So why should historians make this change? Clearly, films or videos of events and people can be
+                        used as solid evidence of the past, linked to the words of the narrator (whether a television
+                        presenter/historian or a university teacher giving a lecture) but carrying information in their
+                        own right. Film has reintroduced the oral form as a mode of research and communication for
+                        documenting historical events. Now, with moving images, people are reminded that oral
+                        communication is not limited to words: it also includes body language, expression and tone, and
+                        is embedded in a context. Little of this is evident in a written transcript. A further effect of
+                        video and film is that the narrator gives up some control and has less need to give
+                        explanations, while the viewer becomes involved in the process of interpreting and understanding
+                        history.</p>
+                    <h3>G</h3>
+                    <p>Film or videotape can also aid historians by simplifying the work of the interviewer. Instead of
+                        trying to carry on an interview while simultaneously making notes about setting and other
+                        unspoken data, this new kind of historian can concentrate on the interview itself, and study the
+                        film later. The many benefits of using moving images as historical evidence easily outweigh
+                        worries about cost, technical skills, or the effect of a camera on a person telling his or her
+                        story. Moving images enhance the quality of historical research, and suggest new directions for
+                        historians to explore.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="questions-container">
+            <div class="section-title">Questions 27-35</div>
+            <div class="instructions">
+                <p>Reading Passage 3 has seven paragraphs, <strong>A-G</strong>.</p>
+                <p>Which paragraph contains the following information?</p>
+                <p>Write the correct letter, <strong>A-G</strong>, in boxes 27-35 on your answer sheet.</p>
+                <p><strong>NB</strong> You may use any letter more than once.</p>
+            </div>
+            <div class="question-group">
+                <div class="question" id="q27">
+                    <div class="question-title">
+                        <div class="question-number">27</div>
+                        <div class="question-text">an overview of the range of methods that have been used over time to
+                            document history</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q27" value="A"> A
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q27" value="B"> B
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q27" value="C"> C
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q27" value="D"> D
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q27" value="E"> E
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q27" value="F"> F
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q27" value="G"> G
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q28">
+                    <div class="question-title">
+                        <div class="question-number">28</div>
+                        <div class="question-text">the main reason why many historians are unwilling to use films in
+                            their work</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q28" value="A"> A
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q28" value="B"> B
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q28" value="C"> C
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q28" value="D"> D
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q28" value="E"> E
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q28" value="F"> F
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q28" value="G"> G
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q29">
+                    <div class="question-title">
+                        <div class="question-number">29</div>
+                        <div class="question-text">a reference to some differences between oral and written
+                            communication</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q29" value="A"> A
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q29" value="B"> B
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q29" value="C"> C
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q29" value="D"> D
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q29" value="E"> E
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q29" value="F"> F
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q29" value="G"> G
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q30">
+                    <div class="question-title">
+                        <div class="question-number">30</div>
+                        <div class="question-text">how most citizens today gain an understanding of history</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q30" value="A"> A
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q30" value="B"> B
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q30" value="C"> C
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q30" value="D"> D
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q30" value="E"> E
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q30" value="F"> F
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q30" value="G"> G
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q31">
+                    <div class="question-title">
+                        <div class="question-number">31</div>
+                        <div class="question-text">how current student events are sometimes captured for future
+                            audiences</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q31" value="A"> A
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q31" value="B"> B
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q31" value="C"> C
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q31" value="D"> D
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q31" value="E"> E
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q31" value="F"> F
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q31" value="G"> G
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q32">
+                    <div class="question-title">
+                        <div class="question-number">32</div>
+                        <div class="question-text">mention of the fact that the advantages of film are greater than the
+                            disadvantages</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q32" value="A"> A
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q32" value="B"> B
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q32" value="C"> C
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q32" value="D"> D
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q32" value="E"> E
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q32" value="F"> F
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q32" value="G"> G
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q33">
+                    <div class="question-title">
+                        <div class="question-number">33</div>
+                        <div class="question-text">the claim that there is no official title for film-based historical
+                            work</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q33" value="A"> A
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q33" value="B"> B
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q33" value="C"> C
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q33" value="D"> D
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q33" value="E"> E
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q33" value="F"> F
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q33" value="G"> G
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q34">
+                    <div class="question-title">
+                        <div class="question-number">34</div>
+                        <div class="question-text">reference to the active role the audience plays when watching films
+                        </div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q34" value="A"> A
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q34" value="B"> B
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q34" value="C"> C
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q34" value="D"> D
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q34" value="E"> E
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q34" value="F"> F
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q34" value="G"> G
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q35">
+                    <div class="question-title">
+                        <div class="question-number">35</div>
+                        <div class="question-text">a list of requirements that historians see as obstacles to their use
+                            of film to record history</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q35" value="A"> A
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q35" value="B"> B
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q35" value="C"> C
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q35" value="D"> D
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q35" value="E"> E
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q35" value="F"> F
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q35" value="G"> G
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">Questions 36-40</div>
+            <div class="instructions">
+                <p>Do the following statements agree with the claims of the writer in Reading Passage 3?</p>
+                <p>In boxes 36-40 on your answer sheet, write:</p>
+                <p><strong>YES</strong> - if the statement agrees with the claims of the writer<br>
+                    <strong>NO</strong> - if the statement contradicts the claims of the writer<br>
+                    <strong>NOT GIVEN</strong> - if it is impossible to say what the writer thinks about this
+                </p>
+            </div>
+            <div class="question-group">
+                <div class="question" id="q36">
+                    <div class="question-title">
+                        <div class="question-number">36</div>
+                        <div class="question-text">The needs of students in school have led to improvements in the
+                            teaching of history.</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q36" value="YES"> YES
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q36" value="NO"> NO
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q36" value="NOT GIVEN"> NOT GIVEN
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q37">
+                    <div class="question-title">
+                        <div class="question-number">37</div>
+                        <div class="question-text">Academic and popular historians have different attitudes towards the
+                            value of innovations in communication.</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q37" value="YES"> YES
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q37" value="NO"> NO
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q37" value="NOT GIVEN"> NOT GIVEN
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q38">
+                    <div class="question-title">
+                        <div class="question-number">38</div>
+                        <div class="question-text">It is common for historians to play a major role in creating
+                            historical documentaries for television.</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q38" value="YES"> YES
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q38" value="NO"> NO
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q38" value="NOT GIVEN"> NOT GIVEN
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q39">
+                    <div class="question-title">
+                        <div class="question-number">39</div>
+                        <div class="question-text">Articles in <em>American History Review</em> have explored aspects of
+                            modern history through popular films.</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q39" value="YES"> YES
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q39" value="NO"> NO
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q39" value="NOT GIVEN"> NOT GIVEN
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q40">
+                    <div class="question-title">
+                        <div class="question-number">40</div>
+                        <div class="question-text">Developments in technology are influencing a range of academic
+                            subjects.</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q40" value="YES"> YES
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q40" value="NO"> NO
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q40" value="NOT GIVEN"> NOT GIVEN
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="progress-container" id="progress-container"></div>
+        <div class="action-buttons">
+            <button class="btn-secondary" id="reset-btn">Reset Answers</button>
+            <button class="btn-primary" id="submit-btn">Submit Answers</button>
+        </div>
+    </footer>
+
+    <div class="feedback-overlay" id="feedback-overlay">
+        <div class="feedback-container">
+            <div class="feedback-header">
+                <div class="feedback-title">
+                    <i class="fas fa-chart-bar"></i> Your Results
+                    <span class="score-display" id="score-display">0/14</span>
+                </div>
+                <button id="close-feedback"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="feedback-body" id="feedback-body">
+                <!-- Feedback will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Night mode toggle
+        document.getElementById('night-mode-toggle').addEventListener('click', function () {
+            document.body.classList.toggle('night-mode');
+            const icon = this.querySelector('i');
+            if (document.body.classList.contains('night-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        });
+
+        // Timer functionality
+        let timerInterval;
+        let timeRemaining = 20 * 60; // 20 minutes
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+            const seconds = (timeRemaining % 60).toString().padStart(2, '0');
+            document.getElementById("timer").textContent = `${minutes}:${seconds}`;
+        }
+
+        document.getElementById("start-timer").addEventListener("click", () => {
+            if (timerInterval) return;
+            timerInterval = setInterval(() => {
+                if (timeRemaining > 0) {
+                    timeRemaining--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    alert("Time is up!");
+                }
+            }, 1000);
+        });
+
+        document.getElementById("pause-timer").addEventListener("click", () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        });
+
+        document.getElementById("reset-timer").addEventListener("click", () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timeRemaining = 20 * 60;
+            updateTimerDisplay();
+        });
+
+        // Initialize timer display
+        updateTimerDisplay();
+
+        // Progress tracker initialization
+        function initializeProgressTracker() {
+            const progressContainer = document.getElementById("progress-container");
+            const questions = [
+                { id: 'q27', number: 27 },
+                { id: 'q28', number: 28 },
+                { id: 'q29', number: 29 },
+                { id: 'q30', number: 30 },
+                { id: 'q31', number: 31 },
+                { id: 'q32', number: 32 },
+                { id: 'q33', number: 33 },
+                { id: 'q34', number: 34 },
+                { id: 'q35', number: 35 },
+                { id: 'q36', number: 36 },
+                { id: 'q37', number: 37 },
+                { id: 'q38', number: 38 },
+                { id: 'q39', number: 39 },
+                { id: 'q40', number: 40 }
+            ];
+
+            questions.forEach(({ id, number }) => {
+                const item = document.createElement("div");
+                item.className = "progress-item";
+                item.textContent = number;
+                item.dataset.qid = id;
+
+                item.addEventListener("click", () => {
+                    document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+                });
+
+                progressContainer.appendChild(item);
+            });
+        }
+
+        // Update progress status
+        function updateProgressStatus() {
+            const progressItems = document.querySelectorAll(".progress-item");
+
+            progressItems.forEach(item => {
+                const qid = item.dataset.qid;
+                const questionElem = document.getElementById(qid);
+                let answered = false;
+
+                // For radio inputs
+                const radios = document.querySelectorAll(`input[name="${qid}"]`);
+                if (radios.length > 0) {
+                    radios.forEach(r => {
+                        if (r.checked) answered = true;
+                    });
+                }
+
+                // Update progress item
+                if (answered) {
+                    item.classList.add("completed");
+                    if (questionElem.closest('.question')) {
+                        questionElem.closest('.question').classList.add("answered");
+                    }
+                } else {
+                    item.classList.remove("completed");
+                    if (questionElem.closest('.question')) {
+                        questionElem.closest('.question').classList.remove("answered");
+                    }
+                }
+            });
+        }
+
+        // Initialize progress tracker
+        document.addEventListener("DOMContentLoaded", () => {
+            initializeProgressTracker();
+            updateProgressStatus();
+        });
+
+        // Listen for changes to update progress
+        document.addEventListener("change", updateProgressStatus);
+
+        // Submit answers and show feedback
+        document.getElementById('submit-btn').addEventListener('click', function () {
+            // Correct answers
+            const correctAnswers = {
+                q27: "C",
+                q28: "E",
+                q29: "F",
+                q30: "A",
+                q31: "B",
+                q32: "G",
+                q33: "C",
+                q34: "F",
+                q35: "E",
+                q36: "NOT GIVEN",
+                q37: "YES",
+                q38: "NO",
+                q39: "YES",
+                q40: "NOT GIVEN"
+            };
+
+            let score = 0;
+            let feedbackHTML = "";
+
+            // Check each question
+            for (const [qid, correct] of Object.entries(correctAnswers)) {
+                let userAnswer = "";
+                const questionElem = document.getElementById(qid);
+
+                // For radio inputs
+                const radios = document.querySelectorAll(`input[name="${qid}"]`);
+                if (radios.length > 0) {
+                    radios.forEach(r => {
+                        if (r.checked) userAnswer = r.value;
+                    });
+                }
+
+                const isCorrect = userAnswer === correct;
+                if (isCorrect) score++;
+
+                // Build feedback item
+                feedbackHTML += `
+                <div class="feedback-item">
+                    <div class="feedback-question">
+                        <span class="question-number">${qid.replace("q", "")}</span>
+                        Question ${qid.replace("q", "")}
+                    </div>
+                    <div class="feedback-answer ${isCorrect ? "correct" : "incorrect"}">
+                        Your answer: <strong>${userAnswer || "Not answered"}</strong><br>
+                        Correct answer: <strong>${correct}</strong>
+                    </div>
+                </div>`;
+            }
+
+            // Update feedback content
+            document.getElementById("feedback-body").innerHTML = feedbackHTML;
+            document.getElementById("score-display").textContent = `${score}/14`;
+
+            // Show feedback overlay
+            document.getElementById("feedback-overlay").style.display = "flex";
+        });
+
+        // Close feedback overlay
+        document.getElementById("close-feedback").addEventListener("click", function () {
+            document.getElementById("feedback-overlay").style.display = "none";
+        });
+
+        // Reset button
+        document.getElementById("reset-btn").addEventListener("click", function () {
+            // Reset all inputs
+            const radios = document.querySelectorAll("input[type='radio']");
+            radios.forEach(radio => radio.checked = false);
+
+            // Reset progress
+            const progressItems = document.querySelectorAll(".progress-item.completed");
+            progressItems.forEach(item => item.classList.remove("completed"));
+
+            const answeredQuestions = document.querySelectorAll(".question.answered");
+            answeredQuestions.forEach(q => q.classList.remove("answered"));
+
+            // Reset timer
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timeRemaining = 20 * 60;
+            updateTimerDisplay();
+
+            // Remove all highlights
+            document.querySelectorAll('.highlight').forEach(highlight => {
+                const parent = highlight.parentNode;
+                while (highlight.firstChild) {
+                    parent.insertBefore(highlight.firstChild, highlight);
+                }
+                parent.removeChild(highlight);
+            });
+        });
+
+        // Highlight functionality
+        let highlightTooltip = null;
+        let selectedRange = null;
+
+        function createColorPicker(x, y) {
+            const picker = document.createElement("div");
+            picker.className = "highlight-tooltip";
+            picker.style.position = "absolute";
+            picker.style.top = `${y}px`;
+            picker.style.left = `${x}px`;
+            picker.style.zIndex = "1000";
+
+            // Create color options
+            const colors = ["#FFEB3B", "#81C784", "#64B5F6", "#FFA726"]; // Yellow, Green, Blue, Orange
+            colors.forEach(color => {
+                const colorOption = document.createElement("div");
+                colorOption.className = "color-option";
+                colorOption.style.backgroundColor = color;
+                colorOption.title = `Highlight with ${color}`;
+                colorOption.addEventListener("click", () => {
+                    applyHighlight(color);
+                    picker.remove();
+                    highlightTooltip = null;
+                });
+                picker.appendChild(colorOption);
+            });
+
+            document.body.appendChild(picker);
+            return picker;
+        }
+
+        function applyHighlight(color) {
+            if (!selectedRange) return;
+
+            const span = document.createElement("span");
+            span.className = "highlight";
+            span.style.backgroundColor = color;
+            span.appendChild(selectedRange.extractContents());
+            selectedRange.insertNode(span);
+
+            selectedRange = null;
+            window.getSelection().removeAllRanges();
+
+            // Add click event to remove highlight
+            span.addEventListener("click", function (e) {
+                e.stopPropagation();
+
+                if (highlightTooltip) {
+                    highlightTooltip.remove();
+                    highlightTooltip = null;
+                }
+
+                highlightTooltip = document.createElement("div");
+                highlightTooltip.className = "highlight-tooltip";
+                highlightTooltip.style.position = "absolute";
+                highlightTooltip.style.top = `${e.clientY}px`;
+                highlightTooltip.style.left = `${e.clientX}px`;
+                highlightTooltip.style.zIndex = "1000";
+
+                const removeBtn = document.createElement("button");
+                removeBtn.className = "remove-highlight";
+                removeBtn.textContent = "Remove Highlight";
+                removeBtn.addEventListener("click", function () {
+                    const parent = span.parentNode;
+                    while (span.firstChild) {
+                        parent.insertBefore(span.firstChild, span);
+                    }
+                    parent.removeChild(span);
+                    highlightTooltip.remove();
+                    highlightTooltip = null;
+                });
+
+                highlightTooltip.appendChild(removeBtn);
+                document.body.appendChild(highlightTooltip);
+            });
+        }
+
+        // Handle mouseup events for text selection in both areas
+        function handleMouseUp(e) {
+            // Ignore selections in form elements
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'BUTTON') {
+                return;
+            }
+
+            const selection = window.getSelection();
+            if (selection.toString().trim() === "") return;
+
+            selectedRange = selection.getRangeAt(0).cloneRange();
+            const rect = selectedRange.getBoundingClientRect();
+
+            if (highlightTooltip) {
+                highlightTooltip.remove();
+                highlightTooltip = null;
+            }
+
+            highlightTooltip = createColorPicker(
+                rect.left + window.scrollX,
+                rect.top + window.scrollY - 50
+            );
+        }
+
+        // Add event listeners to both containers
+        document.getElementById("passage-text").addEventListener("mouseup", handleMouseUp);
+        document.querySelector(".questions-container").addEventListener("mouseup", handleMouseUp);
+
+        // Close highlight tooltip when clicking elsewhere
+        document.addEventListener("mousedown", function (e) {
+            if (highlightTooltip && !highlightTooltip.contains(e.target)) {
+                highlightTooltip.remove();
+                highlightTooltip = null;
+            }
+        });
+    </script>
+</body>
+
+</html>

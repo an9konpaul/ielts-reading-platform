@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Peopling of Patagonia - Reading Passage</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --header-bg: #2c3e50;
+            --header-text: #ecf0f1;
+            --passage-bg: #ffffff;
+            --questions-bg: #f1f5f9;
+            --border-color: #3498db;
+            --highlight-color: #ffeb3b;
+            --correct-color: #2ecc71;
+            --incorrect-color: #e74c3c;
+            --progress-incomplete: #bdc3c7;
+            --progress-complete: #2ecc71;
+            --button-bg: #3498db;
+            --button-hover: #2980b9;
+            --timer-bg: #3498db;
+            --timer-text: #fff;
+        }
+
+        .night-mode {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --header-bg: #1a1a1a;
+            --header-text: #f5f5f5;
+            --passage-bg: #1e1e1e;
+            --questions-bg: #252525;
+            --border-color: #424242;
+            --highlight-color: #0084ff;
+            --correct-color: #27ae60;
+            --incorrect-color: #c0392b;
+            --progress-incomplete: #616161;
+            --progress-complete: #27ae60;
+            --button-bg: #0088cc;
+            --button-hover: #006699;
+            --timer-bg: #0088cc;
+            --timer-text: #f5f5f5;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-area h1 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-right: 15px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            text-decoration: none;
+            background-color: #0088cc;
+            font-weight: 500;
+            transition: transform 0.2s, background-color 0.3s;
+        }
+
+        .social-link:hover {
+            transform: translateY(-2px);
+            background-color: #006699;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .timer-container {
+            background-color: var(--timer-bg);
+            color: var(--timer-text);
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .timer-controls button {
+            background: none;
+            border: none;
+            color: var(--timer-text);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .timer-controls button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .mode-toggle {
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+            font-size: 20px;
+            padding: 6px;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .mode-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .passage-container,
+        .questions-container {
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .passage-container {
+            width: 50%;
+            background-color: var(--passage-bg);
+            border-right: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .questions-container {
+            width: 50%;
+            background-color: var(--questions-bg);
+            position: relative;
+        }
+
+        .passage-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .passage-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .instructions {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid var(--border-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 0 4px 4px 0;
+            font-size: 0.95rem;
+        }
+
+        .passage-text {
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .passage-text p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .highlight {
+            background-color: var(--highlight-color);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 25px 0 15px;
+            color: var(--text-color);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .question-group {
+            margin-bottom: 30px;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: var(--passage-bg);
+            border-left: 4px solid var(--border-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .question-number {
+            display: inline-flex;
+            width: 32px;
+            height: 32px;
+            background-color: var(--progress-incomplete);
+            color: white;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .question.answered .question-number {
+            background-color: var(--progress-complete);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .option:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        .option input {
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+
+        .summary-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .summary-options span {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .summary-input {
+            display: inline-block;
+            width: 120px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--border-color);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 1em;
+            padding: 0 4px 2px 4px;
+            margin: 0 5px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .summary-input:focus {
+            border-bottom-color: var(--button-bg);
+        }
+
+        footer {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .progress-container {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            max-width: 70%;
+        }
+
+        .progress-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--progress-incomplete);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s;
+        }
+
+        .progress-item:hover {
+            transform: scale(1.1);
+        }
+
+        .progress-item.completed {
+            background-color: var(--progress-complete);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--button-bg);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--button-bg);
+            color: var(--button-bg);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .feedback-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .feedback-container {
+            background-color: var(--passage-bg);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .feedback-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--header-bg);
+            color: var(--header-text);
+        }
+
+        .feedback-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #close-feedback {
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+        }
+
+        .score-display {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-left: 10px;
+            color: var(--highlight-color);
+        }
+
+        .feedback-body {
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+
+        .feedback-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: var(--questions-bg);
+        }
+
+        .feedback-question {
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feedback-answer {
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        .correct {
+            background-color: rgba(46, 204, 113, 0.15);
+            color: var(--correct-color);
+            border: 1px solid var(--correct-color);
+        }
+
+        .incorrect {
+            background-color: rgba(231, 76, 60, 0.15);
+            color: var(--incorrect-color);
+            border: 1px solid var(--incorrect-color);
+        }
+
+        .feedback-explanation {
+            margin-top: 10px;
+            padding: 10px;
+            border-left: 3px solid var(--button-bg);
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+
+        /* Highlight Tooltip */
+        .highlight-tooltip {
+            position: absolute;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 1000;
+            cursor: pointer;
+            display: flex;
+            gap: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 5px;
+        }
+
+        .color-option {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+            transition: transform 0.2s;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .remove-highlight {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .passage-container,
+            .questions-container {
+                width: 100%;
+                height: auto;
+                max-height: 50vh;
+            }
+
+            .passage-container {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .progress-container {
+                max-width: 60%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .progress-container {
+                max-width: 100%;
+                justify-content: center;
+            }
+
+            .progress-item {
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .action-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo-area">
+            <h1>IELTS Reading Test</h1>
+            <a class="social-link" href="https://t.me/IELTSwithJurabek" target="_blank">
+                <i class="fab fa-telegram-plane"></i>
+                <span>IELTSwithJurabek</span>
+            </a>
+        </div>
+        <div class="header-controls">
+            <div class="timer-container">
+                <i class="fas fa-clock"></i>
+                <span id="timer">20:00</span>
+                <div class="timer-controls">
+                    <button id="start-timer" title="Start"><i class="fas fa-play"></i></button>
+                    <button id="pause-timer" title="Pause"><i class="fas fa-pause"></i></button>
+                    <button id="reset-timer" title="Reset"><i class="fas fa-redo"></i></button>
+                </div>
+            </div>
+            <button class="mode-toggle" id="night-mode-toggle" title="Toggle Night Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="passage-container">
+            <div class="passage-content">
+                <div class="passage-title">The Peopling of Patagonia</div>
+                <div class="instructions">
+                    <p><strong>You should spend about 20 minutes on Questions 27-40, which are based on Reading Passage
+                            3 on pages 10 and 11.</strong></p>
+                </div>
+                <div class="passage-text" id="passage-text">
+                    <p>The human settlement of the southern extremity of the Americas has always fascinated
+                        pre-historians. Viewed from a global perspective, this was the last major continental land
+                        mass to be reached by human beings. The earliest occupation of Patagonia carries obvious
+                        implications for understanding when the North and South American continents were peopled,
+                        because it gives a baseline that all calculations regarding the rate of dispersion of humans
+                        throughout both continents must take into account.</p>
+
+                    <p>For many years the human settlement of North and South America has been conceived of as
+                        beginning in the far north and travelling progressively southwards to Patagonia. However,
+                        fundamental disagreements developed concerning the length of time involved Some scholars
+                        accepted a human presence in the Americas as early as 20,000 years ago, while others
+                        proposed that it could date no earlier than 8,000 years ago, and the debate is still with us
+                        today.</p>
+
+                    <p>The idea of a relatively ‘late’ settlement of the Americas (around 8,000 years ago)
+                        implies that a rapid process of migration took place. Herein lies a second debate which
+                        revolves around the question of how migration is to be understood. The ‘late’ model demands
+                        a hypothetical migration conceived of as a single, continually advancing wave of settlement.
+                        This has always been difficult to take seriously and many scholars now support the idea of
+                        an ‘early’ model that sees the migration as a less ordered migration, and this is surely the
+                        most realistic scenario as migrants slowly adapted to the diverse natural habitats they
+                        would have met while travelling through the continent.</p>
+
+                    <p>Those who argue for an earlier settlement, however, must contend with the lack of
+                        unequivocal evidence for archaeological sites older than around 14,000 years. Nevertheless,
+                        evidence for human occupation of the centre of South America is now securely dated to around
+                        12,500 years ago at the Monte Verde site, which casts doubt on the ‘late model’. The lack of
+                        archaeological evidence further south for this time period may be explained by the obstacle
+                        to humans on foot posed by the huge glacial streams that were present at that time.</strong>
+                    </p>
+
+                    <p>We can speculate then that the retreat of the Patagonian glaciers around 14,000 years ago
+                        allowed the initial human intrusion into a pristine environment, which was similar to that
+                        of early post-glacial Europe. Human settlement of the vast horizontal expanse of treeless
+                        high country must have been tenuous at best, and the evidence for this occupation remains
+                        relatively scant, most of it coming from rock shelters in Argentina and Chile. There is,
+                        however, reliable evidence from these sites to confirm the presence of humans by around
+                        11,000 years ago in different habitats, and some hints of an even older occupation. However,
+                        some other sites where evidence for even earlier human occupation was initially posited,
+                        have recently come under fresh scrutiny. This is because anthropologists have come to
+                        recognise that bones or other evidence may be deposited in caves by natural agency, in other
+                        words by other forces such as floods or predators, and not necessarily by human.
+                    </p>
+
+                    <p>We shall turn now to a more detailed discussion of the archaeological evidence found in
+                        various parts of Patagonia. At the site located beside Chinchihuapi Creek, excavations have
+                        produced convincing evidence of human occupation, including hut foundations and wooden
+                        artefacts. They were buried in layers of peat, which has the property of preserving wood
+                        remarkably well, and as a result radiocarbon dating* tests have shown these artefacts to
+                        date from around 12,500 years ago. One of the most famous Patagonian sites is a cave known
+                        as Los Toldos. However, the evidence from this site has recently been called into question,
+                        because dispersed flecks of carbon used in the test process were taken unsystematically from
+                        many different places in the site. As a result, the association of this material with the
+                        artefacts is not at all clear.</p>
+
+                    <p>About 150 kilometres south is the site called El Ceibo, where a similar collection of
+                        artefacts to that found at Los Toldos has been discovered from the lowest levels of the dig,
+                        but as yet no radiocarbon dates are available and this sort of analysis of the existing
+                        evidence is required before the site’s value can be confirmed. The Arroyo Feo site is
+                        located very close to the high plateau. The artefacts from the earliest occupations were
+                        found at the same depth and have the same origins as those from Los Toldos, and have been
+                        securely dated to around 9,000 years ago. Another site that is mentioned in the debate is at
+                        Las Buitreras, where a number of stone flakes associated with bone remains of various
+                        animals have been discovered. However, anthropologists now believe that presumed cut marks
+                        on the bones are somewhat dubious, and despite detailed testing there is no way of securely
+                        relating any of these remains with human occupation. Finally some 50 kilometers to the south
+                        is the site at Cueva Fell, which was the first Patagonian site to be systematically studied
+                        by modern archaeological methods. However, it is now recognised that the utility of this
+                        site must be restricted to its direct vicinity, given changes to the nearby area caused by
+                        flooding, and findings cannot be freely extrapolated further afield.</p>
+
+                    <p><strong>In conclusion, based on the evidence from a number of reliable sites, it seems probable
+                            that human populations reached Patagonia around 11,000 years ago. * radiocarbon dating:
+                            finding out the age of an organic object by examining carbon it contains</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="questions-container">
+            <div class="section-title">Questions 27-31</div>
+            <div class="instructions">
+                <p>Choose the correct letter <strong>A, B, C</strong> or <strong>D</strong>.</p>
+                <p>Write the correct letter in boxes 27-31 on your answer sheet.</p>
+            </div>
+            <div class="question-group">
+                <div class="question" id="q27">
+                    <div class="question-title">
+                        <div class="question-number">27</div>
+                        <div class="question-text">In the first paragraph, what is the writer’s main point about
+                            migration to Patagonia?</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q27" value="A">
+                            A It started earlier than previously thought.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q27" value="B">
+                            B Historians have overlooked its importance.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q27" value="C">
+                            C It impacts on research into the wider region.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q27" value="D">
+                            D Researchers have calculated its effects on the environment.
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q28">
+                    <div class="question-title">
+                        <div class="question-number">28</div>
+                        <div class="question-text">In the second paragraph, what is the writer’s purpose?</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q28" value="A">
+                            A to challenge previous research
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q28" value="B">
+                            B to propose new areas to investigate
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q28" value="C">
+                            C to summarise a scholarly debate
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q28" value="D">
+                            D to suggest reasons for human migration
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q29">
+                    <div class="question-title">
+                        <div class="question-number">29</div>
+                        <div class="question-text">The writer refers to the Tate’s model in order to …</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q29" value="A">
+                            A compare it with another theory of migration.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q29" value="B">
+                            B evaluate the success of American migration.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q29" value="C">
+                            C criticize the speed of research into migration
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q29" value="D">
+                            D compare migration in different parts of the world.
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q30">
+                    <div class="question-title">
+                        <div class="question-number">30</div>
+                        <div class="question-text">What does the writer suggest about the Monte Verde site?</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q30" value="A">
+                            A It is much younger than researchers once estimated
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q30" value="B">
+                            B It provides supporting evidence for relatively early settlement
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q30" value="C">
+                            C Archaeologists believe the site is of questionable value
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q30" value="D">
+                            D Streams exposed the site, making new research possible.
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q31">
+                    <div class="question-title">
+                        <div class="question-number">31</div>
+                        <div class="question-text">What does the writer suggest about the streams near the Monte Verde
+                            site?</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q31" value="A">
+                            A They take a decade to teach.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q31" value="B">
+                            B They prevented migration in early times.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q31" value="C">
+                            C They have aroused the suspicions of some agencies.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q31" value="D">
+                            D They can be used by a limited range of occupations.
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">Questions 32-35</div>
+            <div class="instructions">
+                <p>Do the following statements agree with the claims of the writer in Reading Passage 3?</p>
+                <p>In boxes 32-35 on your answer sheet, write:</p>
+                <p><strong>YES</strong> - if the statement agrees with the claims of the writer<br>
+                    <strong>NO</strong> - if the statement contradicts the claims of the writer<br>
+                    <strong>NOT GIVEN</strong> - if it is impossible to say what the writer thinks about this
+                </p>
+            </div>
+            <div class="question-group">
+                <div class="question" id="q32">
+                    <div class="question-title">
+                        <div class="question-number">32</div>
+                        <div class="question-text">The conditions encountered by the first migrants to Patagonia were
+                            unique.</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q32" value="YES">
+                            YES
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q32" value="NO">
+                            NO
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q32" value="NOT GIVEN">
+                            NOT GIVEN
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q33">
+                    <div class="question-title">
+                        <div class="question-number">33</div>
+                        <div class="question-text">In the high country the first migrants hunted wild animals for food.
+                        </div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q33" value="YES">
+                            YES
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q33" value="NO">
+                            NO
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q33" value="NOT GIVEN">
+                            NOT GIVEN
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q34">
+                    <div class="question-title">
+                        <div class="question-number">34</div>
+                        <div class="question-text">Archaeologists have failed to draw conclusions from the evidence
+                            found at rock shelters in Argentina and Chile.</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q34" value="YES">
+                            YES
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q34" value="NO">
+                            NO
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q34" value="NOT GIVEN">
+                            NOT GIVEN
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q35">
+                    <div class="question-title">
+                        <div class="question-number">35</div>
+                        <div class="question-text">Archaeological evidence can be moved from place to place in a variety
+                            of ways.</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q35" value="YES">
+                            YES
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q35" value="NO">
+                            NO
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q35" value="NOT GIVEN">
+                            NOT GIVEN
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">Questions 36-40</div>
+            <div class="instructions">
+                <p>Complete the summary using the list of words and phrases, <strong>A-J</strong>, below.</p>
+                <p>Write the correct letter, <strong>A-J</strong>, in boxes 36-40 on your answer sheet.</p>
+            </div>
+            <div class="question-group">
+                <div class="question">
+                    <div class="question-title">
+                        <div class="question-text">
+                            <p><strong>The archaeological evidence from Patagonia</strong></p>
+                            <p>Building remains and other evidence have been found in 36<select id="q36"
+                                    class="summary-input">
+                                    <option value="">Select</option>
+                                    <option value="A">A Fixed date</option>
+                                    <option value="B">B Random collection</option>
+                                    <option value="C">C Similar properties</option>
+                                    <option value="D">D Good condition</option>
+                                    <option value="E">E Scientific evaluation</option>
+                                    <option value="F">F huge quantities</option>
+                                    <option value="G">G new samples</option>
+                                    <option value="H">H reliable connection</option>
+                                    <option value="I">I skilled preservation</option>
+                                    <option value="J">J immediate surroundings</option>
+                                </select> at the Chinchihuapi Creek site, and because of this it has been possible to
+                                date them to around 12,500 years ago. However, the 37<select id="q37"
+                                    class="summary-input">
+                                    <option value="">Select</option>
+                                    <option value="A">A Fixed date</option>
+                                    <option value="B">B Random collection</option>
+                                    <option value="C">C Similar properties</option>
+                                    <option value="D">D Good condition</option>
+                                    <option value="E">E Scientific evaluation</option>
+                                    <option value="F">F huge quantities</option>
+                                    <option value="G">G new samples</option>
+                                    <option value="H">H reliable connection</option>
+                                    <option value="I">I skilled preservation</option>
+                                    <option value="J">J immediate surroundings</option>
+                                </select> of the samples taken from Los Toldos means that this site is of doubtful
+                                value. El Ceibo is a more promising dig, where the examination of artefacts would be
+                                beneficial in order to confirm the usefulness of discoveries there. The remains found at
+                                the Arroyo Feo site show 38<select id="q38" class="summary-input">
+                                    <option value="">Select</option>
+                                    <option value="A">A Fixed date</option>
+                                    <option value="B">B Random collection</option>
+                                    <option value="C">C Similar properties</option>
+                                    <option value="D">D Good condition</option>
+                                    <option value="E">E Scientific evaluation</option>
+                                    <option value="F">F huge quantities</option>
+                                    <option value="G">G new samples</option>
+                                    <option value="H">H reliable connection</option>
+                                    <option value="I">I skilled preservation</option>
+                                    <option value="J">J immediate surroundings</option>
+                                </select> and date from around 9,000 years ago. Unfortunately, no 39<select id="q39"
+                                    class="summary-input">
+                                    <option value="">Select</option>
+                                    <option value="A">A Fixed date</option>
+                                    <option value="B">B Random collection</option>
+                                    <option value="C">C Similar properties</option>
+                                    <option value="D">D Good condition</option>
+                                    <option value="E">E Scientific evaluation</option>
+                                    <option value="F">F huge quantities</option>
+                                    <option value="G">G new samples</option>
+                                    <option value="H">H reliable connection</option>
+                                    <option value="I">I skilled preservation</option>
+                                    <option value="J">J immediate surroundings</option>
+                                </select> can be made between the samples taken from Las Buitreras and human presence.
+                                The findings of the work carried out at Cueva Fell cannot provide useful information
+                                beyond the 40<select id="q40" class="summary-input">
+                                    <option value="">Select</option>
+                                    <option value="A">A Fixed date</option>
+                                    <option value="B">B Random collection</option>
+                                    <option value="C">C Similar properties</option>
+                                    <option value="D">D Good condition</option>
+                                    <option value="E">E Scientific evaluation</option>
+                                    <option value="F">F huge quantities</option>
+                                    <option value="G">G new samples</option>
+                                    <option value="H">H reliable connection</option>
+                                    <option value="I">I skilled preservation</option>
+                                    <option value="J">J immediate surroundings</option>
+                                </select>. In conclusion, though the evidence is mixed, it is believed that human
+                                population of Patagonia began about 11,000 years ago.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="summary-options">
+                    <span>A Fixed date</span>
+                    <span>B Random collection</span>
+                    <span>C Similar properties</span>
+                    <span>D Good condition</span>
+                    <span>E Scientific evaluation</span>
+                    <span>F huge quantities</span>
+                    <span>G new samples</span>
+                    <span>H reliable connection</span>
+                    <span>I skilled preservation</span>
+                    <span>J immediate surroundings</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="progress-container" id="progress-container"></div>
+        <div class="action-buttons">
+            <button class="btn-secondary" id="reset-btn">Reset Answers</button>
+            <button class="btn-primary" id="submit-btn">Submit Answers</button>
+        </div>
+    </footer>
+
+    <div class="feedback-overlay" id="feedback-overlay">
+        <div class="feedback-container">
+            <div class="feedback-header">
+                <div class="feedback-title">
+                    <i class="fas fa-chart-bar"></i> Your Results
+                    <span class="score-display" id="score-display">0/14</span>
+                </div>
+                <button id="close-feedback"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="feedback-body" id="feedback-body">
+                <!-- Feedback will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Night mode toggle
+        document.getElementById('night-mode-toggle').addEventListener('click', function () {
+            document.body.classList.toggle('night-mode');
+            const icon = this.querySelector('i');
+            if (document.body.classList.contains('night-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        });
+
+        // Timer functionality
+        let timerInterval;
+        let timeRemaining = 20 * 60; // 20 minutes
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+            const seconds = (timeRemaining % 60).toString().padStart(2, '0');
+            document.getElementById("timer").textContent = `${minutes}:${seconds}`;
+        }
+
+        document.getElementById("start-timer").addEventListener("click", () => {
+            if (timerInterval) return;
+            timerInterval = setInterval(() => {
+                if (timeRemaining > 0) {
+                    timeRemaining--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    alert("Time is up!");
+                }
+            }, 1000);
+        });
+
+        document.getElementById("pause-timer").addEventListener("click", () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        });
+
+        document.getElementById("reset-timer").addEventListener("click", () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timeRemaining = 20 * 60;
+            updateTimerDisplay();
+        });
+
+        // Initialize timer display
+        updateTimerDisplay();
+
+        // Progress tracker initialization
+        function initializeProgressTracker() {
+            const progressContainer = document.getElementById("progress-container");
+            const questions = [
+                { id: 'q27', number: 27 },
+                { id: 'q28', number: 28 },
+                { id: 'q29', number: 29 },
+                { id: 'q30', number: 30 },
+                { id: 'q31', number: 31 },
+                { id: 'q32', number: 32 },
+                { id: 'q33', number: 33 },
+                { id: 'q34', number: 34 },
+                { id: 'q35', number: 35 },
+                { id: 'q36', number: 36 },
+                { id: 'q37', number: 37 },
+                { id: 'q38', number: 38 },
+                { id: 'q39', number: 39 },
+                { id: 'q40', number: 40 }
+            ];
+
+            questions.forEach(({ id, number }) => {
+                const item = document.createElement("div");
+                item.className = "progress-item";
+                item.textContent = number;
+                item.dataset.qid = id;
+
+                item.addEventListener("click", () => {
+                    document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+                });
+
+                progressContainer.appendChild(item);
+            });
+        }
+
+        // Update progress status
+        function updateProgressStatus() {
+            const progressItems = document.querySelectorAll(".progress-item");
+
+            progressItems.forEach(item => {
+                const qid = item.dataset.qid;
+                const questionElem = document.getElementById(qid);
+                let answered = false;
+
+                // For radio inputs
+                const radios = document.querySelectorAll(`input[name="${qid}"]`);
+                if (radios.length > 0) {
+                    radios.forEach(r => {
+                        if (r.checked) answered = true;
+                    });
+                }
+                // For select inputs
+                else if (questionElem.tagName === "SELECT") {
+                    answered = questionElem.value !== "";
+                }
+
+                // Update progress item
+                if (answered) {
+                    item.classList.add("completed");
+                    // Also mark the question container as answered
+                    if (questionElem.closest('.question')) {
+                        questionElem.closest('.question').classList.add("answered");
+                    }
+                } else {
+                    item.classList.remove("completed");
+                    if (questionElem.closest('.question')) {
+                        questionElem.closest('.question').classList.remove("answered");
+                    }
+                }
+            });
+        }
+
+        // Initialize progress tracker
+        document.addEventListener("DOMContentLoaded", () => {
+            initializeProgressTracker();
+            updateProgressStatus();
+        });
+
+        // Listen for changes to update progress
+        document.addEventListener("change", updateProgressStatus);
+
+        // Submit answers and show feedback
+        document.getElementById('submit-btn').addEventListener('click', function () {
+            // Correct answers
+            const correctAnswers = {
+                q27: "C",
+                q28: "C",
+                q29: "A",
+                q30: "B",
+                q31: "B",
+                q32: "NO",
+                q33: "NOT GIVEN",
+                q34: "NO",
+                q35: "YES",
+                q36: "D",
+                q37: "B",
+                q38: "H",
+                q39: "E",
+                q40: "J"
+            };
+
+            let score = 0;
+            let feedbackHTML = "";
+
+            // Check each question
+            for (const [qid, correct] of Object.entries(correctAnswers)) {
+                let userAnswer = "";
+                const questionElem = document.getElementById(qid);
+
+                // For radio inputs
+                const radios = document.querySelectorAll(`input[name="${qid}"]`);
+                if (radios.length > 0) {
+                    radios.forEach(r => {
+                        if (r.checked) userAnswer = r.value;
+                    });
+                }
+                // For select inputs
+                else if (questionElem.tagName === "SELECT") {
+                    userAnswer = questionElem.value;
+                }
+
+                const isCorrect = userAnswer === correct;
+                if (isCorrect) score++;
+
+                // Build feedback item
+                feedbackHTML += `
+                <div class="feedback-item">
+                    <div class="feedback-question">
+                        <span class="question-number">${qid.replace("q", "")}</span>
+                        Question ${qid.replace("q", "")}
+                    </div>
+                    <div class="feedback-answer ${isCorrect ? "correct" : "incorrect"}">
+                        Your answer: <strong>${userAnswer || "Not answered"}</strong><br>
+                        Correct answer: <strong>${correct}</strong>
+                    </div>
+                </div>`;
+            }
+
+            // Update feedback content
+            document.getElementById("feedback-body").innerHTML = feedbackHTML;
+            document.getElementById("score-display").textContent = `${score}/14`;
+
+            // Show feedback overlay
+            document.getElementById("feedback-overlay").style.display = "flex";
+        });
+
+        // Close feedback overlay
+        document.getElementById("close-feedback").addEventListener("click", function () {
+            document.getElementById("feedback-overlay").style.display = "none";
+        });
+
+        // Reset button
+        document.getElementById("reset-btn").addEventListener("click", function () {
+            // Reset all inputs
+            const radios = document.querySelectorAll("input[type='radio']");
+            radios.forEach(radio => radio.checked = false);
+
+            const selects = document.querySelectorAll("select");
+            selects.forEach(select => select.value = "");
+
+            // Reset progress
+            const progressItems = document.querySelectorAll(".progress-item.completed");
+            progressItems.forEach(item => item.classList.remove("completed"));
+
+            const answeredQuestions = document.querySelectorAll(".question.answered");
+            answeredQuestions.forEach(q => q.classList.remove("answered"));
+
+            // Reset timer
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timeRemaining = 20 * 60;
+            updateTimerDisplay();
+
+            // Remove all highlights
+            document.querySelectorAll('.highlight').forEach(highlight => {
+                const parent = highlight.parentNode;
+                while (highlight.firstChild) {
+                    parent.insertBefore(highlight.firstChild, highlight);
+                }
+                parent.removeChild(highlight);
+            });
+        });
+
+        // Highlight functionality
+        let highlightTooltip = null;
+        let selectedRange = null;
+
+        function createColorPicker(x, y) {
+            const picker = document.createElement("div");
+            picker.className = "highlight-tooltip";
+            picker.style.position = "absolute";
+            picker.style.top = `${y}px`;
+            picker.style.left = `${x}px`;
+            picker.style.zIndex = "1000";
+
+            // Create color options
+            const colors = ["#FFEB3B", "#81C784", "#64B5F6", "#FFA726"]; // Yellow, Green, Blue, Orange
+            colors.forEach(color => {
+                const colorOption = document.createElement("div");
+                colorOption.className = "color-option";
+                colorOption.style.backgroundColor = color;
+                colorOption.title = `Highlight with ${color}`;
+                colorOption.addEventListener("click", () => {
+                    applyHighlight(color);
+                    picker.remove();
+                    highlightTooltip = null;
+                });
+                picker.appendChild(colorOption);
+            });
+
+            document.body.appendChild(picker);
+            return picker;
+        }
+
+        function applyHighlight(color) {
+            if (!selectedRange) return;
+
+            const span = document.createElement("span");
+            span.className = "highlight";
+            span.style.backgroundColor = color;
+            span.appendChild(selectedRange.extractContents());
+            selectedRange.insertNode(span);
+
+            selectedRange = null;
+            window.getSelection().removeAllRanges();
+
+            // Add click event to remove highlight
+            span.addEventListener("click", function (e) {
+                e.stopPropagation();
+
+                if (highlightTooltip) {
+                    highlightTooltip.remove();
+                    highlightTooltip = null;
+                }
+
+                highlightTooltip = document.createElement("div");
+                highlightTooltip.className = "highlight-tooltip";
+                highlightTooltip.style.position = "absolute";
+                highlightTooltip.style.top = `${e.clientY}px`;
+                highlightTooltip.style.left = `${e.clientX}px`;
+                highlightTooltip.style.zIndex = "1000";
+
+                const removeBtn = document.createElement("button");
+                removeBtn.className = "remove-highlight";
+                removeBtn.textContent = "Remove Highlight";
+                removeBtn.addEventListener("click", function () {
+                    const parent = span.parentNode;
+                    while (span.firstChild) {
+                        parent.insertBefore(span.firstChild, span);
+                    }
+                    parent.removeChild(span);
+                    highlightTooltip.remove();
+                    highlightTooltip = null;
+                });
+
+                highlightTooltip.appendChild(removeBtn);
+                document.body.appendChild(highlightTooltip);
+            });
+        }
+
+        // Handle mouseup events for text selection in both areas
+        function handleMouseUp(e) {
+            // Ignore selections in form elements
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'BUTTON') {
+                return;
+            }
+
+            const selection = window.getSelection();
+            if (selection.toString().trim() === "") return;
+
+            selectedRange = selection.getRangeAt(0).cloneRange();
+            const rect = selectedRange.getBoundingClientRect();
+
+            if (highlightTooltip) {
+                highlightTooltip.remove();
+                highlightTooltip = null;
+            }
+
+            highlightTooltip = createColorPicker(
+                rect.left + window.scrollX,
+                rect.top + window.scrollY - 50
+            );
+        }
+
+        // Add event listeners to both containers
+        document.getElementById("passage-text").addEventListener("mouseup", handleMouseUp);
+        document.querySelector(".questions-container").addEventListener("mouseup", handleMouseUp);
+
+        // Close highlight tooltip when clicking elsewhere
+        document.addEventListener("mousedown", function (e) {
+            if (highlightTooltip && !highlightTooltip.contains(e.target)) {
+                highlightTooltip.remove();
+                highlightTooltip = null;
+            }
+        });
+    </script>
+</body>
+
+</html>

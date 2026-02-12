@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        .loading-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #2563eb;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-title {
+            font-size: 1.2rem;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .loading-subtitle {
+            font-size: 1rem;
+            color: #9ca3af;
+        }
+
+        .start-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9998;
+        }
+
+        .start-content {
+            text-align: center;
+        }
+
+        .start-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 24px;
+        }
+
+        .start-subtitle {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        .start-button {
+            padding: 12px 32px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .start-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            background-color: #ffffff;
+            color: #333;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .passage-info {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .timer {
+            background-color: rgba(255, 193, 193, 0.5);
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+            min-width: 80px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #c53030;
+            border: 1px solid rgba(255, 120, 120, 0.3);
+        }
+
+        .timer.warning {
+            color: #9b2c2c;
+            background-color: rgba(254, 178, 178, 0.7);
+            border-color: rgba(245, 101, 101, 0.5);
+        }
+
+        .logo-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+            cursor: pointer;
+        }
+
+        .logo-area:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+        }
+
+        .logo-area i {
+            font-size: 1.1rem;
+        }
+
+        .progress-container {
+            background-color: #f8f9fa;
+            padding: 4px 20px;
+            z-index: 100;
+            flex-shrink: 0;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .progress-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .progress-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            border: 1px solid #cbd5e0;
+        }
+
+        .progress-item.current {
+            background-color: #4299e1;
+            color: white;
+            transform: scale(1.1);
+            border-color: #2b6cb0;
+        }
+
+        .progress-item.answered {
+            background-color: #9ae6b4;
+            color: #22543d;
+            border-color: #68d391;
+        }
+
+        .progress-item.correct {
+            background-color: #48bb78;
+            color: white;
+            border-color: #38a169;
+        }
+
+        .progress-item.incorrect {
+            background-color: #fed7d7;
+            color: #c53030;
+            border-color: #feb2b2;
+        }
+
+        .progress-item:hover {
+            background-color: #cbd5e0;
+            transform: scale(1.05);
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.95rem;
+            background-color: #f7fafc;
+            color: #4a5568;
+        }
+
+        .btn i {
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-primary {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-primary:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-secondary {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-submit {
+            background-color: #48bb78;
+            color: white;
+            font-weight: 900;
+            border: 1px solid #38a169;
+        }
+
+        .btn-submit:hover {
+            background-color: #38a169;
+            border-color: #2f855a;
+        }
+
+        .btn-submit:disabled {
+            background-color: #9ae6b4;
+            color: #718096;
+            cursor: not-allowed;
+            border: 1px solid #68d391;
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .passage-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #fafafa;
+            position: relative;
+        }
+
+        .resizer {
+            width: 4px;
+            background-color: #cbd5e0;
+            cursor: col-resize;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .resizer:hover {
+            background-color: #a0aec0;
+        }
+
+        .resizer::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 60px;
+            background-color: rgba(203, 213, 224, 0.5);
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        .questions-container {
+            width: 40%;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: white;
+            border-left: 1px solid #e2e8f0;
+        }
+
+        .passage {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .passage h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage-content p {
+            margin-top: 15px;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .passage h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage p {
+            margin-top: 20px;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        .question-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background-color: #ffffff;
+            transition: box-shadow 0.2s;
+        }
+
+        .question:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #2d3748;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .option:hover {
+            background-color: #f7fafc;
+            border-color: #cbd5e0;
+        }
+
+        .option input {
+            margin-right: 2px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 20%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        .input-field:focus {
+            border-color: #4299e1;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+        }
+
+        select.input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 20%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .answer-indicator {
+            background-color: #e6fffa;
+            border: 1px solid #38b2ac;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .answer-indicator.correct {
+            background-color: #e6fffa;
+            border-color: #38b2ac;
+            color: #234e52;
+        }
+
+        .answer-indicator.incorrect {
+            background-color: #fed7d7;
+            border-color: #fc8181;
+            color: #742a2a;
+        }
+
+        .question-group {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-group-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+
+        .highlight {
+            background-color: #ffff00;
+            cursor: pointer;
+        }
+
+        #highlight-btn,
+        #remove-highlight-btn {
+            position: absolute;
+            z-index: 9999;
+            display: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            border: 1px solid #888;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .score-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2d3748;
+        }
+
+        .score-breakdown {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .questions-container {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid #e2e8f0;
+            }
+
+            .resizer {
+                width: 100%;
+                height: 4px;
+                cursor: row-resize;
+            }
+
+            .resizer::before {
+                width: 60px;
+                height: 30px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .logo-area {
+                order: 1;
+            }
+
+            .passage-info {
+                order: 2;
+            }
+
+            .timer {
+                order: 3;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+
+
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h2 class="loading-title">Your test will begin shortly</h2>
+            <p class="loading-subtitle">Please wait</p>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="startScreen" class="start-screen hidden">
+        <div class="start-content">
+            <h1 class="start-title">IELTSwithJurabek</h1>
+            <p class="start-subtitle">Ready to begin your reading test?</p>
+            <button class="start-button" onclick="startTest()">Start Test</button>
+        </div>
+    </div>
+
+    <!-- Test Container -->
+    <div class="container hidden" id="testContainer">
+        <header>
+            <div class="passage-info">IELTSwithJurabek</div>
+            <div class="timer">
+                <i class="fas fa-clock"></i>
+                <span>20:00</span>
+            </div>
+            <div class="logo-area" onclick="window.open('https://t.me/IELTSwithJurabek', '_blank')">
+                <i class="fas fa-paper-plane"></i>
+                <span>Click for more TESTS</span>
+            </div>
+        </header>
+        <button id="highlight-btn" type="button">Highlight</button>
+        <button id="remove-highlight-btn" type="button">Remove Highlight</button>
+        <div class="main-content">
+            <!-- Reading Passage -->
+            <div class="passage-container" role="region" aria-label="Reading Passage">
+                <h2 class="section-title">READING PASSAGE 3</h2>
+                <div class="passage-content" id="passage">
+                    <h3>Learning to be bilingual</h3>
+                    <p><strong>A</strong> Few people would consider mastering more than one language a bad idea.
+                        Consequently, parents who speak different languages from each other are generally keen for their
+                        children to learn both. They understand that the family setting they create is central to this,
+                        and seek ways to ensure their children thrive bilingually. One of the best-known approaches is
+                        the 'one-parent-one-language' strategy (OPOL). Each parent uses their native language when
+                        communicating with their children, so the children learn both simultaneously. OPOL emphasises
+                        consistency – each parent sticking to one language – as key to its approach. But this creates
+                        the myth that mixing languages should always be avoided. My recent study, part of a new wave of
+                        multilingualism studies, would suggest that this received wisdom is just that: a myth. My
+                        research looked at Japanese-British families living in the UK with pre- and early school-age
+                        children who were following a more-or-less strict OPOL language policy. I was particularly
+                        interested in examining the impact of OPOL in the family home – how does this unique language
+                        environment affect the way children use languages?</p>
+
+                    <p><strong>B</strong> Most of the Japanese mothers who participated were fluent in Japanese and
+                        English, while the fathers possessed merely an elementary grasp of Japanese. This made English
+                        the primary language of communication between the parents and outside the home. For this reason,
+                        the mothers were careful to carve out additional space for more sustained Japanese language
+                        learning with their children. In other words, this dedicated space for communicating in Japanese
+                        was time the children spent exclusively with their mother. This seemed to create a connection
+                        between 'Japanese language' and 'motherhood' in the children's perception. This link became
+                        apparent in the way the children used Japanese as a means of emotional bonding with their
+                        mother. In addition, they adopted a broader behavioural repertoire than that which is usually
+                        associated with a language. For example, switching to Japanese could sometimes serve as a method
+                        to appease Mum when she seemed unhappy. At other times, refusing to communicate in Japanese was
+                        a useful means of defiance, even when the dispute was not related to language.</p>
+
+                    <p><strong>C</strong> The OPOL approach emphasises the need for parents to monitor children's
+                        language closely and correct them if they mix the two languages. In practice, many parents
+                        speaking the minority language are bilingual themselves – so they understand what their children
+                        are saying even when they do mix the two. In addition, parents feel it's problematic to keep
+                        correcting children when they mix languages. This is particularly the case when children show
+                        annoyance at being corrected. The parents believe it is a lot more important to have a
+                        meaningful conversation with their children.</p>
+
+                    <p><strong>D</strong> But what if a child uses language that cannot readily be categorised as either
+                        one language or the other? An example from my study involved the use of English words adapted to
+                        accommodate Japanese pronunciation. One of these borrowed words, 'ice cream', is usually
+                        pronounced 'aisukurimu'. The distinction between singular and plural does not exist in Japanese
+                        nouns in the English language sense, so whether using singular or plural, even in a borrowed
+                        word, 'aisukurimu' is the form normally used. But one of my child participants showed his mother
+                        a drawing of two cones of ice cream and described them as 'aisukurimuzu', with a Japanese
+                        pronunciation but in English plural form. The child had created something in between.</p>
+
+                    <p><strong>E</strong> Another example from my study focused on the interaction between
+                        Japanese-English bilingual siblings. In one case, a six-year-old girl was trying to convince her
+                        four-year-old brother to let her play with his toys. Following firm rejections by her brother,
+                        the girl drew on her communicative repertoire to convince him. To start with, she shifted from
+                        an authoritative demand to a softer and humbler appeal. She rephrased the question by using
+                        various polite forms. Then, her voice became more nasal, suggesting she was about to burst into
+                        tears. Even more interestingly, while the negotiation had begun in English, in the middle she
+                        shifted to Japanese. Although this may give the impression of language mixing, a considerably
+                        more complex process was taking place. The shift was accompanied by the incorporation of
+                        Japanese cultural elements, such as honorific titles that emphasise emotional attachment, a
+                        relationship of dependence between sister and brother, and an assumed obligation to care on the
+                        part of the brother. She succeeded.</p>
+
+                    <p><strong>F</strong> These examples show how creatively and strategically human beings use language
+                        in their daily communication. Whether bilingual or not, we all constantly select from our
+                        repertoire anything that will best serve our purpose. For instance, imagine you want to ask a
+                        neighbour a favour. You would use polite language in a friendly voice. But what about your
+                        facial expression? Your body language? It is likely you would make appropriate choices. For
+                        bilinguals, shifting between languages is all part of their repertoire.</p>
+
+                    <p><strong>G</strong> Our language repertoires are shaped by meaning, based on knowledge gathered
+                        throughout our lives, and the ways we use language also shape its meaning. The use of OPOL in
+                        the family brings specific meaning to language used at home, and children make full use of
+                        emergent meaning in their own interactions.</p>
+
+                    <p><strong>H</strong> The popularity of OPOL amongst parents rests on the simplicity of its message,
+                        which is that it should be applied consistently. But when we see a child actively using,
+                        adapting and negotiating their repertoire, it casts doubt on the belief that it's bad for
+                        children to mix languages. What they could actually be doing is demonstrating high-level
+                        flexibility and interpersonal skills. Being bilingual isn't simply about an ability to speak two
+                        languages. Rigidly policing consistency in the OPOL approach could actually inhibit bilingual
+                        children's linguistic ability and creativity. And in the same way, it could also limit their
+                        parents' ability to reveal their own bilingual skills, using their own repertoires.</p>
+                </div>
+            </div>
+            <div class="resizer" id="resizer"></div>
+            <!-- Questions -->
+            <div class="questions-container" id="questions" role="region" aria-label="Questions">
+                <h2 class="section-title">Questions 30-46</h2>
+                <p>You should spend about 20 minutes on Questions 30–46, which are based on Reading Passage 3.</p>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 30-35</div>
+                    <p>Choose the correct letter, A, B, C or D.<br>
+                        Write the correct letter in boxes 30–35 on your answer sheet.</p>
+                    <div class="question" data-question="30">
+                        <div class="question-text">30. What does the writer say about families in which the parents
+                            speak different languages?</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q30" value="A">A. They constantly research
+                                ways to help their children learn both languages.</label>
+                            <label class="option"><input type="radio" name="q30" value="B">B. They realise the
+                                importance of their role in their children's language learning.</label>
+                            <label class="option"><input type="radio" name="q30" value="C">C. They prioritise their
+                                children's language learning over their own.</label>
+                            <label class="option"><input type="radio" name="q30" value="D">D. They find the OPOL
+                                approach the easiest to adopt.</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="31">
+                        <div class="question-text">31. The writer uses the term 'received wisdom' in the first paragraph
+                            to illustrate that</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q31" value="A">A. the success of OPOL
+                                depends on the languages spoken by the parents.</label>
+                            <label class="option"><input type="radio" name="q31" value="B">B. OPOL fails if the parents
+                                are not consistent in its use.</label>
+                            <label class="option"><input type="radio" name="q31" value="C">C. one generally accepted
+                                principle of OPOL is incorrect.</label>
+                            <label class="option"><input type="radio" name="q31" value="D">D. there has been a lack of
+                                research into OPOL.</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="32">
+                        <div class="question-text">32. The mothers who took part in the writer's research</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q32" value="A">A. compensated for the fact
+                                that their children were exposed to more English than Japanese.</label>
+                            <label class="option"><input type="radio" name="q32" value="B">B. took their children's
+                                language learning more seriously than their partners did.</label>
+                            <label class="option"><input type="radio" name="q32" value="C">C. used language learning to
+                                increase the time they spent with their children.</label>
+                            <label class="option"><input type="radio" name="q32" value="D">D. were reluctant for their
+                                partners to speak Japanese to their children.</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="33">
+                        <div class="question-text">33. The writer says that the children in her study</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q33" value="A">A. preferred to use Japanese
+                                exclusively for communicating with their mothers.</label>
+                            <label class="option"><input type="radio" name="q33" value="B">B. understood their mothers
+                                better as their knowledge of Japanese increased.</label>
+                            <label class="option"><input type="radio" name="q33" value="C">C. argued about things that
+                                would be unimportant for monolingual children.</label>
+                            <label class="option"><input type="radio" name="q33" value="D">D. used language in a way
+                                that is uncommon.</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="34">
+                        <div class="question-text">34. What does the writer suggest about correcting children who are
+                            learning to be bilingual?</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q34" value="A">A. It is usually avoided if
+                                it causes bad feeling.</label>
+                            <label class="option"><input type="radio" name="q34" value="B">B. Parents tend to prioritise
+                                it over maintaining a conversation.</label>
+                            <label class="option"><input type="radio" name="q34" value="C">C. It is unnecessary with the
+                                OPOL method of learning.</label>
+                            <label class="option"><input type="radio" name="q34" value="D">D. Parents are less likely to
+                                do it if they speak both languages.</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="35">
+                        <div class="question-text">35. The writer gives the 'ice cream' example to show that</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q35" value="A">A. bilingual children find
+                                the use of borrowed words less confusing than other children.</label>
+                            <label class="option"><input type="radio" name="q35" value="B">B. bilingual children like to
+                                test their parents with words they know to be wrong.</label>
+                            <label class="option"><input type="radio" name="q35" value="C">C. knowledge of two languages
+                                leads bilingual children to invent new word forms.</label>
+                            <label class="option"><input type="radio" name="q35" value="D">D. it may be difficult to
+                                distinguish which language a bilingual child is using.</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 36-41</div>
+                    <p>Complete the summary using the list of words, A–J, below.<br>
+                        Write the correct letter, A–J, in boxes 36–41 on your answer sheet.</p>
+                    <p><strong>A bilingual child negotiates with her brother</strong></p>
+                    <p>Faced with her little brother's <select name="q36" class="summary-select">
+                            <option value="">Select</option>
+                            <option value="A">A. request</option>
+                            <option value="B">B. attempts</option>
+                            <option value="C">C. strategies</option>
+                            <option value="D">D. misunderstandings</option>
+                            <option value="E">E. responsibility</option>
+                            <option value="F">F. agreement</option>
+                            <option value="G">G. judgement</option>
+                            <option value="H">H. refusal</option>
+                            <option value="I">I. behavior</option>
+                            <option value="J">J. aspects</option>
+                        </select> to let her play with his toys, a young bilingual child used all of her communication
+                        <select name="q37" class="summary-select">
+                            <option value="">Select</option>
+                            <option value="A">A. request</option>
+                            <option value="B">B. attempts</option>
+                            <option value="C">C. strategies</option>
+                            <option value="D">D. misunderstandings</option>
+                            <option value="E">E. responsibility</option>
+                            <option value="F">F. agreement</option>
+                            <option value="G">G. judgement</option>
+                            <option value="H">H. refusal</option>
+                            <option value="I">I. behavior</option>
+                            <option value="J">J. aspects</option>
+                        </select> to change his mind. First, she expressed her <select name="q38"
+                            class="summary-select">
+                            <option value="">Select</option>
+                            <option value="A">A. request</option>
+                            <option value="B">B. attempts</option>
+                            <option value="C">C. strategies</option>
+                            <option value="D">D. misunderstandings</option>
+                            <option value="E">E. responsibility</option>
+                            <option value="F">F. agreement</option>
+                            <option value="G">G. judgement</option>
+                            <option value="H">H. refusal</option>
+                            <option value="I">I. behavior</option>
+                            <option value="J">J. aspects</option>
+                        </select> in gentler, more polite language, and pretended to be about to cry. Having switched
+                        from English to Japanese, she exploited <select name="q39" class="summary-select">
+                            <option value="">Select</option>
+                            <option value="A">A. request</option>
+                            <option value="B">B. attempts</option>
+                            <option value="C">C. strategies</option>
+                            <option value="D">D. misunderstandings</option>
+                            <option value="E">E. responsibility</option>
+                            <option value="F">F. agreement</option>
+                            <option value="G">G. judgement</option>
+                            <option value="H">H. refusal</option>
+                            <option value="I">I. behavior</option>
+                            <option value="J">J. aspects</option>
+                        </select> of Japanese culture, such as reminding him of his <select name="q40"
+                            class="summary-select">
+                            <option value="">Select</option>
+                            <option value="A">A. request</option>
+                            <option value="B">B. attempts</option>
+                            <option value="C">C. strategies</option>
+                            <option value="D">D. misunderstandings</option>
+                            <option value="E">E. responsibility</option>
+                            <option value="F">F. agreement</option>
+                            <option value="G">G. judgement</option>
+                            <option value="H">H. refusal</option>
+                            <option value="I">I. behavior</option>
+                            <option value="J">J. aspects</option>
+                        </select> to her as her brother. She succeeded in her <select name="q41" class="summary-select">
+                            <option value="">Select</option>
+                            <option value="A">A. request</option>
+                            <option value="B">B. attempts</option>
+                            <option value="C">C. strategies</option>
+                            <option value="D">D. misunderstandings</option>
+                            <option value="E">E. responsibility</option>
+                            <option value="F">F. agreement</option>
+                            <option value="G">G. judgement</option>
+                            <option value="H">H. refusal</option>
+                            <option value="I">I. behavior</option>
+                            <option value="J">J. aspects</option>
+                        </select> to convince him.
+                    </p>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 42-46</div>
+                    <p>Do the following statements agree with the claims of the writer in Reading Passage 3?<br>
+                        In boxes 42–46 on your answer sheet, write<br>
+                        <strong>YES</strong> if the statement agrees with the claims of the writer<br>
+                        <strong>NO</strong> if the statement contradicts the claims of the writer<br>
+                        <strong>NOT GIVEN</strong> if it is impossible to say what the writer thinks about this
+                    </p>
+                    <div class="question" data-question="42">
+                        <div class="question-text">42. Even people who speak only one language know how to adapt their
+                            way of communicating according to the situation.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q42" value="YES">YES</label>
+                            <label class="option"><input type="radio" name="q42" value="NO">NO</label>
+                            <label class="option"><input type="radio" name="q42" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="43">
+                        <div class="question-text">43. People who grow up in OPOL families will go on to use this
+                            approach with their own children.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q43" value="YES">YES</label>
+                            <label class="option"><input type="radio" name="q43" value="NO">NO</label>
+                            <label class="option"><input type="radio" name="q43" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="44">
+                        <div class="question-text">44. The reason the OPOL approach is favoured by many parents is that
+                            it encourages them to switch languages when necessary.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q44" value="YES">YES</label>
+                            <label class="option"><input type="radio" name="q44" value="NO">NO</label>
+                            <label class="option"><input type="radio" name="q44" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="45">
+                        <div class="question-text">45. Bilingual children who mix languages eventually develop a
+                            preference for one of the languages.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q45" value="YES">YES</label>
+                            <label class="option"><input type="radio" name="q45" value="NO">NO</label>
+                            <label class="option"><input type="radio" name="q45" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="46">
+                        <div class="question-text">46. The OPOL approach may restrict people's capacity to be
+                            resourceful in their use of language.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q46" value="YES">YES</label>
+                            <label class="option"><input type="radio" name="q46" value="NO">NO</label>
+                            <label class="option"><input type="radio" name="q46" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-nav">
+                <div class="progress-items">
+                    <div class="progress-item current" data-question="30">30</div>
+                    <div class="progress-item" data-question="31">31</div>
+                    <div class="progress-item" data-question="32">32</div>
+                    <div class="progress-item" data-question="33">33</div>
+                    <div class="progress-item" data-question="34">34</div>
+                    <div class="progress-item" data-question="35">35</div>
+                    <div class="progress-item" data-question="36">36</div>
+                    <div class="progress-item" data-question="37">37</div>
+                    <div class="progress-item" data-question="38">38</div>
+                    <div class="progress-item" data-question="39">39</div>
+                    <div class="progress-item" data-question="40">40</div>
+                    <div class="progress-item" data-question="41">41</div>
+                    <div class="progress-item" data-question="42">42</div>
+                    <div class="progress-item" data-question="43">43</div>
+                    <div class="progress-item" data-question="44">44</div>
+                    <div class="progress-item" data-question="45">45</div>
+                    <div class="progress-item" data-question="46">46</div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" id="prev-btn" disabled><i class="fas fa-arrow-left"></i>
+                        Previous</button>
+                    <button class="btn btn-secondary" id="next-btn">Next <i class="fas fa-arrow-right"></i></button>
+                    <button class="btn btn-submit" id="submit-btn">Submit Test <i
+                            class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div class="modal" id="results-modal">
+        <div class="modal-content">
+            <h2>Test Results</h2>
+            <div class="score-display" id="score-display">0/17</div>
+            <div class="score-breakdown">
+                <div class="score-item">
+                    <span>Passage 3:</span>
+                    <span id="passage3-score">0/17</span>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="close-modal">Close</button>
+                <button class="btn btn-primary" id="review-answers">Review Answers</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Correct Answers for Questions 30-46
+        const correctAnswers = {
+            q30: "B",
+            q31: "D",
+            q32: "A",
+            q33: "B",
+            q34: "D",
+            q35: "C",
+            q36: "H",
+            q37: "C",
+            q38: "A",
+            q39: "J",
+            q40: "E",
+            q41: "B",
+            q42: "YES",
+            q43: "NOT GIVEN",
+            q44: "NO",
+            q45: "NOT GIVEN",
+            q46: "YES"
+        };
+
+        let lastSelection = null;
+        let highlightTarget = null;
+        let currentPanel = null;
+        let submitted = false;
+        let currentQuestion = 30;
+        let isResizing = false;
+        let seconds = 20 * 60; // 20 minutes
+        let timerInterval;
+
+        const highlightBtn = document.getElementById('highlight-btn');
+        const removeHighlightBtn = document.getElementById('remove-highlight-btn');
+        const passagePanel = document.getElementById('passage');
+        const questionsPanel = document.getElementById('questions');
+        const resizer = document.getElementById('resizer');
+        const submitBtn = document.getElementById('submit-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resultsModal = document.getElementById('results-modal');
+        const scoreDisplay = document.getElementById('score-display');
+        const passage3Score = document.getElementById('passage3-score');
+        const closeModalBtn = document.getElementById('close-modal');
+        const reviewBtn = document.getElementById('review-answers');
+        const timerElement = document.querySelector('.timer span');
+        const timerContainer = document.querySelector('.timer');
+
+        // Timer
+        function updateTimer() {
+            seconds--;
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            if (seconds <= 2 * 60) {
+                timerContainer.classList.add('warning');
+            }
+            if (seconds <= 0) {
+                clearInterval(timerInterval);
+                if (!submitted) {
+                    alert('Time is up! Submitting your test.');
+                    submitTest();
+                }
+            }
+        }
+
+        // Highlight functionality
+        function getValidSelection() {
+            const sel = window.getSelection();
+            if (!sel.rangeCount || sel.isCollapsed) return null;
+            const range = sel.getRangeAt(0);
+            if (passagePanel.contains(range.commonAncestorContainer)) {
+                currentPanel = passagePanel;
+            } else if (questionsPanel.contains(range.commonAncestorContainer)) {
+                currentPanel = questionsPanel;
+            } else {
+                return null;
+            }
+            return range;
+        }
+
+        function showHighlightBtn(range) {
+            const rect = range.getBoundingClientRect();
+            highlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            highlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            highlightBtn.style.display = 'block';
+        }
+
+        function hideHighlightBtn() {
+            highlightBtn.style.display = 'none';
+        }
+
+        function showRemoveBtn(span) {
+            const rect = span.getBoundingClientRect();
+            removeHighlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            removeHighlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            removeHighlightBtn.style.display = 'block';
+            highlightTarget = span;
+        }
+
+        function hideRemoveBtn() {
+            removeHighlightBtn.style.display = 'none';
+            highlightTarget = null;
+        }
+
+        highlightBtn.addEventListener('click', () => {
+            if (lastSelection) {
+                const span = document.createElement('span');
+                span.className = 'highlight';
+                span.appendChild(lastSelection.extractContents());
+                lastSelection.insertNode(span);
+                window.getSelection().removeAllRanges();
+                hideHighlightBtn();
+            }
+        });
+
+        removeHighlightBtn.addEventListener('click', () => {
+            if (highlightTarget) {
+                const parent = highlightTarget.parentNode;
+                while (highlightTarget.firstChild) {
+                    parent.insertBefore(highlightTarget.firstChild, highlightTarget);
+                }
+                parent.removeChild(highlightTarget);
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('selectionchange', () => {
+            hideHighlightBtn();
+            hideRemoveBtn();
+            const range = getValidSelection();
+            if (range) {
+                lastSelection = range;
+                showHighlightBtn(range);
+            } else {
+                lastSelection = null;
+            }
+        });
+
+        [passagePanel, questionsPanel].forEach(panel => {
+            panel.addEventListener('scroll', () => {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            });
+        });
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.target !== highlightBtn && e.target !== removeHighlightBtn) {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('highlight')) {
+                e.preventDefault();
+                showRemoveBtn(e.target);
+            }
+        });
+
+        // Resizer
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const container = document.querySelector('.main-content');
+            const containerRect = container.getBoundingClientRect();
+            const mouseX = e.clientX - containerRect.left;
+            const containerWidth = containerRect.width;
+            const leftPercentage = (mouseX / containerWidth) * 100;
+            const rightPercentage = 100 - leftPercentage;
+            if (leftPercentage >= 30 && leftPercentage <= 70) {
+                document.querySelector('.passage-container').style.flex = leftPercentage + '%';
+                document.querySelector('.questions-container').style.width = rightPercentage + '%';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            }
+        });
+
+        // Navigation
+        function scrollToQuestion(num) {
+            const el = document.querySelector(`[data-question="${num}"]`);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            updateCurrentQuestion(num);
+        }
+
+        function updateCurrentQuestion(num) {
+            currentQuestion = num;
+            document.querySelectorAll('.progress-item').forEach(item => {
+                item.classList.remove('current');
+                if (item.dataset.question == num) item.classList.add('current');
+            });
+            prevBtn.disabled = num <= 30;
+            nextBtn.disabled = num >= 46;
+        }
+
+        document.querySelectorAll('.progress-item').forEach(item => {
+            item.addEventListener('click', () => {
+                scrollToQuestion(parseInt(item.dataset.question));
+            });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 30) scrollToQuestion(currentQuestion - 1);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestion < 46) scrollToQuestion(currentQuestion + 1);
+        });
+
+        document.querySelectorAll('input[type="radio"], select').forEach(input => {
+            input.addEventListener('change', () => {
+                if (submitted) return;
+                const qNumMatch = input.name.match(/^q(\d+)$/);
+                if (qNumMatch) {
+                    const qNum = parseInt(qNumMatch[1]);
+                    const item = document.querySelector(`.progress-item[data-question="${qNum}"]`);
+                    if (item && !item.classList.contains('answered')) {
+                        item.classList.add('answered');
+                    }
+                }
+            });
+        });
+
+        submitBtn.addEventListener('click', submitTest);
+
+        function submitTest() {
+            if (submitted) return;
+            if (!confirm('Are you sure you want to submit?')) return;
+            submitted = true;
+            clearInterval(timerInterval);
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Submitted';
+
+            let score = 0;
+            const results = {};
+
+            // Score all questions 30-46
+            for (let i = 30; i <= 46; i++) {
+                const key = `q${i}`;
+                let userAnswer = '';
+                let isCorrect = false;
+
+                const radioEl = document.querySelector(`input[name="${key}"]:checked`);
+                if (radioEl) {
+                    userAnswer = radioEl.value;
+                    isCorrect = userAnswer === correctAnswers[key];
+                    document.querySelectorAll(`input[name="${key}"]`).forEach(r => r.disabled = true);
+                }
+
+                const selectEl = document.querySelector(`select[name="${key}"]`);
+                if (selectEl) {
+                    userAnswer = selectEl.value;
+                    isCorrect = userAnswer === correctAnswers[key];
+                    selectEl.disabled = true;
+                }
+
+                if (isCorrect) score++;
+                results[key] = { userAnswer, correct: correctAnswers[key], isCorrect };
+            }
+
+            // Update score display
+            scoreDisplay.textContent = `${score}/17`;
+            passage3Score.textContent = `${score}/17`;
+
+            // Update progress indicators
+            for (let i = 30; i <= 46; i++) {
+                const item = document.querySelector(`.progress-item[data-question="${i}"]`);
+                const res = results[`q${i}`];
+                if (item && res) {
+                    item.classList.remove('current', 'answered');
+                    item.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+                }
+            }
+
+            window.testResults = results;
+            resultsModal.style.display = 'flex';
+        }
+
+        function showCorrectAnswers() {
+            if (!submitted) return;
+
+            // Clear previous indicators
+            document.querySelectorAll('.answer-indicator').forEach(el => el.remove());
+
+            // Show results for all questions
+            for (let i = 30; i <= 46; i++) {
+                const key = `q${i}`;
+                const res = window.testResults[key];
+                if (!res) continue;
+
+                let targetElement;
+                const radioGroup = document.querySelector(`input[name="${key}"]`);
+                const selectEl = document.querySelector(`select[name="${key}"]`);
+
+                if (radioGroup) targetElement = radioGroup.closest('.question');
+                else if (selectEl) targetElement = selectEl.parentNode;
+
+                if (!targetElement) continue;
+
+                const div = document.createElement('div');
+                div.className = 'answer-indicator';
+                div.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+                if (res.isCorrect) {
+                    div.innerHTML = `<i class="fas fa-check"></i> Correct! You chose: <strong>${res.userAnswer}</strong>`;
+                } else {
+                    const userDisplay = res.userAnswer || 'No answer';
+                    div.innerHTML = `<i class="fas fa-times"></i> Incorrect. You chose: <strong>${userDisplay}</strong><br><strong>Correct:</strong> ${res.correct}`;
+                }
+                targetElement.appendChild(div);
+            }
+        }
+
+        closeModalBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+        });
+
+        reviewBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+            showCorrectAnswers();
+            scrollToQuestion(30);
+        });
+
+        function startTest() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('testContainer').classList.remove('hidden');
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        setTimeout(() => {
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }, 2000);
+    </script>
+</body>
+
+</html>

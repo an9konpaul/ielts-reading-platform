@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Youth Homelessness - Reading Passage</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --header-bg: #2c3e50;
+            --header-text: #ecf0f1;
+            --passage-bg: #ffffff;
+            --questions-bg: #f1f5f9;
+            --border-color: #3498db;
+            --highlight-color: #ffeb3b;
+            --correct-color: #2ecc71;
+            --incorrect-color: #e74c3c;
+            --progress-incomplete: #bdc3c7;
+            --progress-complete: #2ecc71;
+            --button-bg: #3498db;
+            --button-hover: #2980b9;
+            --timer-bg: #3498db;
+            --timer-text: #fff;
+        }
+
+        .night-mode {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --header-bg: #1a1a1a;
+            --header-text: #f5f5f5;
+            --passage-bg: #1e1e1e;
+            --questions-bg: #252525;
+            --border-color: #424242;
+            --highlight-color: #0084ff;
+            --correct-color: #27ae60;
+            --incorrect-color: #c0392b;
+            --progress-incomplete: #616161;
+            --progress-complete: #27ae60;
+            --button-bg: #0088cc;
+            --button-hover: #006699;
+            --timer-bg: #0088cc;
+            --timer-text: #f5f5f5;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-area h1 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-right: 15px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            text-decoration: none;
+            background-color: #0088cc;
+            font-weight: 500;
+            transition: transform 0.2s, background-color 0.3s;
+        }
+
+        .social-link:hover {
+            transform: translateY(-2px);
+            background-color: #006699;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .timer-container {
+            background-color: var(--timer-bg);
+            color: var(--timer-text);
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .timer-controls button {
+            background: none;
+            border: none;
+            color: var(--timer-text);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .timer-controls button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .mode-toggle {
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+            font-size: 20px;
+            padding: 6px;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .mode-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .passage-container,
+        .questions-container {
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .passage-container {
+            width: 50%;
+            background-color: var(--passage-bg);
+            border-right: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .questions-container {
+            width: 50%;
+            background-color: var(--questions-bg);
+            position: relative;
+        }
+
+        .passage-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .passage-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .instructions {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid var(--border-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 0 4px 4px 0;
+            font-size: 0.95rem;
+        }
+
+        .passage-text {
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .passage-text p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .highlight {
+            background-color: var(--highlight-color);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 25px 0 15px;
+            color: var(--text-color);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .question-group {
+            margin-bottom: 30px;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: var(--passage-bg);
+            border-left: 4px solid var(--border-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .question-number {
+            display: inline-flex;
+            width: 32px;
+            height: 32px;
+            background-color: var(--progress-incomplete);
+            color: white;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .question.answered .question-number {
+            background-color: var(--progress-complete);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .option:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        .option input {
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+
+        .summary-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .answer-placeholder {
+            cursor: pointer;
+            color: var(--button-bg);
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        .answer-placeholder.answered {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--passage-bg);
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .modal-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .modal-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .modal-option:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        .modal-option input {
+            margin-right: 10px;
+        }
+
+        .modal-actions {
+            margin-top: 15px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        footer {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .progress-container {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            max-width: 70%;
+        }
+
+        .progress-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--progress-incomplete);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s;
+        }
+
+        .progress-item:hover {
+            transform: scale(1.1);
+        }
+
+        .progress-item.completed {
+            background-color: var(--progress-complete);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--button-bg);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--button-bg);
+            color: var(--button-bg);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .feedback-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .feedback-container {
+            background-color: var(--passage-bg);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .feedback-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--header-bg);
+            color: var(--header-text);
+        }
+
+        .feedback-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #close-feedback {
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+        }
+
+        .score-display {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-left: 10px;
+            color: var(--highlight-color);
+        }
+
+        .feedback-body {
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+
+        .feedback-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: var(--questions-bg);
+        }
+
+        .feedback-question {
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feedback-answer {
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        .correct {
+            background-color: rgba(46, 204, 113, 0.15);
+            color: var(--correct-color);
+            border: 1px solid var(--correct-color);
+        }
+
+        .incorrect {
+            background-color: rgba(231, 76, 60, 0.15);
+            color: var(--incorrect-color);
+            border: 1px solid var(--incorrect-color);
+        }
+
+        .highlight-tooltip {
+            position: absolute;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 1000;
+            cursor: pointer;
+            display: flex;
+            gap: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 5px;
+        }
+
+        .color-option {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+            transition: transform 0.2s;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .remove-highlight {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .passage-container,
+            .questions-container {
+                width: 100%;
+                height: auto;
+                max-height: 50vh;
+            }
+
+            .passage-container {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .progress-container {
+                max-width: 60%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .progress-container {
+                max-width: 100%;
+                justify-content: center;
+            }
+
+            .progress-item {
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .action-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo-area">
+            <h1>IELTS Reading Test</h1>
+            <a class="social-link" href="https://t.me/IELTSwithJurabek" target="_blank">
+                <i class="fab fa-telegram-plane"></i>
+                <span>IELTSwithJurabek</span>
+            </a>
+        </div>
+        <div class="header-controls">
+            <div class="timer-container">
+                <i class="fas fa-clock"></i>
+                <span id="timer">20:00</span>
+                <div class="timer-controls">
+                    <button id="start-timer" title="Start"><i class="fas fa-play"></i></button>
+                    <button id="pause-timer" title="Pause"><i class="fas fa-pause"></i></button>
+                    <button id="reset-timer" title="Reset"><i class="fas fa-redo"></i></button>
+                </div>
+            </div>
+            <button class="mode-toggle" id="night-mode-toggle" title="Toggle Night Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="passage-container">
+            <div class="passage-content">
+                <div class="passage-title">Youth Homelessness</div>
+                <div class="instructions">
+                    <p><strong>You should spend about 20 minutes on Questions 33-46, which are based on Reading Passage
+                            3 on pages 10 and 11.</strong></p>
+                </div>
+                <div class="passage-text" id="passage-text">
+                    <p>Youth homelessness did not emerge as a public problem in Britain until the second half of the
+                        20th century. In 1975, a television programme called <em>Johnny Go Home</em> shocked the public
+                        by showing the risks faced by a runaway child in London, and placed the problem of youth
+                        homelessness firmly on the public agenda, although policy initiatives were not forthcoming.
+                        Behind the rise in homelessness among young people were the problems of youth unemployment, a
+                        reduction in state benefits, and a shortage of suitable housing.</p>
+                    <p>Government responses to youth homelessness generally involve encouraging voluntary agencies to
+                        set up schemes. The proportions of young people affected vary from region to region, as do the
+                        underlying economic structures, making comparison difficult. However, homeless youngsters all
+                        over Britain face many of the same risks as they move between relatives, institutions and the
+                        street.</p>
+                    <p>Statistics are an integral part of accounts of social issues, whether they be in the press or in
+                        the reports of agencies and academic commentators. The reaction of policy makers to a social
+                        problem also depends largely on the number of people it is thought to affect. However, there are
+                        very few agreed statistics on homelessness.</p>
+                    <p>One reason for this is that there are a number of practical difficulties with measuring it. Young
+                        people who are staying temporarily with friends, for example, may not contact homelessness
+                        agencies, so their housing problem goes unrecorded. In addition, some may be homeless for just a
+                        night or two, others for months or years.</p>
+                    <p>There is also no globally accepted definition of homelessness. For example, in Britain someone is
+                        deemed homeless by a local authority if they have no accommodation that they are entitled to
+                        occupy, but they must also fulfil a number of other criteria: they must have a local connection
+                        of some sort, they must not be intentionally homeless, and they must show that they are in
+                        “priority need of accommodation.” Official statistics therefore exclude large numbers of
+                        homeless people.</p>
+                    <p>Explanations of the causes of youth homelessness also vary considerably. Structural explanations
+                        account for youth homelessness by reference to societal structures, such as changes in the
+                        housing market. This is crucial since, by definition, homelessness is a housing issue. In
+                        particular, there has been a substantial decline in rented housing in recent years. The economic
+                        power of young people is also significant. Both unemployment and low pay are frequently viewed
+                        as being integral to homelessness and both factors affect young people in Britain. However,
+                        unemployment is not directly the issue - rather it is a question of the subsequent low income
+                        that unemployment incurs. As such, the state benefit system is also seen to be fundamental to
+                        the rise in youth homelessness, because young people's benefits have been heavily restricted in
+                        a number of ways. As a result, many young people may be heavily in debt. These various
+                        difficulties have been further compounded by a number of demographic changes, such as the
+                        expanding number of single-person households. Consequently, while there has been a huge
+                        reduction in the supply of affordable accommodation, there has been an increase in the demand
+                        for such housing.</p>
+                    <p>However, the problem of youth homelessness is often explained in more personal terms, which
+                        relate it to the individual behaviors of homeless people. A wide variety of such personal
+                        factors are often introduced to help explain youth homelessness, such as leaving home, mental
+                        illness, crime, and drug abuse, although there is usually disagreement over how these factors
+                        should be interpreted.</p>
+                    <p>Four approaches can be taken towards the explanation of youth homelessness. One is the 'political
+                        model,' which sees homelessness as stemming primarily from the way society is organized. This is
+                        a view widely adopted in academic circles, but there are also a number of criticisms that can be
+                        made of it. Firstly, only by looking in detail at the individual features of the situation is it
+                        possible to assess the impact of these structural features on the homeless and to identify
+                        appropriate provision. In addition, this approach tends to treat young homeless people as
+                        powerless victims, which patronizes them and ignores the fact that they are still capable of
+                        self-determination.</p>
+                    <p>The 'individual culpability' model sees homelessness as having little or nothing to do with
+                        societal structures but as resulting from the individual behavior of young homeless people
+                        themselves. Young homeless people, it is argued, do not have to leave home. As individuals in a
+                        free society they are accountable to themselves for their decisions. The advantage of this
+                        perspective is that it gives some credibility to the self-determination of young homeless
+                        people. However, because such an approach allocates blame to an individual, it also carries
+                        punitive implications.</p>
+                    <p>In the 'pathology' model, the individual's situation is perceived to be a consequence of
+                        personality disorders that may result from early childhood experiences. According to this model,
+                        young homeless people have specific problems and they therefore require specialist support. This
+                        approach can present a misleading picture of the young homeless – many of whom have no problems
+                        other than one of accommodation.</p>
+                    <p>Finally, according to the 'child' model, young people become homeless because they are simply too
+                        immature to cope with life. However, there is evidence to suggest that many homeless youngsters
+                        show considerable resilience and maturity in learning to cope with and survive homelessness.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="questions-container">
+            <div class="section-title">Questions 33-37</div>
+            <div class="instructions">
+                <p>Choose the correct letter, <strong>A, B, C, or D</strong>.</p>
+                <p>Write the correct letter in boxes 33-37 on your answer sheet.</p>
+            </div>
+            <div class="question-group">
+                <div class="question" id="q33">
+                    <div class="question-title">
+                        <div class="question-number">33</div>
+                        <div class="question-text">How did the TV programme <em>Johnny Go Home</em> affect attitudes to
+                            youth homelessness in Britain?</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q33" value="A"> A. It raised awareness of the issue on a wide
+                            scale.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q33" value="B"> B. It led to official measures to deal with the
+                            situation.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q33" value="C"> C. It discouraged many young people from leaving
+                            home.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q33" value="D"> D. It made people aware of the real causes of the
+                            problem.
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q34">
+                    <div class="question-title">
+                        <div class="question-number">34</div>
+                        <div class="question-text">Comparison of homelessness in different regions is difficult, partly
+                            because of variations in</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q34" value="A"> A. the places homeless children go to.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q34" value="B"> B. government responses.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q34" value="C"> C. economic structures.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q34" value="D"> D. the work done by voluntary agencies.
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q35">
+                    <div class="question-title">
+                        <div class="question-number">35</div>
+                        <div class="question-text">Why is the lack of agreed statistics on homelessness a problem?</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q35" value="A"> A. Accounts of the problem by the press are
+                            ineffective.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q35" value="B"> B. Policy makers may not respond appropriately to
+                            the situation.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q35" value="C"> C. Academic commentary on the issue becomes
+                            unclear.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q35" value="D"> D. Agencies may not be able to provide funding.
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q36">
+                    <div class="question-title">
+                        <div class="question-number">36</div>
+                        <div class="question-text">The lack of statistics on homelessness may partly be caused by</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q36" value="A"> A. disagreement over the type of data needed.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q36" value="B"> B. reluctance of the homeless to identify
+                            themselves.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q36" value="C"> C. lack of time to carry out surveys.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q36" value="D"> D. difficulty in identifying the homeless.
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q37">
+                    <div class="question-title">
+                        <div class="question-number">37</div>
+                        <div class="question-text">The writer describes the criteria for classifying someone as homeless
+                            in Britain to illustrate</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q37" value="A"> A. the different ways of collecting statistics.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q37" value="B"> B. the fact that too many people are defined as
+                            homeless.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q37" value="C"> C. the variation there is in different parts of
+                            the country.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q37" value="D"> D. the fact that official statistics may be
+                            misleading.
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">Questions 38-42</div>
+            <div class="instructions">
+                <p>Complete the summary using the list of words and phrases, <strong>A-J</strong>, below.</p>
+                <p>Click on each placeholder (e.g., [38]) to select an answer from the list.</p>
+            </div>
+            <div class="question-group">
+                <div class="question">
+                    <div class="summary-text">
+                        There are various explanations for youth homelessness. Firstly, the reduction in <span
+                            class="answer-placeholder" data-qid="q38">[38]</span> was caused by changes in the housing
+                        market and is one of a number of <span class="answer-placeholder" data-qid="q39">[39]</span> for
+                        youth homelessness. There may also be <span class="answer-placeholder"
+                            data-qid="q40">[40]</span> for developments, such as the increased demand for single-person
+                        accommodation. Thirdly, some young people may find it difficult to get state benefits, and do
+                        not have jobs. These are <span class="answer-placeholder" data-qid="q41">[41]</span> for
+                        homelessness. Lastly, factors such as crime and mental illness are examples of <span
+                            class="answer-placeholder" data-qid="q42">[42]</span>.
+                    </div>
+                </div>
+            </div>
+            <div class="instructions">
+                <p><strong>Options for Questions 38-42:</strong></p>
+                <p>A. demographic explanations<br>
+                    B. government support<br>
+                    C. bank loans<br>
+                    D. solutions<br>
+                    E. money owed<br>
+                    F. economic explanations<br>
+                    G. personal explanations<br>
+                    H. structural explanations<br>
+                    I. income<br>
+                    J. property to rent</p>
+            </div>
+
+            <div class="section-title">Questions 43-46</div>
+            <div class="instructions">
+                <p>Do the following statements agree with the claims of the writer in Reading Passage 3?</p>
+                <p>In boxes 43-46 on your answer sheet, write:</p>
+                <p><strong>YES</strong> - if the statement agrees with the claims of the writer<br>
+                    <strong>NO</strong> - if the statement contradicts the claims of the writer<br>
+                    <strong>NOT GIVEN</strong> - if it is impossible to say what the writer thinks about this
+                </p>
+            </div>
+            <div class="question-group">
+                <div class="question" id="q43">
+                    <div class="question-title">
+                        <div class="question-number">43</div>
+                        <div class="question-text">The 'political model' is unpopular among academics.</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q43" value="YES"> YES
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q43" value="NO"> NO
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q43" value="NOT GIVEN"> NOT GIVEN
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q44">
+                    <div class="question-title">
+                        <div class="question-number">44</div>
+                        <div class="question-text">The 'political model' may lead to young homeless people being
+                            regarded as having hardly any control over their lives.</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q44" value="YES"> YES
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q44" value="NO"> NO
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q44" value="NOT GIVEN"> NOT GIVEN
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q45">
+                    <div class="question-title">
+                        <div class="question-number">45</div>
+                        <div class="question-text">The disadvantages of the 'individual culpability' model far outweigh
+                            the advantages.</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q45" value="YES"> YES
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q45" value="NO"> NO
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q45" value="NOT GIVEN"> NOT GIVEN
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q46">
+                    <div class="question-title">
+                        <div class="question-number">46</div>
+                        <div class="question-text">The 'child' model is an accurate representation of the situation of
+                            many young homeless people.</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q46" value="YES"> YES
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q46" value="NO"> NO
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q46" value="NOT GIVEN"> NOT GIVEN
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="progress-container" id="progress-container"></div>
+        <div class="action-buttons">
+            <button class="btn-secondary" id="reset-btn">Reset Answers</button>
+            <button class="btn-primary" id="submit-btn">Submit Answers</button>
+        </div>
+    </footer>
+
+    <div class="modal" id="answer-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Select Answer for Question <span id="modal-question-number"></span></div>
+                <button class="modal-close" id="modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-options" id="modal-options">
+                <label class="modal-option">
+                    <input type="radio" name="modal-answer" value="A"> A. demographic explanations
+                </label>
+                <label class="modal-option">
+                    <input type="radio" name="modal-answer" value="B"> B. government support
+                </label>
+                <label class="modal-option">
+                    <input type="radio" name="modal-answer" value="C"> C. bank loans
+                </label>
+                <label class="modal-option">
+                    <input type="radio" name="modal-answer" value="D"> D. solutions
+                </label>
+                <label class="modal-option">
+                    <input type="radio" name="modal-answer" value="E"> E. money owed
+                </label>
+                <label class="modal-option">
+                    <input type="radio" name="modal-answer" value="F"> F. economic explanations
+                </label>
+                <label class="modal-option">
+                    <input type="radio" name="modal-answer" value="G"> G. personal explanations
+                </label>
+                <label class="modal-option">
+                    <input type="radio" name="modal-answer" value="H"> H. structural explanations
+                </label>
+                <label class="modal-option">
+                    <input type="radio" name="modal-answer" value="I"> I. income
+                </label>
+                <label class="modal-option">
+                    <input type="radio" name="modal-answer" value="J"> J. property to rent
+                </label>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" id="modal-cancel">Cancel</button>
+                <button class="btn-primary" id="modal-submit">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="feedback-overlay" id="feedback-overlay">
+        <div class="feedback-container">
+            <div class="feedback-header">
+                <div class="feedback-title">
+                    <i class="fas fa-chart-bar"></i> Your Results
+                    <span class="score-display" id="score-display">0/14</span>
+                </div>
+                <button id="close-feedback"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="feedback-body" id="feedback-body">
+                <!-- Feedback will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Night mode toggle
+        document.getElementById('night-mode-toggle').addEventListener('click', function () {
+            document.body.classList.toggle('night-mode');
+            const icon = this.querySelector('i');
+            if (document.body.classList.contains('night-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        });
+
+        // Timer functionality
+        let timerInterval;
+        let timeRemaining = 20 * 60; // 20 minutes
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+            const seconds = (timeRemaining % 60).toString().padStart(2, '0');
+            document.getElementById("timer").textContent = `${minutes}:${seconds}`;
+        }
+
+        document.getElementById("start-timer").addEventListener("click", () => {
+            if (timerInterval) return;
+            timerInterval = setInterval(() => {
+                if (timeRemaining > 0) {
+                    timeRemaining--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    alert("Time is up!");
+                }
+            }, 1000);
+        });
+
+        document.getElementById("pause-timer").addEventListener("click", () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        });
+
+        document.getElementById("reset-timer").addEventListener("click", () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timeRemaining = 20 * 60;
+            updateTimerDisplay();
+        });
+
+        // Initialize timer display
+        updateTimerDisplay();
+
+        // Progress tracker initialization
+        function initializeProgressTracker() {
+            const progressContainer = document.getElementById("progress-container");
+            const questions = [
+                { id: 'q33', number: 33 },
+                { id: 'q34', number: 34 },
+                { id: 'q35', number: 35 },
+                { id: 'q36', number: 36 },
+                { id: 'q37', number: 37 },
+                { id: 'q38', number: 38 },
+                { id: 'q39', number: 39 },
+                { id: 'q40', number: 40 },
+                { id: 'q41', number: 41 },
+                { id: 'q42', number: 42 },
+                { id: 'q43', number: 43 },
+                { id: 'q44', number: 44 },
+                { id: 'q45', number: 45 },
+                { id: 'q46', number: 46 }
+            ];
+
+            questions.forEach(({ id, number }) => {
+                const item = document.createElement("div");
+                item.className = "progress-item";
+                item.textContent = number;
+                item.dataset.qid = id;
+
+                item.addEventListener("click", () => {
+                    document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+                });
+
+                progressContainer.appendChild(item);
+            });
+        }
+
+        // Update progress status
+        function updateProgressStatus() {
+            const progressItems = document.querySelectorAll(".progress-item");
+
+            progressItems.forEach(item => {
+                const qid = item.dataset.qid;
+                const questionElem = document.getElementById(qid);
+                let answered = false;
+
+                // For radio inputs (q33–q37, q43–q46)
+                const radios = document.querySelectorAll(`input[name="${qid}"]`);
+                if (radios.length > 0) {
+                    radios.forEach(r => {
+                        if (r.checked) answered = true;
+                    });
+                }
+
+                // For summary placeholders (q38–q42)
+                const placeholder = document.querySelector(`.answer-placeholder[data-qid="${qid}"]`);
+                if (placeholder && placeholder.dataset.answer) {
+                    answered = true;
+                }
+
+                // Update progress item
+                if (answered) {
+                    item.classList.add("completed");
+                    if (questionElem && questionElem.closest('.question')) {
+                        questionElem.closest('.question').classList.add("answered");
+                    }
+                } else {
+                    item.classList.remove("completed");
+                    if (questionElem && questionElem.closest('.question')) {
+                        questionElem.closest('.question').classList.remove("answered");
+                    }
+                }
+            });
+        }
+
+        // Initialize progress tracker
+        document.addEventListener("DOMContentLoaded", () => {
+            initializeProgressTracker();
+            updateProgressStatus();
+        });
+
+        // Modal functionality for questions 38–42
+        const modal = document.getElementById('answer-modal');
+        const modalQuestionNumber = document.getElementById('modal-question-number');
+        const modalOptions = document.getElementById('modal-options');
+        const modalSubmit = document.getElementById('modal-submit');
+        const modalCancel = document.getElementById('modal-cancel');
+        const modalClose = document.getElementById('modal-close');
+        let currentQid = null;
+
+        document.querySelectorAll('.answer-placeholder').forEach(placeholder => {
+            placeholder.addEventListener('click', () => {
+                currentQid = placeholder.dataset.qid;
+                modalQuestionNumber.textContent = currentQid.replace('q', '');
+                const currentAnswer = placeholder.dataset.answer || '';
+                const radios = modalOptions.querySelectorAll('input[name="modal-answer"]');
+                radios.forEach(radio => {
+                    radio.checked = radio.value === currentAnswer;
+                });
+                modal.style.display = 'flex';
+            });
+        });
+
+        modalSubmit.addEventListener('click', () => {
+            const selectedOption = modalOptions.querySelector('input[name="modal-answer"]:checked');
+            if (selectedOption) {
+                const placeholder = document.querySelector(`.answer-placeholder[data-qid="${currentQid}"]`);
+                placeholder.textContent = selectedOption.value;
+                placeholder.dataset.answer = selectedOption.value;
+                placeholder.classList.add('answered');
+                updateProgressStatus();
+            }
+            modal.style.display = 'none';
+        });
+
+        modalCancel.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        modalClose.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        // Submit answers and show feedback
+        document.getElementById('submit-btn').addEventListener('click', function () {
+            // Correct answers
+            const correctAnswers = {
+                q33: "A",
+                q34: "C",
+                q35: "B",
+                q36: "D",
+                q37: "D",
+                q38: "J",
+                q39: "H",
+                q40: "A",
+                q41: "F",
+                q42: "G",
+                q43: "NO",
+                q44: "YES",
+                q45: "NOT GIVEN",
+                q46: "NO"
+            };
+
+            let score = 0;
+            let feedbackHTML = "";
+
+            // Check each question
+            for (const [qid, correct] of Object.entries(correctAnswers)) {
+                let userAnswer = "";
+                const questionElem = document.getElementById(qid);
+
+                // For radio inputs (q33–q37, q43–q46)
+                const radios = document.querySelectorAll(`input[name="${qid}"]`);
+                if (radios.length > 0) {
+                    radios.forEach(r => {
+                        if (r.checked) userAnswer = r.value;
+                    });
+                }
+
+                // For summary placeholders (q38–q42)
+                const placeholder = document.querySelector(`.answer-placeholder[data-qid="${qid}"]`);
+                if (placeholder) {
+                    userAnswer = placeholder.dataset.answer || "";
+                }
+
+                const isCorrect = userAnswer === correct;
+                if (isCorrect) score++;
+
+                // Build feedback item
+                feedbackHTML += `
+                <div class="feedback-item">
+                    <div class="feedback-question">
+                        <span class="question-number">${qid.replace("q", "")}</span>
+                        Question ${qid.replace("q", "")}
+                    </div>
+                    <div class="feedback-answer ${isCorrect ? "correct" : "incorrect"}">
+                        Your answer: <strong>${userAnswer || "Not answered"}</strong><br>
+                        Correct answer: <strong>${correct}</strong>
+                    </div>
+                </div>`;
+            }
+
+            // Update feedback content
+            document.getElementById("feedback-body").innerHTML = feedbackHTML;
+            document.getElementById("score-display").textContent = `${score}/14`;
+
+            // Show feedback overlay
+            document.getElementById("feedback-overlay").style.display = "flex";
+        });
+
+        // Close feedback overlay
+        document.getElementById("close-feedback").addEventListener("click", function () {
+            document.getElementById("feedback-overlay").style.display = "none";
+        });
+
+        // Reset button
+        document.getElementById("reset-btn").addEventListener("click", function () {
+            // Reset radio inputs
+            const radios = document.querySelectorAll("input[type='radio']");
+            radios.forEach(radio => radio.checked = false);
+
+            // Reset summary placeholders
+            const placeholders = document.querySelectorAll(".answer-placeholder");
+            placeholders.forEach(placeholder => {
+                placeholder.textContent = `[${placeholder.dataset.qid.replace('q', '')}]`;
+                placeholder.dataset.answer = "";
+                placeholder.classList.remove("answered");
+            });
+
+            // Reset progress
+            const progressItems = document.querySelectorAll(".progress-item.completed");
+            progressItems.forEach(item => item.classList.remove("completed"));
+
+            const answeredQuestions = document.querySelectorAll(".question.answered");
+            answeredQuestions.forEach(q => q.classList.remove("answered"));
+
+            // Reset timer
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timeRemaining = 20 * 60;
+            updateTimerDisplay();
+
+            // Remove all highlights
+            document.querySelectorAll('.highlight').forEach(highlight => {
+                const parent = highlight.parentNode;
+                while (highlight.firstChild) {
+                    parent.insertBefore(highlight.firstChild, highlight);
+                }
+                parent.removeChild(highlight);
+            });
+        });
+
+        // Highlight functionality
+        let highlightTooltip = null;
+        let selectedRange = null;
+
+        function createColorPicker(x, y) {
+            const picker = document.createElement("div");
+            picker.className = "highlight-tooltip";
+            picker.style.position = "absolute";
+            picker.style.top = `${y}px`;
+            picker.style.left = `${x}px`;
+            picker.style.zIndex = "1000";
+
+            const colors = ["#FFEB3B", "#81C784", "#64B5F6", "#FFA726"];
+            colors.forEach(color => {
+                const colorOption = document.createElement("div");
+                colorOption.className = "color-option";
+                colorOption.style.backgroundColor = color;
+                colorOption.title = `Highlight with ${color}`;
+                colorOption.addEventListener("click", () => {
+                    applyHighlight(color);
+                    picker.remove();
+                    highlightTooltip = null;
+                });
+                picker.appendChild(colorOption);
+            });
+
+            document.body.appendChild(picker);
+            return picker;
+        }
+
+        function applyHighlight(color) {
+            if (!selectedRange) return;
+
+            const span = document.createElement("span");
+            span.className = "highlight";
+            span.style.backgroundColor = color;
+            span.appendChild(selectedRange.extractContents());
+            selectedRange.insertNode(span);
+
+            selectedRange = null;
+            window.getSelection().removeAllRanges();
+
+            span.addEventListener("click", function (e) {
+                e.stopPropagation();
+
+                if (highlightTooltip) {
+                    highlightTooltip.remove();
+                    highlightTooltip = null;
+                }
+
+                highlightTooltip = document.createElement("div");
+                highlightTooltip.className = "highlight-tooltip";
+                highlightTooltip.style.position = "absolute";
+                highlightTooltip.style.top = `${e.clientY}px`;
+                highlightTooltip.style.left = `${e.clientX}px`;
+                highlightTooltip.style.zIndex = "1000";
+
+                const removeBtn = document.createElement("button");
+                removeBtn.className = "remove-highlight";
+                removeBtn.textContent = "Remove Highlight";
+                removeBtn.addEventListener("click", function () {
+                    const parent = span.parentNode;
+                    while (span.firstChild) {
+                        parent.insertBefore(span.firstChild, span);
+                    }
+                    parent.removeChild(span);
+                    highlightTooltip.remove();
+                    highlightTooltip = null;
+                });
+
+                highlightTooltip.appendChild(removeBtn);
+                document.body.appendChild(highlightTooltip);
+            });
+        }
+
+        function handleMouseUp(e) {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'BUTTON' || e.target.classList.contains('answer-placeholder')) {
+                return;
+            }
+
+            const selection = window.getSelection();
+            if (selection.toString().trim() === "") return;
+
+            selectedRange = selection.getRangeAt(0).cloneRange();
+            const rect = selectedRange.getBoundingClientRect();
+
+            if (highlightTooltip) {
+                highlightTooltip.remove();
+                highlightTooltip = null;
+            }
+
+            highlightTooltip = createColorPicker(
+                rect.left + window.scrollX,
+                rect.top + window.scrollY - 50
+            );
+        }
+
+        document.getElementById("passage-text").addEventListener("mouseup", handleMouseUp);
+        document.querySelector(".questions-container").addEventListener("mouseup", handleMouseUp);
+
+        document.addEventListener("mousedown", function (e) {
+            if (highlightTooltip && !highlightTooltip.contains(e.target)) {
+                highlightTooltip.remove();
+                highlightTooltip = null;
+            }
+        });
+    </script>
+</body>
+
+</html>

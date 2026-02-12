@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        .loading-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #2563eb;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-title {
+            font-size: 1.2rem;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .loading-subtitle {
+            font-size: 1rem;
+            color: #9ca3af;
+        }
+
+        .start-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9998;
+        }
+
+        .start-content {
+            text-align: center;
+        }
+
+        .start-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 24px;
+        }
+
+        .start-subtitle {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        .start-button {
+            padding: 12px 32px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .start-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            background-color: #ffffff;
+            color: #333;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .passage-info {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .timer {
+            background-color: rgba(255, 193, 193, 0.5);
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+            min-width: 80px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #c53030;
+            border: 1px solid rgba(255, 120, 120, 0.3);
+        }
+
+        .timer.warning {
+            color: #9b2c2c;
+            background-color: rgba(254, 178, 178, 0.7);
+            border-color: rgba(245, 101, 101, 0.5);
+        }
+
+        .logo-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+            cursor: pointer;
+        }
+
+        .logo-area:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+        }
+
+        .logo-area i {
+            font-size: 1.1rem;
+        }
+
+        .progress-container {
+            background-color: #f8f9fa;
+            padding: 4px 20px;
+            z-index: 100;
+            flex-shrink: 0;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .progress-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .progress-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            border: 1px solid #cbd5e0;
+        }
+
+        .progress-item.current {
+            background-color: #4299e1;
+            color: white;
+            transform: scale(1.1);
+            border-color: #2b6cb0;
+        }
+
+        .progress-item.answered {
+            background-color: #9ae6b4;
+            color: #22543d;
+            border-color: #68d391;
+        }
+
+        .progress-item.correct {
+            background-color: #48bb78;
+            color: white;
+            border-color: #38a169;
+        }
+
+        .progress-item.incorrect {
+            background-color: #fed7d7;
+            color: #c53030;
+            border-color: #feb2b2;
+        }
+
+        .progress-item:hover {
+            background-color: #cbd5e0;
+            transform: scale(1.05);
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.95rem;
+            background-color: #f7fafc;
+            color: #4a5568;
+        }
+
+        .btn i {
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-primary {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .loading-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #333;
+            color: white;
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .start-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fff;
+            text-align: center;
+        }
+
+        .start-content {
+            padding: 20px;
+        }
+
+        .start-title {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .start-button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .start-button:hover {
+            background-color: #0056b3;
+        }
+
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .timer {
+            font-size: 1.2em;
+        }
+
+        .timer.warning {
+            color: red;
+        }
+
+        .logo-area {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-area i {
+            margin-right: 5px;
+        }
+
+        .passage-nav {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .btn-passage {
+            padding: 8px 16px;
+            border: 1px solid #007bff;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .btn-passage.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .main-content {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+        }
+
+
+        .resizer {
+            width: 5px;
+            background-color: #ddd;
+            cursor: col-resize;
+        }
+
+        .question-group {
+            margin-bottom: 20px;
+        }
+
+        .question {
+            margin-bottom: 15px;
+        }
+
+        .options label {
+            display: block;
+            margin: 5px 0;
+        }
+
+        .summary-select,
+        .summary-input {
+            width: 100%;
+            padding: 5px;
+            margin-top: 5px;
+        }
+
+        .highlight {
+            background-color: yellow;
+        }
+
+        #highlight-btn,
+        #remove-highlight-btn {
+            display: none;
+            position: absolute;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f8f9fa;
+            border-top: 1px solid #ddd;
+            padding: 10px;
+            position: sticky;
+            bottom: 0;
+            z-index: 10;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .footer__questionWrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer__questionNo {
+            padding: 6px 12px;
+            border: 1px solid #007bff;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            font-size: 0.85em;
+            border-radius: 4px;
+        }
+
+        .footer__questionNo.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .footer__subquestionWrapper {
+            display: flex;
+            gap: 3px;
+            flex-wrap: wrap;
+        }
+
+        .subQuestion {
+            width: 24px;
+            height: 24px;
+            border: 1px solid #ddd;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            text-align: center;
+            line-height: 24px;
+            font-size: 0.8em;
+            border-radius: 4px;
+        }
+
+        .subQuestion.answered {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .subQuestion.correct {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .subQuestion.incorrect {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .subQuestion.current {
+            border: 2px solid #007bff;
+        }
+
+        .attemptedCount {
+            margin-left: 5px;
+            font-size: 0.8em;
+            color: #555;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .footer__deliverButton {
+            padding: 8px 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .footer__deliverButton:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .score-display {
+            font-size: 2em;
+            margin: 20px 0;
+        }
+
+        .score-breakdown {
+            margin-bottom: 20px;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .answer-indicator {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .answer-indicator.correct {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .answer-indicator.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        .btn-primary:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-secondary {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-submit {
+            background-color: #48bb78;
+            color: white;
+            font-weight: 900;
+            border: 1px solid #38a169;
+        }
+
+        .btn-submit:hover {
+            background-color: #38a169;
+            border-color: #2f855a;
+        }
+
+        .btn-submit:disabled {
+            background-color: #9ae6b4;
+            color: #718096;
+            cursor: not-allowed;
+            border: 1px solid #68d391;
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .passage-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #fafafa;
+            position: relative;
+        }
+
+        .resizer {
+            width: 4px;
+            background-color: #cbd5e0;
+            cursor: col-resize;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .resizer:hover {
+            background-color: #a0aec0;
+        }
+
+        .resizer::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 60px;
+            background-color: rgba(203, 213, 224, 0.5);
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        .questions-container {
+            width: 40%;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: white;
+            border-left: 1px solid #e2e8f0;
+        }
+
+        .passage {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .passage h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage-content p {
+            margin-top: 15px;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .passage h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage p {
+            margin-top: 20px;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        .question-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background-color: #ffffff;
+            transition: box-shadow 0.2s;
+        }
+
+        .question:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #2d3748;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .timer.warning {
+            color: #ff4444;
+            font-weight: bold;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .option:hover {
+            background-color: #f7fafc;
+            border-color: #cbd5e0;
+        }
+
+        .option input {
+            margin-right: 2px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 20%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        .input-field:focus {
+            border-color: #4299e1;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+        }
+
+        select.input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 20%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .answer-indicator {
+            background-color: #e6fffa;
+            border: 1px solid #38b2ac;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .answer-indicator.correct {
+            background-color: #e6fffa;
+            border-color: #38b2ac;
+            color: #234e52;
+        }
+
+        .answer-indicator.incorrect {
+            background-color: #fed7d7;
+            border-color: #fc8181;
+            color: #742a2a;
+        }
+
+        .question-group {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-group-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+
+        .highlight {
+            background-color: #ffff00;
+            cursor: pointer;
+        }
+
+        #highlight-btn,
+        #remove-highlight-btn {
+            position: absolute;
+            z-index: 9999;
+            display: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            border: 1px solid #888;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .score-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2d3748;
+        }
+
+        .highlight {
+            background-color: yellow;
+        }
+
+        #highlight-btn,
+        #remove-highlight-btn {
+            display: none;
+            position: absolute;
+            padding: 5px 10px;
+            background-color: #ffffff;
+            color: rgb(12, 12, 12);
+            border: none;
+            cursor: pointer;
+        }
+
+        .score-breakdown {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .questions-container {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid #e2e8f0;
+            }
+
+            .resizer {
+                width: 100%;
+                height: 4px;
+                cursor: row-resize;
+            }
+
+            .resizer::before {
+                width: 60px;
+                height: 30px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .logo-area {
+                order: 1;
+            }
+
+            .passage-info {
+                order: 2;
+            }
+
+            .timer {
+                order: 3;
+            }
+        }
+
+        .passage-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .btn-passage {
+            padding: 8px 16px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+
+        .btn-passage.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        @media (max-width: 480px) {
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h2 class="loading-title">Your test will begin shortly</h2>
+            <p class="loading-subtitle">Please wait</p>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="startScreen" class="start-screen hidden">
+        <div class="start-content">
+            <h1 class="start-title">IELTSwithJurabek</h1>
+            <p class="start-subtitle">Ready to begin your reading test?</p>
+            <button class="start-button" onclick="startTest()">Start Test</button>
+        </div>
+    </div>
+
+    <!-- Test Container -->
+    <div class="container hidden" id="testContainer">
+        <header>
+            <div class="passage-info">IELTSwithJurabek</div>
+            <div class="timer">
+                <i class="fas fa-clock"></i>
+                <span>20:00</span>
+            </div>
+            <div class="logo-area" onclick="window.open('https://t.me/IELTSwithJurabek', '_blank')">
+                <i class="fas fa-paper-plane"></i>
+                <span>Click for more TESTS</span>
+            </div>
+        </header>
+
+        <button id="highlight-btn" type="button">Highlight</button>
+        <button id="remove-highlight-btn" type="button">Remove Highlight</button>
+
+        <div class="main-content">
+            <!-- Reading Passage -->
+            <div class="passage-container" role="region" aria-label="Reading Passage">
+                <h2 class="section-title">READING PASSAGE 3</h2>
+                <div class="passage-content" id="passage">
+                    <h3>Designed to Last: Could Better Design Cure Our Throwaway Culture?</h3>
+                    <p>Jonathan Chapman, a senior lecturer at the University of Brighton, UK, is one of a new breed of
+                        ‘sustainable designers’. Like many of us, they are concerned about the huge waste associated
+                        with Western consumer culture and the damage this does to the environment. Some, like Chapman,
+                        aim to create objects we will want to keep rather than discard. Others are working to create
+                        more efficient or durable consumer goods, or goods designed with recycling in mind. The waste
+                        entailed in our fleeting relationships with consumer durables is colossal.</p>
+                    <p>Domestic power tools, such as electric drills, are a typical example of such waste. However much
+                        DIY the purchaser plans to do, the truth is that these things are thrown away having been used,
+                        on average, for just ten minutes. Most will serve ‘conscience time’, gathering dust on a shelf
+                        in the garage; people are reluctant to admit that they have wasted their money. However, the end
+                        is inevitable: thousands of years in land-fill waste sites. In its design, manufacture,
+                        packaging, transportation and disposal, a power tool consumes many times its own weight of
+                        resources, all for a shorter active lifespan than that of the average small insect.</p>
+                    <p>To understand why we have become so wasteful, we should look to the underlying motivation of
+                        consumers. “People own things to give expression to who they are, and to show what group of
+                        people they feel they belong to,” Chapman says. In a world of mass production, however, that
+                        symbolism has lost much of its potency. For most of human history, people had an intimate
+                        relationship with objects they used or treasured. Often they made the objects themselves, or
+                        family members passed them on. For more specialised objects, people relied on expert
+                        manufacturers living close by, whom they probably knew personally. Chapman points out that all
+                        these factors gave objects a history — a narrative — and an emotional connection that today’s
+                        mass-produced goods cannot possibly match. Without these personal connections, consumerist
+                        culture idolizes novelty instead. People know that they cannot buy happiness, but the chance to
+                        remake themselves with glossy, box-fresh products seems irresistible. When the novelty fades,
+                        they simply renew the excitement by buying more.</p>
+                    <p>Chapman’s solution is what he calls ’emotionally durable design’. He says the challenge for
+                        designers is to create things we want to keep. This may sound like a tall order but it can be
+                        surprisingly straightforward. A favorite pair of old jeans, for example, just do not have the
+                        right feel until they have been worn and washed a hundred times. It is as if they are sharing
+                        the wearer’s life story. The look can be faked, but it is simply not the same. Walter Stahel,
+                        visiting professor at the University of Surrey, UK, calls this ‘the teddy bear factor’. No
+                        matter how ragged and worn a favorite teddy becomes, we don’t rush out and buy another one. As
+                        adults, our teddy bear connects us to our childhood and this protects it from obsolescence.
+                        Stahel argues that this is what sustainable design needs to do with more products.</p>
+                    <p>The information age was supposed to lighten our economies and reduce our impact on the
+                        environment, but, in fact, the reverse seems to be happening. We have simply added information
+                        technology to the industrial era and speeded up the developed world’s metabolism. The cure is
+                        hardly rocket science: minimise waste, stop moving things around so much and use people more. So
+                        what will post-throwaway consumerism look like? It might be as simple as installing
+                        energy-saving light bulbs, more efficient washing machines or choosing locally produced
+                        groceries with less packaging. In general, we will spend less on goods and more on services.
+                        Instead of buying a second car, for example, we might buy into a car-sharing network. Rather
+                        than following our current wasteful practices, we will buy less and rent a lot more; why own
+                        things such as tools that you use infrequently, especially things are likely to be updated all
+                        the time?</p>
+                    <p>Consumer durables will increasingly be sold with plans for their disposal. Electronic goods such
+                        as mobile phones will be designed to be recyclable, with the extra cost added into the retail
+                        price. Following Chapman’s notion of emotionally durable design, there will be a move away from
+                        mass production and towards tailor-made articles and products designed and manufactured with
+                        greater craftsmanship, products which will be repaired rather than replaced, in the same way as
+                        was done in our grandparents’ time. Companies will replace profit from bulk sales by servicing
+                        and repairing products chosen because we want them to last.</p>
+                    <p>Chapman acknowledges that it will be a challenge to persuade people to buy fewer goods, and ones
+                        that they intend to keep. At the moment, price competition between retailers makes it cheaper
+                        for consumers to replace rather than repair. Products designed to be durable and emotionally
+                        satisfying are likely to be more expensive, so how will we be persuaded to choose
+                        sustainability? Tim Cooper, from Sheffield Hallam University in the UK, points out that many
+                        people are already happy to pay a premium for quality, and that they also tend to value and care
+                        more for expensive goods. Chapman is also positive: “People are ready to keep things for
+                        longer,” he says, “The problem is that a lot of industries don’t know how to do that.” Chapman
+                        believes that sustainable design is here to stay. “The days when large corporations were in a
+                        position to choose whether to jump on the sustainability band-wagon or not are coming to an
+                        end,” he says. Whether this is also the beginning of the end of the throwaway society remains to
+                        be seen.</p>
+                </div>
+            </div>
+
+            <div class="resizer" id="resizer"></div>
+
+            <!-- Questions -->
+            <div class="questions-container" id="questions" role="region" aria-label="Questions">
+                <h2 class="section-title">Questions 1-14</h2>
+                <p>You should spend about 20 minutes on Questions 1–14, which are based on Reading Passage 3.</p>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 1-5</div>
+                    <p>Choose the correct letter, A, B, C or D.<br>
+                        Write the correct letter in boxes 1-5 on your answer sheet.</p>
+                    <div class="question" data-question="1">
+                        <div class="question-text">1. In the second paragraph, the expression ‘conscience time’ refers
+                            to the fact that the owners</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q1" value="A">A. wish they had not bought
+                                the power tool.</label>
+                            <label class="option"><input type="radio" name="q1" value="B">B. want to make sure the tool
+                                is stored safely.</label>
+                            <label class="option"><input type="radio" name="q1" value="C">C. feel that the tool will
+                                increase in value in the future.</label>
+                            <label class="option"><input type="radio" name="q1" value="D">D. would feel guilty if they
+                                threw the tool away immediately.</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="2">
+                        <div class="question-text">2. Jonathan Chapman uses the word ‘narrative’ in the third paragraph
+                            to refer to the fact that the owner</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q2" value="A">A. told a story about how the
+                                item was bought.</label>
+                            <label class="option"><input type="radio" name="q2" value="B">B. was aware of how the item
+                                had come into being.</label>
+                            <label class="option"><input type="radio" name="q2" value="C">C. felt that the item became
+                                more useful over time.</label>
+                            <label class="option"><input type="radio" name="q2" value="D">D. was told that the item had
+                                been used for a long time.</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="3">
+                        <div class="question-text">3. In the third paragraph, the writer suggests that mass-produced
+                            goods are</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q3" value="A">A. inferior in
+                                quality.</label>
+                            <label class="option"><input type="radio" name="q3" value="B">B. less likely to be kept for
+                                a long time.</label>
+                            <label class="option"><input type="radio" name="q3" value="C">C. attractive because of their
+                                lower prices.</label>
+                            <label class="option"><input type="radio" name="q3" value="D">D. less tempting than goods
+                                which are traditionally produced.</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="4">
+                        <div class="question-text">4. Lack of personal connection to goods is described as producing
+                        </div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q4" value="A">A. a belief that older goods
+                                are superior.</label>
+                            <label class="option"><input type="radio" name="q4" value="B">B. an attraction to
+                                well-designed packaging.</label>
+                            <label class="option"><input type="radio" name="q4" value="C">C. a desire to demonstrate
+                                status through belongings.</label>
+                            <label class="option"><input type="radio" name="q4" value="D">D. a desire to purchase a
+                                constant stream of new items.</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="5">
+                        <div class="question-text">5. Jeans and teddy bears are given as examples of goods which</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q5" value="A">A. have been very well
+                                designed.</label>
+                            <label class="option"><input type="radio" name="q5" value="B">B. take a long time to show
+                                wear.</label>
+                            <label class="option"><input type="radio" name="q5" value="C">C. are valued more as they
+                                grow older.</label>
+                            <label class="option"><input type="radio" name="q5" value="D">D. are used by the majority of
+                                the population.</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 6-9</div>
+                    <p>Do the following statements agree with the information given in Reading Passage 3?<br>
+                        In boxes 6-9 on your answer sheet, write<br>
+                        <strong>TRUE</strong> if the statement agrees with the information<br>
+                        <strong>FALSE</strong> if the statement contradicts the information<br>
+                        <strong>NOT GIVEN</strong> if there is no information on this
+                    </p>
+                    <div class="question" data-question="6">
+                        <div class="question-text">6. People often buy goods that they make little use of.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q6" value="TRUE">TRUE</label>
+                            <label class="option"><input type="radio" name="q6" value="FALSE">FALSE</label>
+                            <label class="option"><input type="radio" name="q6" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="7">
+                        <div class="question-text">7. Understanding the reasons for buying goods will help to explain
+                            why waste occurs.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q7" value="TRUE">TRUE</label>
+                            <label class="option"><input type="radio" name="q7" value="FALSE">FALSE</label>
+                            <label class="option"><input type="radio" name="q7" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="8">
+                        <div class="question-text">8. People already rent more goods than they buy.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q8" value="TRUE">TRUE</label>
+                            <label class="option"><input type="radio" name="q8" value="FALSE">FALSE</label>
+                            <label class="option"><input type="radio" name="q8" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="9">
+                        <div class="question-text">9. Companies will charge less to repair goods in the future.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q9" value="TRUE">TRUE</label>
+                            <label class="option"><input type="radio" name="q9" value="FALSE">FALSE</label>
+                            <label class="option"><input type="radio" name="q9" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 10-14</div>
+                    <p>Complete the summary using the list of words, A-I, below.<br>
+                        Write the correct letter, A-I, in boxes 10-14 on your answer sheet.</p>
+                    <p><strong>A cure for our wasteful habits</strong></p>
+                    <p>The writer believes that the recipe for reducing our impact on the environment is a simple one.
+                        He states that we should use less energy for things such as lighting or <span class="question"
+                            data-question="10"><select name="q10" class="summary-select">
+                                <option value="">Select</option>
+                                <option value="A">A. mobile phones</option>
+                                <option value="B">B. clothing</option>
+                                <option value="C">C. tools</option>
+                                <option value="D">D. laundry</option>
+                                <option value="E">E. computers</option>
+                                <option value="F">F. food</option>
+                                <option value="G">G. heating</option>
+                                <option value="H">H. cars</option>
+                                <option value="I">I. teddy bears</option>
+                            </select></span>, and buy <span class="question" data-question="11"><select name="q11"
+                                class="summary-select">
+                                <option value="">Select</option>
+                                <option value="A">A. mobile phones</option>
+                                <option value="B">B. clothing</option>
+                                <option value="C">C. tools</option>
+                                <option value="D">D. laundry</option>
+                                <option value="E">E. computers</option>
+                                <option value="F">F. food</option>
+                                <option value="G">G. heating</option>
+                                <option value="H">H. cars</option>
+                                <option value="I">I. teddy bears</option>
+                            </select></span> that will not need to be moved across long distances. Some expensive items
+                        such as <span class="question" data-question="12"><select name="q12" class="summary-select">
+                                <option value="">Select</option>
+                                <option value="A">A. mobile phones</option>
+                                <option value="B">B. clothing</option>
+                                <option value="C">C. tools</option>
+                                <option value="D">D. laundry</option>
+                                <option value="E">E. computers</option>
+                                <option value="F">F. food</option>
+                                <option value="G">G. heating</option>
+                                <option value="H">H. cars</option>
+                                <option value="I">I. teddy bears</option>
+                            </select></span> could be shared, and others which may be less expensive but which are not
+                        needed often, such as <span class="question" data-question="13"><select name="q13"
+                                class="summary-select">
+                                <option value="">Select</option>
+                                <option value="A">A. mobile phones</option>
+                                <option value="B">B. clothing</option>
+                                <option value="C">C. tools</option>
+                                <option value="D">D. laundry</option>
+                                <option value="E">E. computers</option>
+                                <option value="F">F. food</option>
+                                <option value="G">G. heating</option>
+                                <option value="H">H. cars</option>
+                                <option value="I">I. teddy bears</option>
+                            </select></span>, could be rented instead of being purchased. He believes that manufacturers
+                        will need to design high-technology items such as <span class="question"
+                            data-question="14"><select name="q14" class="summary-select">
+                                <option value="">Select</option>
+                                <option value="A">A. mobile phones</option>
+                                <option value="B">B. clothing</option>
+                                <option value="C">C. tools</option>
+                                <option value="D">D. laundry</option>
+                                <option value="E">E. computers</option>
+                                <option value="F">F. food</option>
+                                <option value="G">G. heating</option>
+                                <option value="H">H. cars</option>
+                                <option value="I">I. teddy bears</option>
+                            </select></span> so that they can be recycled more easily.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-nav">
+                <div class="progress-items">
+                    <div class="progress-item current" data-question="1">1</div>
+                    <div class="progress-item" data-question="2">2</div>
+                    <div class="progress-item" data-question="3">3</div>
+                    <div class="progress-item" data-question="4">4</div>
+                    <div class="progress-item" data-question="5">5</div>
+                    <div class="progress-item" data-question="6">6</div>
+                    <div class="progress-item" data-question="7">7</div>
+                    <div class="progress-item" data-question="8">8</div>
+                    <div class="progress-item" data-question="9">9</div>
+                    <div class="progress-item" data-question="10">10</div>
+                    <div class="progress-item" data-question="11">11</div>
+                    <div class="progress-item" data-question="12">12</div>
+                    <div class="progress-item" data-question="13">13</div>
+                    <div class="progress-item" data-question="14">14</div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" id="prev-btn" disabled><i class="fas fa-arrow-left"></i>
+                        Previous</button>
+                    <button class="btn btn-secondary" id="next-btn">Next <i class="fas fa-arrow-right"></i></button>
+                    <button class="btn btn-submit" id="submit-btn">Submit Test <i
+                            class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div class="modal" id="results-modal">
+        <div class="modal-content">
+            <h2>Test Results</h2>
+            <div class="score-display" id="score-display">0/14</div>
+            <div class="score-breakdown">
+                <div class="score-item">
+                    <span>Passage 3:</span>
+                    <span id="passage3-score">0/14</span>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="close-modal">Close</button>
+                <button class="btn btn-primary" id="review-answers">Review Answers</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Correct Answers for Questions 1-14
+        const correctAnswers = {
+            q1: "D",
+            q2: "B",
+            q3: "B",
+            q4: "D",
+            q5: "C",
+            q6: "TRUE",
+            q7: "TRUE",
+            q8: "NOT GIVEN",
+            q9: "NOT GIVEN",
+            q10: "D",
+            q11: "F",
+            q12: "H",
+            q13: "C",
+            q14: "A"
+        };
+
+        let lastSelection = null;
+        let highlightTarget = null;
+        let currentPanel = null;
+        let submitted = false;
+        let currentQuestion = 1;
+        let isResizing = false;
+        let seconds = 20 * 60; // 20 minutes
+        let timerInterval;
+
+        const highlightBtn = document.getElementById('highlight-btn');
+        const removeHighlightBtn = document.getElementById('remove-highlight-btn');
+        const passagePanel = document.getElementById('passage');
+        const questionsPanel = document.getElementById('questions');
+        const resizer = document.getElementById('resizer');
+        const submitBtn = document.getElementById('submit-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resultsModal = document.getElementById('results-modal');
+        const scoreDisplay = document.getElementById('score-display');
+        const passage3Score = document.getElementById('passage3-score');
+        const closeModalBtn = document.getElementById('close-modal');
+        const reviewBtn = document.getElementById('review-answers');
+        const timerElement = document.querySelector('.timer span');
+        const timerContainer = document.querySelector('.timer');
+
+        // Timer
+        function updateTimer() {
+            seconds--;
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            if (seconds <= 2 * 60) {
+                timerContainer.classList.add('warning');
+            }
+            if (seconds <= 0) {
+                clearInterval(timerInterval);
+                if (!submitted) {
+                    alert('Time is up! Submitting your test.');
+                    submitTest();
+                }
+            }
+        }
+
+        // Highlight functionality
+        function getValidSelection() {
+            const sel = window.getSelection();
+            if (!sel.rangeCount || sel.isCollapsed) return null;
+            const range = sel.getRangeAt(0);
+            if (passagePanel.contains(range.commonAncestorContainer)) {
+                currentPanel = passagePanel;
+            } else if (questionsPanel.contains(range.commonAncestorContainer)) {
+                currentPanel = questionsPanel;
+            } else {
+                return null;
+            }
+            return range;
+        }
+
+        function showHighlightBtn(range) {
+            const rect = range.getBoundingClientRect();
+            highlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            highlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            highlightBtn.style.display = 'block';
+        }
+
+        function hideHighlightBtn() {
+            highlightBtn.style.display = 'none';
+        }
+
+        function showRemoveBtn(span) {
+            const rect = span.getBoundingClientRect();
+            removeHighlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            removeHighlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            removeHighlightBtn.style.display = 'block';
+            highlightTarget = span;
+        }
+
+        function hideRemoveBtn() {
+            removeHighlightBtn.style.display = 'none';
+            highlightTarget = null;
+        }
+
+        highlightBtn.addEventListener('click', () => {
+            if (lastSelection) {
+                const span = document.createElement('span');
+                span.className = 'highlight';
+                span.appendChild(lastSelection.extractContents());
+                lastSelection.insertNode(span);
+                window.getSelection().removeAllRanges();
+                hideHighlightBtn();
+            }
+        });
+
+        removeHighlightBtn.addEventListener('click', () => {
+            if (highlightTarget) {
+                const parent = highlightTarget.parentNode;
+                while (highlightTarget.firstChild) {
+                    parent.insertBefore(highlightTarget.firstChild, highlightTarget);
+                }
+                parent.removeChild(highlightTarget);
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('selectionchange', () => {
+            hideHighlightBtn();
+            hideRemoveBtn();
+            const range = getValidSelection();
+            if (range) {
+                lastSelection = range;
+                showHighlightBtn(range);
+            } else {
+                lastSelection = null;
+            }
+        });
+
+        [passagePanel, questionsPanel].forEach(panel => {
+            panel.addEventListener('scroll', () => {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            });
+        });
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.target !== highlightBtn && e.target !== removeHighlightBtn) {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('highlight')) {
+                e.preventDefault();
+                showRemoveBtn(e.target);
+            }
+        });
+
+        // Resizer
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const container = document.querySelector('.main-content');
+            const containerRect = container.getBoundingClientRect();
+            const mouseX = e.clientX - containerRect.left;
+            const containerWidth = containerRect.width;
+            const leftPercentage = (mouseX / containerWidth) * 100;
+            const rightPercentage = 100 - leftPercentage;
+            if (leftPercentage >= 30 && leftPercentage <= 70) {
+                document.querySelector('.passage-container').style.flex = leftPercentage + '%';
+                document.querySelector('.questions-container').style.width = rightPercentage + '%';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            }
+        });
+
+        // Navigation
+        function scrollToQuestion(num) {
+            const el = document.querySelector(`[data-question="${num}"]`);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            updateCurrentQuestion(num);
+        }
+
+        function updateCurrentQuestion(num) {
+            currentQuestion = num;
+            document.querySelectorAll('.progress-item').forEach(item => {
+                item.classList.remove('current');
+                if (item.dataset.question == num) item.classList.add('current');
+            });
+            prevBtn.disabled = num <= 1;
+            nextBtn.disabled = num >= 14;
+        }
+
+        document.querySelectorAll('.progress-item').forEach(item => {
+            item.addEventListener('click', () => {
+                scrollToQuestion(parseInt(item.dataset.question));
+            });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 1) scrollToQuestion(currentQuestion - 1);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestion < 14) scrollToQuestion(currentQuestion + 1);
+        });
+
+        document.querySelectorAll('input[type="radio"], select').forEach(input => {
+            input.addEventListener('change', () => {
+                if (submitted) return;
+                const qNumMatch = input.name.match(/^q(\d+)$/);
+                if (qNumMatch) {
+                    const qNum = parseInt(qNumMatch[1]);
+                    const item = document.querySelector(`.progress-item[data-question="${qNum}"]`);
+                    if (item && !item.classList.contains('answered')) {
+                        item.classList.add('answered');
+                    }
+                }
+            });
+        });
+
+        submitBtn.addEventListener('click', submitTest);
+
+        function submitTest() {
+            if (submitted) return;
+            if (!confirm('Are you sure you want to submit?')) return;
+            submitted = true;
+            clearInterval(timerInterval);
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Submitted';
+            let score = 0;
+            const results = {};
+            for (let i = 1; i <= 14; i++) {
+                const key = `q${i}`;
+                let userAnswer = '';
+                let isCorrect = false;
+                const radioEl = document.querySelector(`input[name="${key}"]:checked`);
+                const selectEl = document.querySelector(`select[name="${key}"]`);
+                if (radioEl) {
+                    userAnswer = radioEl.value;
+                    isCorrect = userAnswer === correctAnswers[key];
+                    document.querySelectorAll(`input[name="${key}"]`).forEach(r => r.disabled = true);
+                } else if (selectEl) {
+                    userAnswer = selectEl.value;
+                    isCorrect = userAnswer === correctAnswers[key];
+                    selectEl.disabled = true;
+                }
+                if (isCorrect) score++;
+                results[key] = { userAnswer, correct: correctAnswers[key], isCorrect };
+                console.log(`Question ${key}: User Answer = "${userAnswer}", Correct Answer = "${correctAnswers[key]}", Is Correct = ${isCorrect}`);
+            }
+            scoreDisplay.textContent = `${score}/14`;
+            passage3Score.textContent = `${score}/14`;
+            for (let i = 1; i <= 14; i++) {
+                const item = document.querySelector(`.progress-item[data-question="${i}"]`);
+                const res = results[`q${i}`];
+                if (item && res) {
+                    item.classList.remove('current', 'answered');
+                    item.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+                }
+            }
+            window.testResults = results;
+            resultsModal.style.display = 'flex';
+        }
+
+        function showCorrectAnswers() {
+            if (!submitted) return;
+            document.querySelectorAll('.answer-indicator').forEach(el => el.remove());
+            for (let i = 1; i <= 14; i++) {
+                const key = `q${i}`;
+                const res = window.testResults[key];
+                if (!res) {
+                    console.error(`No result found for question ${key}`);
+                    continue;
+                }
+                let targetElement;
+                const radioGroup = document.querySelector(`input[name="${key}"]`);
+                const selectEl = document.querySelector(`select[name="${key}"]`);
+                if (radioGroup) {
+                    targetElement = radioGroup.closest('.question');
+                } else if (selectEl) {
+                    targetElement = selectEl.closest('.question');
+                }
+                if (!targetElement) {
+                    console.error(`No question container found for ${key}`);
+                    continue;
+                }
+                const div = document.createElement('div');
+                div.className = 'answer-indicator';
+                div.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+                if (res.isCorrect) {
+                    div.innerHTML = `<i class="fas fa-check"></i> Correct! You chose: <strong>${res.userAnswer || 'No answer'}</strong>`;
+                } else {
+                    const userDisplay = res.userAnswer || 'No answer';
+                    div.innerHTML = `<i class="fas fa-times"></i> Incorrect. You chose: <strong>${userDisplay}</strong><br><strong>Correct:</strong> ${res.correct}`;
+                }
+                try {
+                    targetElement.appendChild(div);
+                } catch (e) {
+                    console.error(`Error appending indicator for question ${key}: ${e.message}`);
+                }
+            }
+        }
+
+        closeModalBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+        });
+
+        reviewBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+            showCorrectAnswers();
+            scrollToQuestion(1);
+        });
+
+        function startTest() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('testContainer').classList.remove('hidden');
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        setTimeout(() => {
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }, 2000);
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Benefits of Learning an Instrument - Reading Passage</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS styles remain unchanged from the original */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --header-bg: #2c3e50;
+            --header-text: #ecf0f1;
+            --passage-bg: #ffffff;
+            --questions-bg: #f1f5f9;
+            --border-color: #3498db;
+            --highlight-color: #ffeb3b;
+            --correct-color: #2ecc71;
+            --incorrect-color: #e74c3c;
+            --progress-incomplete: #bdc3c7;
+            --progress-complete: #2ecc71;
+            --button-bg: #3498db;
+            --button-hover: #2980b9;
+            --timer-bg: #3498db;
+            --timer-text: #fff;
+        }
+
+        .night-mode {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --header-bg: #1a1a1a;
+            --header-text: #f5f5f5;
+            --passage-bg: #1e1e1e;
+            --questions-bg: #252525;
+            --border-color: #424242;
+            --highlight-color: #0084ff;
+            --correct-color: #27ae60;
+            --incorrect-color: #c0392b;
+            --progress-incomplete: #616161;
+            --progress-complete: #27ae60;
+            --button-bg: #0088cc;
+            --button-hover: #006699;
+            --timer-bg: #0088cc;
+            --timer-text: #f5f5f5;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-area h1 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-right: 15px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            text-decoration: none;
+            background-color: #0088cc;
+            font-weight: 500;
+            transition: transform 0.2s, background-color 0.3s;
+        }
+
+        .social-link:hover {
+            transform: translateY(-2px);
+            background-color: #006699;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .timer-container {
+            background-color: var(--timer-bg);
+            color: var(--timer-text);
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .timer-controls button {
+            background: none;
+            border: none;
+            color: var(--timer-text);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .timer-controls button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .mode-toggle {
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+            font-size: 20px;
+            padding: 6px;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .mode-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .passage-container,
+        .questions-container {
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .passage-container {
+            width: 50%;
+            background-color: var(--passage-bg);
+            border-right: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .questions-container {
+            width: 50%;
+            background-color: var(--questions-bg);
+            position: relative;
+        }
+
+        .passage-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .passage-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .instructions {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid var(--border-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 0 4px 4px 0;
+            font-size: 0.95rem;
+        }
+
+        .passage-text {
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .passage-text p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .highlight {
+            background-color: var(--highlight-color);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 25px 0 15px;
+            color: var(--text-color);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .question-group {
+            margin-bottom: 30px;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: var(--passage-bg);
+            border-left: 4px solid var(--border-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .question-number {
+            display: inline-flex;
+            width: 32px;
+            height: 32px;
+            background-color: var(--progress-incomplete);
+            color: white;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .question.answered .question-number {
+            background-color: var(--progress-complete);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .option:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        .option input {
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+
+        footer {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .progress-container {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            max-width: 70%;
+        }
+
+        .progress-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--progress-incomplete);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s;
+        }
+
+        .progress-item:hover {
+            transform: scale(1.1);
+        }
+
+        .progress-item.completed {
+            background-color: var(--progress-complete);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--button-bg);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--button-bg);
+            color: var(--button-bg);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .feedback-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .feedback-container {
+            background-color: var(--passage-bg);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .feedback-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--header-bg);
+            color: var(--header-text);
+        }
+
+        .feedback-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #close-feedback {
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+        }
+
+        .score-display {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-left: 10px;
+            color: var(--highlight-color);
+        }
+
+        .feedback-body {
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+
+        .feedback-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: var(--questions-bg);
+        }
+
+        .feedback-question {
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feedback-answer {
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        .correct {
+            background-color: rgba(46, 204, 113, 0.15);
+            color: var(--correct-color);
+            border: 1px solid var(--correct-color);
+        }
+
+        .incorrect {
+            background-color: rgba(231, 76, 60, 0.15);
+            color: var(--incorrect-color);
+            border: 1px solid var(--incorrect-color);
+        }
+
+        .highlight-tooltip {
+            position: absolute;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 1000;
+            cursor: pointer;
+            display: flex;
+            gap: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 5px;
+        }
+
+        .color-option {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+            transition: transform 0.2s;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .remove-highlight {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .passage-container,
+            .questions-container {
+                width: 100%;
+                height: auto;
+                max-height: 50vh;
+            }
+
+            .passage-container {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .progress-container {
+                max-width: 60%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .progress-container {
+                max-width: 100%;
+                justify-content: center;
+            }
+
+            .progress-item {
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .action-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo-area">
+            <h1>IELTS Reading Test</h1>
+            <a class="social-link" href="https://t.me/IELTSwithJurabek" target="_blank">
+                <i class="fab fa-telegram-plane"></i>
+                <span>IELTSwithJurabek</span>
+            </a>
+        </div>
+        <div class="header-controls">
+            <div class="timer-container">
+                <i class="fas fa-clock"></i>
+                <span id="timer">20:00</span>
+                <div class="timer-controls">
+                    <button id="start-timer" title="Start"><i class="fas fa-play"></i></button>
+                    <button id="pause-timer" title="Pause"><i class="fas fa-pause"></i></button>
+                    <button id="reset-timer" title="Reset"><i class="fas fa-redo"></i></button>
+                </div>
+            </div>
+            <button class="mode-toggle" id="night-mode-toggle" title="Toggle Night Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="passage-container">
+            <div class="passage-content">
+                <div class="passage-title">The Benefits of Learning an Instrument</div>
+                <div class="instructions">
+                    <p><strong>You should spend about 20 minutes on Questions 27-40, which are based on Reading Passage
+                            3.</strong></p>
+                </div>
+                <div class="passage-text" id="passage-text">
+                    <p>Studies show that learning a musical instrument can bring about significant improvements in your
+                        brain.</p>
+                    <p>Are music lessons the way to get smarter? That's what a lot of parents and experts believe:
+                        studying an instrument gives children an advantage in the development of their intellectual,
+                        perceptual, and cognitive skills. This may, however, turn out to be wishful thinking. Two highly
+                        convincing trials carried out recently have found no evidence to support this idea; the IQs of
+                        pre-school children who attended several weeks of music classes as part of these studies did not
+                        differ significantly from the IQs of those who had not.</p>
+                    <p>But that does not mean that the advantages of learning to play music are limited to expressing
+                        yourself, impressing friends, or just having fun. A growing number of studies show that learning
+                        an instrument in childhood can do something perhaps more valuable for the brain: it can provide
+                        benefits as we age, in the form of an added defense against memory loss, cognitive decline, and
+                        impaired hearing. Not only that, you may well get those benefits even if you haven't picked up
+                        your instrument in years, or decide to take up music for the first time in mid-life or beyond.
+                    </p>
+                    <p>According to neuropsychologist Brenda Hanna-Pladdy of Emory University in Atlanta, the time spent
+                        learning and practicing specific types of motor control and coordination - each finger on each
+                        hand doing something different, and for wind and brass instruments, also using your mouth and
+                        breathing - contributes to the brain boost that shows up later in life.</p>
+                    <p>You can even map the impact of musical training on the brain itself. In one study, Harvard
+                        neurologist Gottfried Schlaug found that the brains of adult professional musicians had a larger
+                        volume of grey matter than the brains of non-musicians had. Schlaug and colleagues also found
+                        that after 15 months of musical training in early childhood, structural brain changes associated
+                        with motor and auditory improvements begin to appear. 'What's unique about playing an instrument
+                        is that it requires a wide array of brain regions and cognitive functions to work together
+                        simultaneously, in both right and left hemispheres of the brain,' says Alison Balbag of the
+                        University of Southern California. 'Playing music may be an efficient way to stimulate the
+                        brain,' she says, 'cutting across a broad swath of its regions and cognitive functions and with
+                        ripple effects through the decades.'</p>
+                    <p>More research is showing this might well be the case. In her first study on the subject,
+                        Hanna-Pladdy divided 70 healthy adults between the ages of 60 and 83 into three groups:
+                        musicians who had studied an instrument for at least ten years, those who had played between one
+                        and nine years, and a control group who had never learned an instrument. The group who had
+                        studied for at least ten years scored the highest when tested in such areas as nonverbal and
+                        visuo-spatial memory, naming objects, and taking in and adapting new information. Her follow-up
+                        study a year later confirmed those findings and further suggested that starting musical training
+                        before the age of nine and keeping at it for ten years or more may yield the greatest benefits.
+                        Interestingly, it was the group who had the lowest level of general education which showed the
+                        greatest gap in scores between those who had studied an instrument in childhood and those who
+                        had not. Hanna-Pladdy suspects that musical training could have made up for the lack of
+                        cognitive stimulation these people had.</p>
+                    <p>Neuroscientist Nina Kraus of Northwestern University in Chicago has found still more positive
+                        effects of early musical training. She measured the electrical activity in the auditory
+                        brainstem of adults, aged 55 to 70, as they responded to the synthesized speech syllable "da."
+                        Although none of the subjects had played a musical instrument in 40 years, those who had trained
+                        the longest - between four and fourteen years - responded the fastest. "That's significant,"
+                        says Kraus, "because hearing tends to decline as we age, including the ability to quickly and
+                        accurately discern consonants, a skill crucial to understanding and participating in
+                        conversation. If your nervous system is not keeping up with the timing necessary for encoding
+                        consonants, you will lose out on the flow and meaning of the conversation, and that can
+                        potentially create a downward spiral leading to a sense of social isolation," says Kraus. In
+                        addition, the fact that musical training appears to enhance auditory working memory might help
+                        reinforce in later life the memory capacity that facilitates verbal interaction.</p>
+                    <p>In another study at the University of South Florida, assistant professor of music education
+                        Jennifer Bugos studied the impact of elementary piano instruction on adults between the ages of
+                        60 and 85. After six months, those who had received piano lessons showed more robust gains in
+                        memory, verbal fluency, the speed at which they processed information, planning ability, and
+                        other cognitive functions compared with those who had not received the lessons. Bugos believes
+                        that playing an instrument has beneficial effects, regardless of how old the person is when he
+                        or she begins. "Musical training contains all the components of a cognitive training program
+                        that sometimes are overlooked," she says. "And just as we work out our bodies, we should work
+                        out our minds."</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="questions-container">
+            <div class="section-title">Questions 27-30</div>
+            <div class="instructions">
+                <p>Do the following statements agree with the claims of the writer in Reading Passage 3?</p>
+                <p>In boxes 27-30 on your answer sheet, write:</p>
+                <p><strong>YES</strong> - if the statement agrees with the claims of the writer<br>
+                    <strong>NO</strong> - if the statement contradicts the claims of the writer<br>
+                    <strong>NOT GIVEN</strong> - if it is impossible to say what the writer thinks about this
+                </p>
+            </div>
+            <div class="question-group">
+                <div class="question" id="q27">
+                    <div class="question-title">
+                        <div class="question-number">27</div>
+                        <div class="question-text">Many parents indicate that their children struggle to learn a musical
+                            instrument.</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q27" value="YES"> YES
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q27" value="NO"> NO
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q27" value="NOT GIVEN"> NOT GIVEN
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q28">
+                    <div class="question-title">
+                        <div class="question-number">28</div>
+                        <div class="question-text">The findings of the recent research into pre-school children's IQs
+                            are unreliable.</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q28" value="YES"> YES
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q28" value="NO"> NO
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q28" value="NOT GIVEN"> NOT GIVEN
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q29">
+                    <div class="question-title">
+                        <div class="question-number">29</div>
+                        <div class="question-text">The main reasons people take up an instrument are that they enjoy
+                            playing music and being creative.</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q29" value="YES"> YES
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q29" value="NO"> NO
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q29" value="NOT GIVEN"> NOT GIVEN
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q30">
+                    <div class="question-title">
+                        <div class="question-number">30</div>
+                        <div class="question-text">Evidence about the long-term advantages of learning an instrument is
+                            increasing.</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q30" value="YES"> YES
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q30" value="NO"> NO
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q30" value="NOT GIVEN"> NOT GIVEN
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">Questions 31-35</div>
+            <div class="instructions">
+                <p>Choose the correct letter, <strong>A, B, C, or D</strong>.</p>
+                <p>Write the correct letter in boxes 31-35 on your answer sheet.</p>
+            </div>
+            <div class="question-group">
+                <div class="question" id="q31">
+                    <div class="question-title">
+                        <div class="question-number">31</div>
+                        <div class="question-text">The studies mentioned in the first paragraph</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q31" value="A"> A. confirm a link between musical training and
+                            intelligence.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q31" value="B"> B. present misleading information about the value
+                            of learning an instrument.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q31" value="C"> C. suggest that there are undiscovered benefits to
+                            studying music.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q31" value="D"> D. cast doubt on a belief about the effects of
+                            taking music lessons.
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q32">
+                    <div class="question-title">
+                        <div class="question-number">32</div>
+                        <div class="question-text">According to the second paragraph, there may be many benefits to
+                            studying music,</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q32" value="A"> A. even for those who begin learning in adulthood.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q32" value="B"> B. providing the person learns the correct
+                            techniques.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q32" value="C"> C. especially if the person practices on a regular
+                            basis.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q32" value="D"> D. particularly if the person plays a range of
+                            different instruments.
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q33">
+                    <div class="question-title">
+                        <div class="question-number">33</div>
+                        <div class="question-text">The phrase 'this might well be the case' in the fourth paragraph
+                            suggests that</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q33" value="A"> A. music lessons and long-term physical well-being
+                            may be connected.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q33" value="B"> B. the ability to learn music may depend on
+                            neurological features.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q33" value="C"> C. learning an instrument may have a lasting
+                            impact on brain function.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q33" value="D"> D. older people's brains may be better suited to
+                            studying music than those of children.
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q34">
+                    <div class="question-title">
+                        <div class="question-number">34</div>
+                        <div class="question-text">Which aspect of playing an instrument was included in Hanna-Pladdy's
+                            follow-up study but not in her first study?</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q34" value="A"> A. the number of years that the person had played
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q34" value="B"> B. at which age the person began having lessons
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q34" value="C"> C. the length of time since the person last played
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q34" value="D"> D. how the person had practised as a child
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q35">
+                    <div class="question-title">
+                        <div class="question-number">35</div>
+                        <div class="question-text">What do Hanna-Pladdy's studies suggest about people's general
+                            education?</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q35" value="A"> A. Studying music compensates for an otherwise
+                            limited level of education.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q35" value="B"> B. Learning to play an instrument improves
+                            educational performance.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q35" value="C"> C. Highly educated people are more likely to
+                            benefit from music training.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q35" value="D"> D. Level of education makes no difference to a
+                            person's musical ability.
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">Questions 36-40</div>
+            <div class="instructions">
+                <p>Complete each sentence with the correct ending, <strong>A-F</strong>, below.</p>
+                <p>Write the correct letter, <strong>A-F</strong>, in boxes 36-40 on your answer sheet.</p>
+            </div>
+            <div class="question-group">
+                <div class="question" id="q36">
+                    <div class="question-title">
+                        <div class="question-number">36</div>
+                        <div class="question-text">Brenda Hanna-Pladdy believes the cognitive benefits of music lessons
+                            are a result of</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q36" value="A"> A
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q36" value="B"> B
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q36" value="C"> C
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q36" value="D"> D
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q36" value="E"> E
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q36" value="F"> F
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q37">
+                    <div class="question-title">
+                        <div class="question-number">37</div>
+                        <div class="question-text">The research undertaken by Gottfried Schlaug focused on</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q37" value="A"> A
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q37" value="B"> B
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q37" value="C"> C
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q37" value="D"> D
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q37" value="E"> E
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q37" value="F"> F
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q38">
+                    <div class="question-title">
+                        <div class="question-number">38</div>
+                        <div class="question-text">According to Alison Balbag, playing an instrument is a unique
+                            experience because it involves</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q38" value="A"> A
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q38" value="B"> B
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q38" value="C"> C
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q38" value="D"> D
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q38" value="E"> E
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q38" value="F"> F
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q39">
+                    <div class="question-title">
+                        <div class="question-number">39</div>
+                        <div class="question-text">Nina Kraus believes there is a link between better hearing in later
+                            life and the experience of</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q39" value="A"> A
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q39" value="B"> B
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q39" value="C"> C
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q39" value="D"> D
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q39" value="E"> E
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q39" value="F"> F
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question" id="q40">
+                    <div class="question-title">
+                        <div class="question-number">40</div>
+                        <div class="question-text">Jennifer Bugos's study involved</div>
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q40" value="A"> A
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q40" value="B"> B
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q40" value="C"> C
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q40" value="D"> D
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q40" value="E"> E
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q40" value="F"> F
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="instructions">
+                <p><strong>Options for Questions 36-40:</strong></p>
+                <p>A. comparing the brains of people who had never played an instrument with those who played for a
+                    living.<br>
+                    B. activating many different parts of the brain at the same time.<br>
+                    C. teaching a group of older people to play an instrument.<br>
+                    D. acquiring the particular set of physical skills needed to play an instrument.<br>
+                    E. discovering which group of people become the best musicians.<br>
+                    F. having played an instrument for a considerable length of time.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="progress-container" id="progress-container"></div>
+        <div class="action-buttons">
+            <button class="btn-secondary" id="reset-btn">Reset Answers</button>
+            <button class="btn-primary" id="submit-btn">Submit Answers</button>
+        </div>
+    </footer>
+
+    <div class="feedback-overlay" id="feedback-overlay">
+        <div class="feedback-container">
+            <div class="feedback-header">
+                <div class="feedback-title">
+                    <i class="fas fa-chart-bar"></i> Your Results
+                    <span class="score-display" id="score-display">0/14</span>
+                </div>
+                <button id="close-feedback"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="feedback-body" id="feedback-body">
+                <!-- Feedback will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Night mode toggle
+        document.getElementById('night-mode-toggle').addEventListener('click', function () {
+            document.body.classList.toggle('night-mode');
+            const icon = this.querySelector('i');
+            if (document.body.classList.contains('night-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        });
+
+        // Timer functionality
+        let timerInterval;
+        let timeRemaining = 20 * 60; // 20 minutes
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+            const seconds = (timeRemaining % 60).toString().padStart(2, '0');
+            document.getElementById("timer").textContent = `${minutes}:${seconds}`;
+        }
+
+        document.getElementById("start-timer").addEventListener("click", () => {
+            if (timerInterval) return;
+            timerInterval = setInterval(() => {
+                if (timeRemaining > 0) {
+                    timeRemaining--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    alert("Time is up!");
+                }
+            }, 1000);
+        });
+
+        document.getElementById("pause-timer").addEventListener("click", () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        });
+
+        document.getElementById("reset-timer").addEventListener("click", () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timeRemaining = 20 * 60;
+            updateTimerDisplay();
+        });
+
+        // Initialize timer display
+        updateTimerDisplay();
+
+        // Progress tracker initialization
+        function initializeProgressTracker() {
+            const progressContainer = document.getElementById("progress-container");
+            const questions = [
+                { id: 'q27', number: 27 },
+                { id: 'q28', number: 28 },
+                { id: 'q29', number: 29 },
+                { id: 'q30', number: 30 },
+                { id: 'q31', number: 31 },
+                { id: 'q32', number: 32 },
+                { id: 'q33', number: 33 },
+                { id: 'q34', number: 34 },
+                { id: 'q35', number: 35 },
+                { id: 'q36', number: 36 },
+                { id: 'q37', number: 37 },
+                { id: 'q38', number: 38 },
+                { id: 'q39', number: 39 },
+                { id: 'q40', number: 40 }
+            ];
+
+            questions.forEach(({ id, number }) => {
+                const item = document.createElement("div");
+                item.className = "progress-item";
+                item.textContent = number;
+                item.dataset.qid = id;
+
+                item.addEventListener("click", () => {
+                    document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+                });
+
+                progressContainer.appendChild(item);
+            });
+        }
+
+        // Update progress status
+        function updateProgressStatus() {
+            const progressItems = document.querySelectorAll(".progress-item");
+
+            progressItems.forEach(item => {
+                const qid = item.dataset.qid;
+                const questionElem = document.getElementById(qid);
+                let answered = false;
+
+                // For radio inputs
+                const radios = document.querySelectorAll(`input[name="${qid}"]`);
+                if (radios.length > 0) {
+                    radios.forEach(r => {
+                        if (r.checked) answered = true;
+                    });
+                }
+
+                // Update progress item
+                if (answered) {
+                    item.classList.add("completed");
+                    if (questionElem.closest('.question')) {
+                        questionElem.closest('.question').classList.add("answered");
+                    }
+                } else {
+                    item.classList.remove("completed");
+                    if (questionElem.closest('.question')) {
+                        questionElem.closest('.question').classList.remove("answered");
+                    }
+                }
+            });
+        }
+
+        // Initialize progress tracker
+        document.addEventListener("DOMContentLoaded", () => {
+            initializeProgressTracker();
+            updateProgressStatus();
+        });
+
+        // Listen for changes to update progress
+        document.addEventListener("change", updateProgressStatus);
+
+        // Submit answers and show feedback
+        document.getElementById('submit-btn').addEventListener('click', function () {
+            // Correct answers
+            const correctAnswers = {
+                q27: "NOT GIVEN",
+                q28: "NO",
+                q29: "NOT GIVEN",
+                q30: "YES",
+                q31: "D",
+                q32: "A",
+                q33: "C",
+                q34: "B",
+                q35: "A",
+                q36: "D",
+                q37: "A",
+                q38: "B",
+                q39: "F",
+                q40: "C"
+            };
+
+            let score = 0;
+            let feedbackHTML = "";
+
+            // Check each question
+            for (const [qid, correct] of Object.entries(correctAnswers)) {
+                let userAnswer = "";
+                const questionElem = document.getElementById(qid);
+
+                // For radio inputs
+                const radios = document.querySelectorAll(`input[name="${qid}"]`);
+                if (radios.length > 0) {
+                    radios.forEach(r => {
+                        if (r.checked) userAnswer = r.value;
+                    });
+                }
+
+                const isCorrect = userAnswer === correct;
+                if (isCorrect) score++;
+
+                // Build feedback item
+                feedbackHTML += `
+                <div class="feedback-item">
+                    <div class="feedback-question">
+                        <span class="question-number">${qid.replace("q", "")}</span>
+                        Question ${qid.replace("q", "")}
+                    </div>
+                    <div class="feedback-answer ${isCorrect ? "correct" : "incorrect"}">
+                        Your answer: <strong>${userAnswer || "Not answered"}</strong><br>
+                        Correct answer: <strong>${correct}</strong>
+                    </div>
+                </div>`;
+            }
+
+            // Update feedback content
+            document.getElementById("feedback-body").innerHTML = feedbackHTML;
+            document.getElementById("score-display").textContent = `${score}/14`;
+
+            // Show feedback overlay
+            document.getElementById("feedback-overlay").style.display = "flex";
+        });
+
+        // Close feedback overlay
+        document.getElementById("close-feedback").addEventListener("click", function () {
+            document.getElementById("feedback-overlay").style.display = "none";
+        });
+
+        // Reset button
+        document.getElementById("reset-btn").addEventListener("click", function () {
+            // Reset all inputs
+            const radios = document.querySelectorAll("input[type='radio']");
+            radios.forEach(radio => radio.checked = false);
+
+            // Reset progress
+            const progressItems = document.querySelectorAll(".progress-item.completed");
+            progressItems.forEach(item => item.classList.remove("completed"));
+
+            const answeredQuestions = document.querySelectorAll(".question.answered");
+            answeredQuestions.forEach(q => q.classList.remove("answered"));
+
+            // Reset timer
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timeRemaining = 20 * 60;
+            updateTimerDisplay();
+
+            // Remove all highlights
+            document.querySelectorAll('.highlight').forEach(highlight => {
+                const parent = highlight.parentNode;
+                while (highlight.firstChild) {
+                    parent.insertBefore(highlight.firstChild, highlight);
+                }
+                parent.removeChild(highlight);
+            });
+        });
+
+        // Highlight functionality
+        let highlightTooltip = null;
+        let selectedRange = null;
+
+        function createColorPicker(x, y) {
+            const picker = document.createElement("div");
+            picker.className = "highlight-tooltip";
+            picker.style.position = "absolute";
+            picker.style.top = `${y}px`;
+            picker.style.left = `${x}px`;
+            picker.style.zIndex = "1000";
+
+            // Create color options
+            const colors = ["#FFEB3B", "#81C784", "#64B5F6", "#FFA726"]; // Yellow, Green, Blue, Orange
+            colors.forEach(color => {
+                const colorOption = document.createElement("div");
+                colorOption.className = "color-option";
+                colorOption.style.backgroundColor = color;
+                colorOption.title = `Highlight with ${color}`;
+                colorOption.addEventListener("click", () => {
+                    applyHighlight(color);
+                    picker.remove();
+                    highlightTooltip = null;
+                });
+                picker.appendChild(colorOption);
+            });
+
+            document.body.appendChild(picker);
+            return picker;
+        }
+
+        function applyHighlight(color) {
+            if (!selectedRange) return;
+
+            const span = document.createElement("span");
+            span.className = "highlight";
+            span.style.backgroundColor = color;
+            span.appendChild(selectedRange.extractContents());
+            selectedRange.insertNode(span);
+
+            selectedRange = null;
+            window.getSelection().removeAllRanges();
+
+            // Add click event to remove highlight
+            span.addEventListener("click", function (e) {
+                e.stopPropagation();
+
+                if (highlightTooltip) {
+                    highlightTooltip.remove();
+                    highlightTooltip = null;
+                }
+
+                highlightTooltip = document.createElement("div");
+                highlightTooltip.className = "highlight-tooltip";
+                highlightTooltip.style.position = "absolute";
+                highlightTooltip.style.top = `${e.clientY}px`;
+                highlightTooltip.style.left = `${e.clientX}px`;
+                highlightTooltip.style.zIndex = "1000";
+
+                const removeBtn = document.createElement("button");
+                removeBtn.className = "remove-highlight";
+                removeBtn.textContent = "Remove Highlight";
+                removeBtn.addEventListener("click", function () {
+                    const parent = span.parentNode;
+                    while (span.firstChild) {
+                        parent.insertBefore(span.firstChild, span);
+                    }
+                    parent.removeChild(span);
+                    highlightTooltip.remove();
+                    highlightTooltip = null;
+                });
+
+                highlightTooltip.appendChild(removeBtn);
+                document.body.appendChild(highlightTooltip);
+            });
+        }
+
+        // Handle mouseup events for text selection in both areas
+        function handleMouseUp(e) {
+            // Ignore selections in form elements
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'BUTTON') {
+                return;
+            }
+
+            const selection = window.getSelection();
+            if (selection.toString().trim() === "") return;
+
+            selectedRange = selection.getRangeAt(0).cloneRange();
+            const rect = selectedRange.getBoundingClientRect();
+
+            if (highlightTooltip) {
+                highlightTooltip.remove();
+                highlightTooltip = null;
+            }
+
+            highlightTooltip = createColorPicker(
+                rect.left + window.scrollX,
+                rect.top + window.scrollY - 50
+            );
+        }
+
+        // Add event listeners to both containers
+        document.getElementById("passage-text").addEventListener("mouseup", handleMouseUp);
+        document.querySelector(".questions-container").addEventListener("mouseup", handleMouseUp);
+
+        // Close highlight tooltip when clicking elsewhere
+        document.addEventListener("mousedown", function (e) {
+            if (highlightTooltip && !highlightTooltip.contains(e.target)) {
+                highlightTooltip.remove();
+                highlightTooltip = null;
+            }
+        });
+    </script>
+</body>
+
+</html>

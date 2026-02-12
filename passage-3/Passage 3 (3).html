@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        .loading-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #2563eb;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-title {
+            font-size: 1.2rem;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .loading-subtitle {
+            font-size: 1rem;
+            color: #9ca3af;
+        }
+
+        .start-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9998;
+        }
+
+        .start-content {
+            text-align: center;
+        }
+
+        .start-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 24px;
+        }
+
+        .start-subtitle {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        .start-button {
+            padding: 12px 32px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .start-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            background-color: #ffffff;
+            color: #333;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .passage-info {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .timer {
+            background-color: rgba(255, 193, 193, 0.5);
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+            min-width: 80px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #c53030;
+            border: 1px solid rgba(255, 120, 120, 0.3);
+        }
+
+        .timer.warning {
+            color: #9b2c2c;
+            background-color: rgba(254, 178, 178, 0.7);
+            border-color: rgba(245, 101, 101, 0.5);
+        }
+
+        .logo-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+            cursor: pointer;
+        }
+
+        .logo-area:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+        }
+
+        .logo-area i {
+            font-size: 1.1rem;
+        }
+
+        .progress-container {
+            background-color: #f8f9fa;
+            padding: 4px 20px;
+            z-index: 100;
+            flex-shrink: 0;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .progress-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .progress-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            border: 1px solid #cbd5e0;
+        }
+
+        .progress-item.current {
+            background-color: #4299e1;
+            color: white;
+            transform: scale(1.1);
+            border-color: #2b6cb0;
+        }
+
+        .progress-item.answered {
+            background-color: #9ae6b4;
+            color: #22543d;
+            border-color: #68d391;
+        }
+
+        .progress-item.correct {
+            background-color: #48bb78;
+            color: white;
+            border-color: #38a169;
+        }
+
+        .progress-item.incorrect {
+            background-color: #fed7d7;
+            color: #c53030;
+            border-color: #feb2b2;
+        }
+
+        .progress-item:hover {
+            background-color: #cbd5e0;
+            transform: scale(1.05);
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.95rem;
+            background-color: #f7fafc;
+            color: #4a5568;
+        }
+
+        .btn i {
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-primary {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-primary:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-secondary {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-submit {
+            background-color: #48bb78;
+            color: white;
+            font-weight: 900;
+            border: 1px solid #38a169;
+        }
+
+        .btn-submit:hover {
+            background-color: #38a169;
+            border-color: #2f855a;
+        }
+
+        .btn-submit:disabled {
+            background-color: #9ae6b4;
+            color: #718096;
+            cursor: not-allowed;
+            border: 1px solid #68d391;
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .passage-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #fafafa;
+            position: relative;
+        }
+
+        .resizer {
+            width: 4px;
+            background-color: #cbd5e0;
+            cursor: col-resize;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .resizer:hover {
+            background-color: #a0aec0;
+        }
+
+        .resizer::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 60px;
+            background-color: rgba(203, 213, 224, 0.5);
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        .questions-container {
+            width: 40%;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: white;
+            border-left: 1px solid #e2e8f0;
+        }
+
+        .passage {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .passage h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage-content p {
+            margin-top: 15px;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .passage h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage p {
+            margin-top: 20px;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        .question-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background-color: #ffffff;
+            transition: box-shadow 0.2s;
+        }
+
+        .question:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #2d3748;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .option:hover {
+            background-color: #f7fafc;
+            border-color: #cbd5e0;
+        }
+
+        .option input {
+            margin-right: 2px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 20%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        .input-field:focus {
+            border-color: #4299e1;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+        }
+
+        select.input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 20%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .answer-indicator {
+            background-color: #e6fffa;
+            border: 1px solid #38b2ac;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .answer-indicator.correct {
+            background-color: #e6fffa;
+            border-color: #38b2ac;
+            color: #234e52;
+        }
+
+        .answer-indicator.incorrect {
+            background-color: #fed7d7;
+            border-color: #fc8181;
+            color: #742a2a;
+        }
+
+        .question-group {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-group-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+
+        .highlight {
+            background-color: #ffff00;
+            cursor: pointer;
+        }
+
+        #highlight-btn,
+        #remove-highlight-btn {
+            position: absolute;
+            z-index: 9999;
+            display: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            border: 1px solid #888;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .score-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2d3748;
+        }
+
+        .score-breakdown {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .questions-container {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid #e2e8f0;
+            }
+
+            .resizer {
+                width: 100%;
+                height: 4px;
+                cursor: row-resize;
+            }
+
+            .resizer::before {
+                width: 60px;
+                height: 30px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .logo-area {
+                order: 1;
+            }
+
+            .passage-info {
+                order: 2;
+            }
+
+            .timer {
+                order: 3;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+
+
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h2 class="loading-title">Your test will begin shortly</h2>
+            <p class="loading-subtitle">Please wait</p>
+        </div>
+    </div>
+    <!-- Start Screen -->
+    <div id="startScreen" class="start-screen hidden">
+        <div class="start-content">
+            <h1 class="start-title">IELTSwithJurabek</h1>
+            <p class="start-subtitle">Ready to begin your reading test?</p>
+            <button class="start-button" onclick="startTest()">Start Test</button>
+        </div>
+    </div>
+    <!-- Test Container -->
+    <div class="container hidden" id="testContainer">
+        <header>
+            <div class="passage-info">IELTSwithJurabek</div>
+            <div class="timer">
+                <i class="fas fa-clock"></i>
+                <span>20:00</span>
+            </div>
+            <div class="logo-area" onclick="window.open('https://t.me/IELTSwithJurabek', '_blank')">
+                <i class="fas fa-paper-plane"></i>
+                <span>Click for more TESTS</span>
+            </div>
+        </header>
+        <button id="highlight-btn" type="button">Highlight</button>
+        <button id="remove-highlight-btn" type="button">Remove Highlight</button>
+        <div class="main-content">
+            <!-- Reading Passage -->
+            <div class="passage-container" role="region" aria-label="Reading Passage">
+                <h2 class="section-title">READING PASSAGE 1</h2>
+                <div class="passage-content" id="passage">
+                    <h3>Australia's Megafauna Controversy</h3>
+                    <p><strong>A</strong> Just how long did humans live side by side with megafauna in Australia? Barry
+                        Brook, Richard Gillespie and Paul Martin dispute previous claims of a lengthy coexistence. Over
+                        the past 50 millennia, Australia has witnessed the extinction of many species of large animals,
+                        including a rhinoceros-sized wombat and goannas the size of crocodiles. Debate about the
+                        possible cause of these extinctions has continued for more than 150 years and one of the crucial
+                        questions raised is how long humans and megafauna coexisted in Australia. We need to know the
+                        overlap of time to make an informed choice between the two main theories regarding the causes of
+                        these extinctions. If humans and megafauna coexisted for a protracted period then climate change
+                        is the more likely cause. However, if the megafauna became extinct shortly after the arrival of
+                        humans, then humans are the likely culprits.</p>
+                    <p><strong>B</strong> The archaeological site at Cuddie Springs in eastern Australia appears to be
+                        well preserved. This dusty claypan holds within its sediments a rich cache of flaked stone and
+                        seed-grinding tools, and side by side with these clear signals of human culture are the bones of
+                        a dozen or more species of megafauna. Drs Judith Field and Stephen Wroe of the University of
+                        Sydney, who excavated the site, claim that it provides unequivocal evidence of a long overlap of
+                        humans and megafauna, and conclude that aridity leading up to the last Ice Age brought about
+                        their eventual demise. In the long-standing explanation of this site, artefacts such as stone
+                        tools and extinct animal remains were deposited over many thousands of years in an ephemeral
+                        lake—a body of water existing for a relatively short time—and remained in place and undisturbed
+                        until the present day.</p>
+                    <p><strong>C</strong> There is no disputing the close association of bones and stones at Cuddie
+                        Springs, as both are found 1 to 1.7 metres below the modern surface. The dating of these layers
+                        is accurate: ages for the sediments were obtained through radiocarbon dating of charcoal
+                        fragments and luminescence dating of sand grains from the same levels (revealing when a sample
+                        was last exposed to sunlight). Intriguingly, some of the stones show surface features indicating
+                        their use for processing plants, and a few even have well-preserved blood and hair residues
+                        suggesting they were used in butchering animals.</p>
+                    <p><strong>D</strong> But is the case proposed by Field and Wroe clear-cut? We carried out a
+                        reanalysis of the scientific data from Cuddie Springs that brings into question their
+                        conclusions. The amount of anthropological evidence found at the site is remarkable: we estimate
+                        there are more than 3 tonnes of charcoal and more than 300 tonnes of stone buried there. Field
+                        and Wroe estimate that there are approximately 20 million artefacts. This plethora of tools is
+                        hard to reconcile with a site that was only available for occupation when the lake was dry.
+                        Furthermore, no cultural features such as oven pits have been discovered. If the sediment layers
+                        have remained undisturbed since being laid down, as Field and Wroe contend, then the ages of
+                        those sediments should increase with depth. However, our analysis revealed a number of
+                        inconsistencies.</p>
+                    <p><strong>E</strong> First, the charcoal samples are all roughly 36,000 years old. Second, sand in
+                        the two upper levels is considerably younger than charcoal from the same levels. Third, Field
+                        and Wroe say that the tools and seed-grinding stones used for plant and animal processing are
+                        ancient, yet they are very similar to implements found elsewhere that were in use only a few
+                        thousand years ago. Also interesting is the fact that a deep drill core made a mere 60 metres
+                        from the site recovered no stone artefacts or fossil bones whatsoever. These points suggest
+                        strongly that the sediments have been moved about and some of the old charcoal has been
+                        re-deposited in younger layers. Indeed, one sample of cow bone found 1 metre below the surface
+                        came from sediments where charcoal dated at 6,000 and 23,000 years old is mixed with
+                        17,000-year-old sand. The megafauna bones themselves have not yet been dated, although new
+                        technological developments make this a possibility in the near future.</p>
+                    <p><strong>F</strong> We propose that the archaeologists have actually been sampling the debris
+                        carried by ancient flood channels beneath the site, including charcoal transported from
+                        bushfires that intermittently occurred within the catchment. Flood events more likely explain
+                        the accumulation of megafauna remains, and could have mixed old bones with fresh deposits.
+                        European graziers also disturbed the site in 1876 by constructing a well to provide water for
+                        their cattle. Given the expense of well-digging, we speculate that the graziers made sure it was
+                        protected from the damage caused by cattle hooves by lining the surface with small stones
+                        collected from further afield, including prehistoric quarries. This idea is consistent with the
+                        thin layer of stones spread over a large area, with cattle occasionally breaking through the
+                        gravel surface and forcing the stone and even cattle bones deeper into the waterlogged soil.</p>
+                    <p><strong>G</strong> The lack of conclusive evidence that humans and megafauna coexisted for a
+                        lengthy period casts doubt on Field and Wroe's assertion that climate change was responsible for
+                        the extinction of Australia's megafauna. However, we do not suggest that newly arrived,
+                        well-armed hunters systematically slaughtered all the large beasts they encountered. Recent
+                        studies based on the biology of modern-day large mammals, combined with observations of people
+                        who still practise a traditional hunter-gatherer lifestyle, reveal an unexpected paradox and
+                        suggest a further possible explanation as to what happened. Using a mathematical model, it was
+                        found that a group of 10 people killing only one juvenile Diprotodon each year would be
+                        sufficient to bring about the extinction of that species within 1,000 years. This suggests that
+                        here, as in other parts of the world, the arrival of humans in lands previously inhabited only
+                        by animals created a volatile combination in which large animals fared badly.</p>
+                    <p><em>Note: The Diprotodon (a rhinoceros-sized wombat), an example of Australia’s now extinct
+                            megafauna</em></p>
+                </div>
+            </div>
+            <div class="resizer" id="resizer"></div>
+            <!-- Questions -->
+            <div class="questions-container" id="questions" role="region" aria-label="Questions">
+                <h2 class="section-title">Questions 1-14</h2>
+                <p>You should spend about 20 minutes on Questions 1–14, which are based on Reading Passage 1.</p>
+                <div class="question-group">
+                    <div class="question-group-title">Questions 1-4</div>
+                    <p>Do the following statements agree with the claims of the writer in Reading Passage?<br>
+                        In boxes 1–4 on your answer sheet, write<br>
+                        <strong>YES</strong> if the statement agrees with the views of the writer<br>
+                        <strong>NO</strong> if the statement contradicts the views of the writer<br>
+                        <strong>NOT GIVEN</strong> if it is impossible to say what the writer thinks about this
+                    </p>
+                    <div class="question" data-question="1">
+                        <div class="question-text">1. Field and Wroe argue that findings at the Cuddie Springs site show
+                            that people lived in this area at the same time as megafauna.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q1" value="YES">YES</label>
+                            <label class="option"><input type="radio" name="q1" value="NO">NO</label>
+                            <label class="option"><input type="radio" name="q1" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="2">
+                        <div class="question-text">2. Field and Wroe believe it is likely that smaller megafauna species
+                            survived the last Ice Age.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q2" value="YES">YES</label>
+                            <label class="option"><input type="radio" name="q2" value="NO">NO</label>
+                            <label class="option"><input type="radio" name="q2" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="3">
+                        <div class="question-text">3. The writers believe that the dating of earth up to 1.7m below the
+                            present surface at Cuddie Springs is unreliable.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q3" value="YES">YES</label>
+                            <label class="option"><input type="radio" name="q3" value="NO">NO</label>
+                            <label class="option"><input type="radio" name="q3" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="4">
+                        <div class="question-text">4. Some artefacts found at Cuddie Springs were preserved well enough
+                            to reveal their function.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q4" value="YES">YES</label>
+                            <label class="option"><input type="radio" name="q4" value="NO">NO</label>
+                            <label class="option"><input type="radio" name="q4" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="question-group">
+                    <div class="question-group-title">Questions 5-9</div>
+                    <p>Complete the summary using the list of words, A–I, below.<br>
+                        Write the correct letter, A–I, in boxes 5–9 on your answer sheet.</p>
+                    <p><strong>The writers’ arguments against Field and Wroe's analysis of the scientific data from
+                            Cuddie Springs</strong></p>
+                    <p>One objection to Field and Wroe's interpretation is the large quantity of charcoal, 5 <select
+                            name="q5" class="summary-select">
+                            <option value="">Select</option>
+                            <option value="A">A. seeds</option>
+                            <option value="B">B. stone</option>
+                            <option value="C">C. sand</option>
+                            <option value="D">D. cooking</option>
+                            <option value="E">E. deep drill core</option>
+                            <option value="F">F. water</option>
+                            <option value="G">G. fossil bones</option>
+                            <option value="H">H. sediment</option>
+                            <option value="I">I. storage</option>
+                        </select> and artefacts found at Cuddie Springs. Such large numbers of artefacts would be
+                        impossible if the area had been covered with 6 <select name="q6" class="summary-select">
+                            <option value="">Select</option>
+                            <option value="A">A. seeds</option>
+                            <option value="B">B. stone</option>
+                            <option value="C">C. sand</option>
+                            <option value="D">D. cooking</option>
+                            <option value="E">E. deep drill core</option>
+                            <option value="F">F. water</option>
+                            <option value="G">G. fossil bones</option>
+                            <option value="H">H. sediment</option>
+                            <option value="I">I. storage</option>
+                        </select> for a period. There is also a complete lack of man-made structures, for instance those
+                        used for 7 <select name="q7" class="summary-select">
+                            <option value="">Select</option>
+                            <option value="A">A. seeds</option>
+                            <option value="B">B. stone</option>
+                            <option value="C">C. sand</option>
+                            <option value="D">D. cooking</option>
+                            <option value="E">E. deep drill core</option>
+                            <option value="F">F. water</option>
+                            <option value="G">G. fossil bones</option>
+                            <option value="H">H. sediment</option>
+                            <option value="I">I. storage</option>
+                        </select>. Other evidence that casts doubt on Field and Wroe’s claim is the fact that while some
+                        material in the highest levels of sediment is 36,000 years old, the 8 <select name="q8"
+                            class="summary-select">
+                            <option value="">Select</option>
+                            <option value="A">A. seeds</option>
+                            <option value="B">B. stone</option>
+                            <option value="C">C. sand</option>
+                            <option value="D">D. cooking</option>
+                            <option value="E">E. deep drill core</option>
+                            <option value="F">F. water</option>
+                            <option value="G">G. fossil bones</option>
+                            <option value="H">H. sediment</option>
+                            <option value="I">I. storage</option>
+                        </select> in the same levels is much more recent. The tools used to process plants and animals
+                        may also be newer than Field and Wroe believe. Further evidence against human occupation of the
+                        area is the absence of tools and 9 <select name="q9" class="summary-select">
+                            <option value="">Select</option>
+                            <option value="A">A. seeds</option>
+                            <option value="B">B. stone</option>
+                            <option value="C">C. sand</option>
+                            <option value="D">D. cooking</option>
+                            <option value="E">E. deep drill core</option>
+                            <option value="F">F. water</option>
+                            <option value="G">G. fossil bones</option>
+                            <option value="H">H. sediment</option>
+                            <option value="I">I. storage</option>
+                        </select> a short distance away.</p>
+                </div>
+                <div class="question-group">
+                    <div class="question-group-title">Questions 10-14</div>
+                    <p>Choose the correct letter, A, B, C or D.<br>
+                        Write the correct letter in boxes 10–14 on your answer sheet.</p>
+                    <div class="question" data-question="10">
+                        <div class="question-text">10. What conclusions did the writers reach about the inconsistencies
+                            in the data from Cuddie Springs?</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q10" value="A">A. The different layers of
+                                sediment have been mixed over time.</label>
+                            <label class="option"><input type="radio" name="q10" value="B">B. The sand evidence is
+                                unhelpful and should be disregarded.</label>
+                            <label class="option"><input type="radio" name="q10" value="C">C. The area needs to be
+                                re-examined when technology improves.</label>
+                            <label class="option"><input type="radio" name="q10" value="D">D. The charcoal found in the
+                                area cannot be dated.</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="11">
+                        <div class="question-text">11. According to the writers, what impact could a natural phenomenon
+                            have had on this site?</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q11" value="A">A. Floods could have caused
+                                the death of the megafauna.</label>
+                            <label class="option"><input type="radio" name="q11" value="B">B. Floods could have
+                                disturbed the archaeological evidence.</label>
+                            <label class="option"><input type="radio" name="q11" value="C">C. Bushfires could have
+                                prevented humans from settling in the area for any length of time.</label>
+                            <label class="option"><input type="radio" name="q11" value="D">D. Bushfires could have
+                                destroyed much of the evidence left by megafauna and humans.</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="12">
+                        <div class="question-text">12. What did the writers speculate about the people who lived at this
+                            site in 1876?</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q12" value="A">A. They bred cattle whose
+                                bones could have been confused with megafauna.</label>
+                            <label class="option"><input type="radio" name="q12" value="B">B. They found that the soil
+                                was too waterlogged for farming.</label>
+                            <label class="option"><input type="radio" name="q12" value="C">C. They allowed cattle to
+                                move around freely at the site.</label>
+                            <label class="option"><input type="radio" name="q12" value="D">D. They brought stones there
+                                from another area.</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="13">
+                        <div class="question-text">13. In the final paragraph, what suggestion do the writers make about
+                            Australia’s megafauna?</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q13" value="A">A. A rapid change in climate
+                                may have been responsible for the extinction of the megafauna.</label>
+                            <label class="option"><input type="radio" name="q13" value="B">B. Megafauna could have died
+                                out as a result of small numbers being killed year after year.</label>
+                            <label class="option"><input type="radio" name="q13" value="C">C. The population of humans
+                                at that time was probably insufficient to cause the extinction of the megafauna.</label>
+                            <label class="option"><input type="radio" name="q13" value="D">D. The extinction of ancient
+                                animals should not be compared to that of modern-day species.</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="14">
+                        <div class="question-text">14. Which of the following best represents the writers' criticism of
+                            Field and Wroe?</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q14" value="A">A. Their methods were not
+                                well thought out.</label>
+                            <label class="option"><input type="radio" name="q14" value="B">B. Their excavations did not
+                                go deep enough.</label>
+                            <label class="option"><input type="radio" name="q14" value="C">C. Their technology failed to
+                                obtain precise data.</label>
+                            <label class="option"><input type="radio" name="q14" value="D">D. Their conclusions were
+                                based on inconsistent data.</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="progress-container">
+            <div class="progress-nav">
+                <div class="progress-items">
+                    <div class="progress-item current" data-question="1">1</div>
+                    <div class="progress-item" data-question="2">2</div>
+                    <div class="progress-item" data-question="3">3</div>
+                    <div class="progress-item" data-question="4">4</div>
+                    <div class="progress-item" data-question="5">5</div>
+                    <div class="progress-item" data-question="6">6</div>
+                    <div class="progress-item" data-question="7">7</div>
+                    <div class="progress-item" data-question="8">8</div>
+                    <div class="progress-item" data-question="9">9</div>
+                    <div class="progress-item" data-question="10">10</div>
+                    <div class="progress-item" data-question="11">11</div>
+                    <div class="progress-item" data-question="12">12</div>
+                    <div class="progress-item" data-question="13">13</div>
+                    <div class="progress-item" data-question="14">14</div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" id="prev-btn" disabled><i class="fas fa-arrow-left"></i>
+                        Previous</button>
+                    <button class="btn btn-secondary" id="next-btn">Next <i class="fas fa-arrow-right"></i></button>
+                    <button class="btn btn-submit" id="submit-btn">Submit Test <i
+                            class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Results Modal -->
+    <div class="modal" id="results-modal">
+        <div class="modal-content">
+            <h2>Test Results</h2>
+            <div class="score-display" id="score-display">0/14</div>
+            <div class="score-breakdown">
+                <div class="score-item">
+                    <span>Passage 1:</span>
+                    <span id="passage1-score">0/14</span>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="close-modal">Close</button>
+                <button class="btn btn-primary" id="review-answers">Review Answers</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Correct Answers for Questions 1-14
+        const correctAnswers = {
+            q1: "YES",
+            q2: "NOT GIVEN",
+            q3: "NO",
+            q4: "YES",
+            q5: "B",
+            q6: "F",
+            q7: "D",
+            q8: "C",
+            q9: "G",
+            q10: "A",
+            q11: "B",
+            q12: "D",
+            q13: "B",
+            q14: "D"
+        };
+        let lastSelection = null;
+        let highlightTarget = null;
+        let currentPanel = null;
+        let submitted = false;
+        let currentQuestion = 1;
+        let isResizing = false;
+        let seconds = 20 * 60; // 20 minutes
+        let timerInterval;
+        const highlightBtn = document.getElementById('highlight-btn');
+        const removeHighlightBtn = document.getElementById('remove-highlight-btn');
+        const passagePanel = document.getElementById('passage');
+        const questionsPanel = document.getElementById('questions');
+        const resizer = document.getElementById('resizer');
+        const submitBtn = document.getElementById('submit-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resultsModal = document.getElementById('results-modal');
+        const scoreDisplay = document.getElementById('score-display');
+        const passage1Score = document.getElementById('passage1-score');
+        const closeModalBtn = document.getElementById('close-modal');
+        const reviewBtn = document.getElementById('review-answers');
+        const timerElement = document.querySelector('.timer span');
+        const timerContainer = document.querySelector('.timer');
+        // Timer
+        function updateTimer() {
+            seconds--;
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            if (seconds <= 2 * 60) {
+                timerContainer.classList.add('warning');
+            }
+            if (seconds <= 0) {
+                clearInterval(timerInterval);
+                if (!submitted) {
+                    alert('Time is up! Submitting your test.');
+                    submitTest();
+                }
+            }
+        }
+        // Highlight functionality
+        function getValidSelection() {
+            const sel = window.getSelection();
+            if (!sel.rangeCount || sel.isCollapsed) return null;
+            const range = sel.getRangeAt(0);
+            if (passagePanel.contains(range.commonAncestorContainer)) {
+                currentPanel = passagePanel;
+            } else if (questionsPanel.contains(range.commonAncestorContainer)) {
+                currentPanel = questionsPanel;
+            } else {
+                return null;
+            }
+            return range;
+        }
+        function showHighlightBtn(range) {
+            const rect = range.getBoundingClientRect();
+            highlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            highlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            highlightBtn.style.display = 'block';
+        }
+        function hideHighlightBtn() {
+            highlightBtn.style.display = 'none';
+        }
+        function showRemoveBtn(span) {
+            const rect = span.getBoundingClientRect();
+            removeHighlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            removeHighlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            removeHighlightBtn.style.display = 'block';
+            highlightTarget = span;
+        }
+        function hideRemoveBtn() {
+            removeHighlightBtn.style.display = 'none';
+            highlightTarget = null;
+        }
+        highlightBtn.addEventListener('click', () => {
+            if (lastSelection) {
+                const span = document.createElement('span');
+                span.className = 'highlight';
+                span.appendChild(lastSelection.extractContents());
+                lastSelection.insertNode(span);
+                window.getSelection().removeAllRanges();
+                hideHighlightBtn();
+            }
+        });
+        removeHighlightBtn.addEventListener('click', () => {
+            if (highlightTarget) {
+                const parent = highlightTarget.parentNode;
+                while (highlightTarget.firstChild) {
+                    parent.insertBefore(highlightTarget.firstChild, highlightTarget);
+                }
+                parent.removeChild(highlightTarget);
+                hideRemoveBtn();
+            }
+        });
+        document.addEventListener('selectionchange', () => {
+            hideHighlightBtn();
+            hideRemoveBtn();
+            const range = getValidSelection();
+            if (range) {
+                lastSelection = range;
+                showHighlightBtn(range);
+            } else {
+                lastSelection = null;
+            }
+        });
+        [passagePanel, questionsPanel].forEach(panel => {
+            panel.addEventListener('scroll', () => {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            });
+        });
+        document.addEventListener('mousedown', (e) => {
+            if (e.target !== highlightBtn && e.target !== removeHighlightBtn) {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            }
+        });
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('highlight')) {
+                e.preventDefault();
+                showRemoveBtn(e.target);
+            }
+        });
+        // Resizer
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+        });
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const container = document.querySelector('.main-content');
+            const containerRect = container.getBoundingClientRect();
+            const mouseX = e.clientX - containerRect.left;
+            const containerWidth = containerRect.width;
+            const leftPercentage = (mouseX / containerWidth) * 100;
+            const rightPercentage = 100 - leftPercentage;
+            if (leftPercentage >= 30 && leftPercentage <= 70) {
+                document.querySelector('.passage-container').style.flex = leftPercentage + '%';
+                document.querySelector('.questions-container').style.width = rightPercentage + '%';
+            }
+        });
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            }
+        });
+        // Navigation
+        function scrollToQuestion(num) {
+            const el = document.querySelector(`[data-question="${num}"]`);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            updateCurrentQuestion(num);
+        }
+        function updateCurrentQuestion(num) {
+            currentQuestion = num;
+            document.querySelectorAll('.progress-item').forEach(item => {
+                item.classList.remove('current');
+                if (item.dataset.question == num) item.classList.add('current');
+            });
+            prevBtn.disabled = num <= 1;
+            nextBtn.disabled = num >= 14;
+        }
+        document.querySelectorAll('.progress-item').forEach(item => {
+            item.addEventListener('click', () => {
+                scrollToQuestion(parseInt(item.dataset.question));
+            });
+        });
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 1) scrollToQuestion(currentQuestion - 1);
+        });
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestion < 14) scrollToQuestion(currentQuestion + 1);
+        });
+        document.querySelectorAll('input[type="radio"], select').forEach(input => {
+            input.addEventListener('change', () => {
+                if (submitted) return;
+                const qNumMatch = input.name.match(/^q(\d+)$/);
+                if (qNumMatch) {
+                    const qNum = parseInt(qNumMatch[1]);
+                    const item = document.querySelector(`.progress-item[data-question="${qNum}"]`);
+                    if (item && !item.classList.contains('answered')) {
+                        item.classList.add('answered');
+                    }
+                }
+            });
+        });
+        submitBtn.addEventListener('click', submitTest);
+        function submitTest() {
+            if (submitted) return;
+            if (!confirm('Are you sure you want to submit?')) return;
+            submitted = true;
+            clearInterval(timerInterval);
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Submitted';
+            let score = 0;
+            const results = {};
+            // Score all questions 1-14
+            for (let i = 1; i <= 14; i++) {
+                const key = `q${i}`;
+                let userAnswer = '';
+                let isCorrect = false;
+                const radioEl = document.querySelector(`input[name="${key}"]:checked`);
+                if (radioEl) {
+                    userAnswer = radioEl.value;
+                    isCorrect = userAnswer === correctAnswers[key];
+                    document.querySelectorAll(`input[name="${key}"]`).forEach(r => r.disabled = true);
+                }
+                const selectEl = document.querySelector(`select[name="${key}"]`);
+                if (selectEl) {
+                    userAnswer = selectEl.value;
+                    isCorrect = userAnswer === correctAnswers[key];
+                    selectEl.disabled = true;
+                }
+                if (isCorrect) score++;
+                results[key] = { userAnswer, correct: correctAnswers[key], isCorrect };
+            }
+            // Update score display
+            scoreDisplay.textContent = `${score}/14`;
+            passage1Score.textContent = `${score}/14`;
+            // Update progress indicators
+            for (let i = 1; i <= 14; i++) {
+                const item = document.querySelector(`.progress-item[data-question="${i}"]`);
+                const res = results[`q${i}`];
+                if (item && res) {
+                    item.classList.remove('current', 'answered');
+                    item.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+                }
+            }
+            window.testResults = results;
+            resultsModal.style.display = 'flex';
+        }
+        function showCorrectAnswers() {
+            if (!submitted) return;
+            // Clear previous indicators
+            document.querySelectorAll('.answer-indicator').forEach(el => el.remove());
+            // Show results for all questions
+            for (let i = 1; i <= 14; i++) {
+                const key = `q${i}`;
+                const res = window.testResults[key];
+                if (!res) continue;
+                let targetElement;
+                const radioGroup = document.querySelector(`input[name="${key}"]`);
+                const selectEl = document.querySelector(`select[name="${key}"]`);
+                if (radioGroup) targetElement = radioGroup.closest('.question');
+                else if (selectEl) targetElement = selectEl.parentNode;
+                if (!targetElement) continue;
+                const div = document.createElement('div');
+                div.className = 'answer-indicator';
+                div.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+                if (res.isCorrect) {
+                    div.innerHTML = `<i class="fas fa-check"></i> Correct! You chose: <strong>${res.userAnswer}</strong>`;
+                } else {
+                    const userDisplay = res.userAnswer || 'No answer';
+                    div.innerHTML = `<i class="fas fa-times"></i> Incorrect. You chose: <strong>${userDisplay}</strong><br><strong>Correct:</strong> ${res.correct}`;
+                }
+                targetElement.appendChild(div);
+            }
+        }
+        closeModalBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+        });
+        reviewBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+            showCorrectAnswers();
+            scrollToQuestion(1);
+        });
+        function startTest() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('testContainer').classList.remove('hidden');
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+        setTimeout(() => {
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }, 2000);
+    </script>
+</body>
+
+</html>

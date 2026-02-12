@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        .loading-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #2563eb;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-title {
+            font-size: 1.2rem;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .loading-subtitle {
+            font-size: 1rem;
+            color: #9ca3af;
+        }
+
+        .start-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9998;
+        }
+
+        .start-content {
+            text-align: center;
+        }
+
+        .start-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 24px;
+        }
+
+        .start-subtitle {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        .start-button {
+            padding: 12px 32px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .start-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            background-color: #ffffff;
+            color: #333;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .passage-info {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .timer {
+            background-color: rgba(255, 193, 193, 0.5);
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+            min-width: 80px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #c53030;
+            border: 1px solid rgba(255, 120, 120, 0.3);
+        }
+
+        .timer.warning {
+            color: #9b2c2c;
+            background-color: rgba(254, 178, 178, 0.7);
+            border-color: rgba(245, 101, 101, 0.5);
+        }
+
+        .logo-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+            cursor: pointer;
+        }
+
+        .logo-area:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+        }
+
+        .logo-area i {
+            font-size: 1.1rem;
+        }
+
+        .progress-container {
+            background-color: #f8f9fa;
+            padding: 4px 20px;
+            z-index: 100;
+            flex-shrink: 0;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .progress-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .progress-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            border: 1px solid #cbd5e0;
+        }
+
+        .progress-item.current {
+            background-color: #4299e1;
+            color: white;
+            transform: scale(1.1);
+            border-color: #2b6cb0;
+        }
+
+        .progress-item.answered {
+            background-color: #9ae6b4;
+            color: #22543d;
+            border-color: #68d391;
+        }
+
+        .progress-item.correct {
+            background-color: #48bb78;
+            color: white;
+            border-color: #38a169;
+        }
+
+        .progress-item.incorrect {
+            background-color: #fed7d7;
+            color: #c53030;
+            border-color: #feb2b2;
+        }
+
+        .progress-item:hover {
+            background-color: #cbd5e0;
+            transform: scale(1.05);
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.95rem;
+            background-color: #f7fafc;
+            color: #4a5568;
+        }
+
+        .btn i {
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-primary {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-primary:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-secondary {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-submit {
+            background-color: #48bb78;
+            color: white;
+            font-weight: 900;
+            border: 1px solid #38a169;
+        }
+
+        .btn-submit:hover {
+            background-color: #38a169;
+            border-color: #2f855a;
+        }
+
+        .btn-submit:disabled {
+            background-color: #9ae6b4;
+            color: #718096;
+            cursor: not-allowed;
+            border: 1px solid #68d391;
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .passage-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #fafafa;
+            position: relative;
+        }
+
+        .resizer {
+            width: 4px;
+            background-color: #cbd5e0;
+            cursor: col-resize;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .resizer:hover {
+            background-color: #a0aec0;
+        }
+
+        .resizer::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 60px;
+            background-color: rgba(203, 213, 224, 0.5);
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        .questions-container {
+            width: 40%;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: white;
+            border-left: 1px solid #e2e8f0;
+        }
+
+        .passage {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .passage h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage-content p {
+            margin-top: 15px;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .passage h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage p {
+            margin-top: 20px;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        .question-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 6px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background-color: #ffffff;
+            transition: box-shadow 0.2s;
+        }
+
+        .question:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #2d3748;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .option:hover {
+            background-color: #f7fafc;
+            border-color: #cbd5e0;
+        }
+
+        .option input {
+            margin-right: 2px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 20%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        .input-field:focus {
+            border-color: #4299e1;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+        }
+
+        select.input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 20%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .answer-indicator {
+            background-color: #e6fffa;
+            border: 1px solid #38b2ac;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .answer-indicator.correct {
+            background-color: #e6fffa;
+            border-color: #38b2ac;
+            color: #234e52;
+        }
+
+        .answer-indicator.incorrect {
+            background-color: #fed7d7;
+            border-color: #fc8181;
+            color: #742a2a;
+        }
+
+        .question-group {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-group-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+
+        .highlight {
+            background-color: #ffff00;
+            cursor: pointer;
+        }
+
+        #highlight-btn,
+        #remove-highlight-btn {
+            position: absolute;
+            z-index: 9999;
+            display: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            border: 1px solid #888;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .score-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2d3748;
+        }
+
+        .score-breakdown {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .questions-container {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid #e2e8f0;
+            }
+
+            .resizer {
+                width: 100%;
+                height: 4px;
+                cursor: row-resize;
+            }
+
+            .resizer::before {
+                width: 60px;
+                height: 30px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .logo-area {
+                order: 1;
+            }
+
+            .passage-info {
+                order: 2;
+            }
+
+            .timer {
+                order: 3;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h2 class="loading-title">Your test will begin shortly</h2>
+            <p class="loading-subtitle">Please wait</p>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="startScreen" class="start-screen hidden">
+        <div class="start-content">
+            <h1 class="start-title">IELTSwithJurabek</h1>
+            <p class="start-subtitle">Ready to begin your reading test?</p>
+            <button class="start-button" onclick="startTest()">Start Test</button>
+        </div>
+    </div>
+
+    <!-- Test Container -->
+    <div class="container hidden" id="testContainer">
+        <header>
+            <div class="passage-info">IELTSwithJurabek</div>
+            <div class="timer">
+                <i class="fas fa-clock"></i>
+                <span>20:00</span>
+            </div>
+            <div class="logo-area" onclick="window.open('https://t.me/IELTSwithJurabek', '_blank')">
+                <i class="fas fa-paper-plane"></i>
+                <span>Click for more TESTS</span>
+            </div>
+            <div class="passage-info">Passage 3 of 3</div>
+        </header>
+
+        <button id="highlight-btn" type="button">Highlight</button>
+        <button id="remove-highlight-btn" type="button">Remove Highlight</button>
+
+        <div class="main-content">
+            <!-- Reading Passage -->
+            <div class="passage-container" role="region" aria-label="Reading Passage">
+                <h2 class="section-title">READING PASSAGE 3</h2>
+                <div class="passage-content" id="passage3">
+                    <h3>Life on Mars?</h3>
+                    <p id="P1">Terraforming may sound like something out of science fiction, but some believe it is
+                        possible to turn that fiction into fact.</p>
+                    <p id="P2">As plans are slowly being drawn up for the first manned mission to Mars, many space
+                        travel sceptics are asking one vital question: why go there? Mars is a barren, desolate planet,
+                        and with its thin atmosphere and bitterly cold climate, it would appear to be completely
+                        unsuitable for human life. Above all, it is a very distant place, and getting there would be an
+                        enormous challenge. However, the planet might just hold the key to long-term human survival.
+                        With the Earth's population currently at more than seven billion and climbing, we may eventually
+                        be forced to look elsewhere in the solar system for somewhere to live. It is just possible that,
+                        contrary to photographic evidence, Mars may be more promising than it appears.</p>
+                    <p id="P3">Today, Mars is a viciously cold, dry place. However, it does have some things in common
+                        with our own planet. For example, it has a daily rotation rate of 24 hours 37 minutes, compared
+                        with 23 hours 56 minutes on Earth. It also has an axial tilt of 24 degrees, which is just half a
+                        degree more than Earth's, and a gravitational pull one third of Earth's. Furthermore, it holds
+                        many of the elements that are required to support life, including carbon and oxygen (in the form
+                        of carbon dioxide), nitrogen, and frozen water at its polar ice caps. In fact, if you were to
+                        travel back in time several billion years, you would notice some remarkable parallels between
+                        the atmosphere on Earth then and Mars today. Back then, Earth was also a lifeless planet until
+                        photosynthetic bacteria developed and began to produce enough oxygen to allow for the
+                        development of animal and plant life. Our atmosphere also consisted entirely of carbon dioxide
+                        and nitrogen.</p>
+                    <p id="P4">It comes as no surprise to learn, therefore, that some scientists believe the same
+                        process which turned Earth's atmosphere from mostly carbon dioxide into breathable air could be
+                        repeated on Mars, but by using technology rather than by letting nature and evolution take its
+                        natural course. Terraforming, as this process is known, would initially create a greenhouse
+                        effect that would heat the planet, which in turn would create other conditions necessary to
+                        provide a suitable living environment for plants and animals. However, it would be a highly
+                        challenging undertaking, and the process of terraforming the entire planet into an Earth-like
+                        habitat could still take many thousands of years.</p>
+                    <p id="P5">Three terraforming methods have been suggested, with the first already under development,
+                        albeit for a different purpose. At present, the American space agency NASA is working on a
+                        system that will use large mirrors to capture the sun's radiation. This radiation will be used
+                        to propel spacecraft through space, removing the need for heavy and expensive rocket fuel. With
+                        a few changes, it might be possible to use similar mirrors to reflect the sun's radiation and
+                        heat the surface of Mars. Aimed at the planet from a distance of two hundred thousand miles,
+                        these enormous mirrors would raise the surface temperature by a few degrees. If they were
+                        concentrated on the polar ice caps, they would provide enough heat to melt the polar ice caps
+                        and release the carbon dioxide that is believed to be trapped there. Gradually, as the
+                        temperature rose, greenhouse gases would be released, and this would create a form of Martian
+                        global warming, the first stage in making the planet sustainable for life.</p>
+                    <p id="P6">The second method would be to set up greenhouse gas factories in order to raise the
+                        temperature of the planet. It is generally accepted that greenhouse gases produced by heavy
+                        industry are raising the Earth's temperature. Therefore, by building hundreds of greenhouse gas
+                        emitting factories on Mars, a similar effect could be achieved. Carbon dioxide, methane, and
+                        other greenhouse gases would be pumped into the Martian atmosphere. The same factories would
+                        then produce oxygen by mimicking the natural process of plant photosynthesis: they would inhale
+                        the carbon dioxide they produce, and then emit oxygen. The process could be accelerated by
+                        'sowing' the planet's surface with photosynthetic bacteria, which would increase the rate at
+                        which oxygen is produced. Eventually, there would be enough oxygen on the planet for humans to
+                        breathe using only special apparatus similar to that used by mountain climbers.</p>
+                    <p id="P7">The third, and by far the most extreme, method has been proposed by space scientists
+                        Robert Zubrin and Christopher McKay. They believe that it would be possible to produce
+                        greenhouse gases and water by firing large, ammonia-bearing asteroids at the planet. Each
+                        asteroid would weigh about ten billion tons and would be powered by rocket engines which would
+                        move it towards Mars at around 10,000 miles per second. The energy produced by one asteroid
+                        slamming into Mars' surface, say Zubrin and McKay, would raise the temperature of the planet by
+                        three degrees Celsius and melt about one thousand billion tons of ice at the polar caps. They
+                        believe it would take many of these asteroids, and at least fifty years, in order to create a
+                        temperate climate and enough water to cover a quarter of the planet's surface.</p>
+                    <p id="P8">Terraforming Mars, if it is ever attempted, will be neither cheap nor easy. And it
+                        certainly won't be quick. Although optimists like Zubrin and McKay say it could be achieved in
+                        five or six decades, the reality is that terraforming is more likely to take hundreds or even
+                        thousands of years. Furthermore, it will stretch human ingenuity to its limits and will require
+                        levels of will and commitment that have rarely been seen before. The challenge of developing a
+                        habitable environment and bringing life to the cold, dry world of Mars is fraught with
+                        challenges, but it might just be one that saves the human race.</p>
+                </div>
+            </div>
+
+            <div class="resizer" id="resizer"></div>
+
+            <!-- Questions -->
+            <div class="questions-container" id="questions" role="region" aria-label="Questions">
+                <h2 class="section-title">Questions 1-14</h2>
+                <p>You should spend about 20 minutes on Questions 1–14, which are based on Reading Passage 3.</p>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 1-5</div>
+                    <p>Do the following statements agree with the views of the writer in Reading Passage 3? Write:</p>
+                    <p><strong>YES</strong> if the statement agrees with the writer's view<br>
+                        <strong>NO</strong> if the statement contradicts the writer's view<br>
+                        <strong>NOT GIVEN</strong> if it is impossible to say what the writer thinks about this
+                    </p>
+                    <div class="question" data-question="1">
+                        <div class="question-text">1. Pictures of Mars suggest it might make a good place for people to
+                            settle</div>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="YES"> YES</label>
+                            <label><input type="radio" name="q1" value="NO"> NO</label>
+                            <label><input type="radio" name="q1" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="2">
+                        <div class="question-text">2. Modern Mars and ancient Earth looked remarkably similar</div>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="YES"> YES</label>
+                            <label><input type="radio" name="q2" value="NO"> NO</label>
+                            <label><input type="radio" name="q2" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="3">
+                        <div class="question-text">3. One method of terraforming could involve adapting technology that
+                            is already under development</div>
+                        <div class="options">
+                            <label><input type="radio" name="q3" value="YES"> YES</label>
+                            <label><input type="radio" name="q3" value="NO"> NO</label>
+                            <label><input type="radio" name="q3" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="4">
+                        <div class="question-text">4. Greenhouse gas factories would provide enough oxygen for people to
+                            breathe without special equipment</div>
+                        <div class="options">
+                            <label><input type="radio" name="q4" value="YES"> YES</label>
+                            <label><input type="radio" name="q4" value="NO"> NO</label>
+                            <label><input type="radio" name="q4" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="5">
+                        <div class="question-text">5. Terraforming Mars would be an extreme test of human skill and
+                            intelligence</div>
+                        <div class="options">
+                            <label><input type="radio" name="q5" value="YES"> YES</label>
+                            <label><input type="radio" name="q5" value="NO"> NO</label>
+                            <label><input type="radio" name="q5" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 6-9</div>
+                    <p>Choose the correct letter, A, B, C, or D.</p>
+                    <div class="question" data-question="6">
+                        <div class="question-text">6. Which one of these factors suggests that Mars might be a good
+                            place for people to settle?</div>
+                        <div class="options">
+                            <label><input type="radio" name="q6" value="A"> A. It is not too far from Earth</label>
+                            <label><input type="radio" name="q6" value="B"> B. It has no other life forms living
+                                there</label>
+                            <label><input type="radio" name="q6" value="C"> C. It has a cool, dry climate</label>
+                            <label><input type="radio" name="q6" value="D"> D. It has some similarities with
+                                Earth</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="7">
+                        <div class="question-text">7. The first step in terraforming Mars would be to</div>
+                        <div class="options">
+                            <label><input type="radio" name="q7" value="A"> A. make the planet warmer</label>
+                            <label><input type="radio" name="q7" value="B"> B. create a breathable atmosphere</label>
+                            <label><input type="radio" name="q7" value="C"> C. find a suitable source of water</label>
+                            <label><input type="radio" name="q7" value="D"> D. create a habitat for living
+                                organisms</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="8">
+                        <div class="question-text">8. Special factories on Mars could be used to</div>
+                        <div class="options">
+                            <label><input type="radio" name="q8" value="A"> A. control the level of greenhouse
+                                gases</label>
+                            <label><input type="radio" name="q8" value="B"> B. absorb excess levels of carbon
+                                dioxide</label>
+                            <label><input type="radio" name="q8" value="C"> C. produce oxygen in a manner similar to
+                                plants</label>
+                            <label><input type="radio" name="q8" value="D"> D. help grow essential bacteria</label>
+                        </div>
+                    </div>
+                    <div class="question" data-question="9">
+                        <div class="question-text">9. What is the writer's main purpose in the passage?</div>
+                        <div class="options">
+                            <label><input type="radio" name="q9" value="A"> A. To explain why we need to terraform
+                                Mars</label>
+                            <label><input type="radio" name="q9" value="B"> B. To illustrate the three processes
+                                required to terraform a planet like Mars</label>
+                            <label><input type="radio" name="q9" value="C"> C. To consider how and why Mars might be
+                                terraformed</label>
+                            <label><input type="radio" name="q9" value="D"> D. To demonstrate how straightforward it
+                                would be to terraform a planet</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 10-14</div>
+                    <p>Complete the summary using words from the box.</p>
+                    <p>One method of terraforming Mars would be to <strong>10</strong> asteroids at the planet. Rockets
+                        attached to an enormous asteroid would propel it towards Mars, taking ten years to
+                        <strong>11</strong> the enormous distances required. The asteroid would <strong>12</strong> the
+                        planet with incredible force and <strong>13</strong> enough energy to <strong>14</strong> the
+                        planet's temperature. The result would be a temperate climate and lots of water from melting ice
+                        caps.
+                    </p>
+                    <p><strong>Word Box:</strong> A. cover, B. create, C. hit, D. increase, E. land, F. drive, G. power,
+                        H. rise, I. shoot</p>
+                    <div class="question" data-question="10">
+                        <div class="question-text">10. <select name="q10">
+                                <option value="" disabled selected>Select an option</option>
+                                <option value="A">A. cover</option>
+                                <option value="B">B. create</option>
+                                <option value="C">C. hit</option>
+                                <option value="D">D. increase</option>
+                                <option value="E">E. land</option>
+                                <option value="F">F. drive</option>
+                                <option value="G">G. power</option>
+                                <option value="H">H. rise</option>
+                                <option value="I">I. shoot</option>
+                            </select></div>
+                    </div>
+                    <div class="question" data-question="11">
+                        <div class="question-text">11. <select name="q11">
+                                <option value="" disabled selected>Select an option</option>
+                                <option value="A">A. cover</option>
+                                <option value="B">B. create</option>
+                                <option value="C">C. hit</option>
+                                <option value="D">D. increase</option>
+                                <option value="E">E. land</option>
+                                <option value="F">F. drive</option>
+                                <option value="G">G. power</option>
+                                <option value="H">H. rise</option>
+                                <option value="I">I. shoot</option>
+                            </select></div>
+                    </div>
+                    <div class="question" data-question="12">
+                        <div class="question-text">12. <select name="q12">
+                                <option value="" disabled selected>Select an option</option>
+                                <option value="A">A. cover</option>
+                                <option value="B">B. create</option>
+                                <option value="C">C. hit</option>
+                                <option value="D">D. increase</option>
+                                <option value="E">E. land</option>
+                                <option value="F">F. drive</option>
+                                <option value="G">G. power</option>
+                                <option value="H">H. rise</option>
+                                <option value="I">I. shoot</option>
+                            </select></div>
+                    </div>
+                    <div class="question" data-question="13">
+                        <div class="question-text">13. <select name="q13">
+                                <option value="A">A. cover</option>
+                                <option value="B">B. create</option>
+                                <option value="C">C. hit</option>
+                                <option value="D">D. increase</option>
+                                <option value="E">E. land</option>
+                                <option value="F">F. drive</option>
+                                <option value="G">G. power</option>
+                                <option value="H">H. rise</option>
+                                <option value="I">I. shoot</option>
+                            </select></div>
+                    </div>
+                    <div class="question" data-question="14">
+                        <div class="question-text">14. <select name="q14">
+                                <option value="" disabled selected>Select an option</option>
+                                <option value="A">A. cover</option>
+                                <option value="B">B. create</option>
+                                <option value="C">C. hit</option>
+                                <option value="D">D. increase</option>
+                                <option value="E">E. land</option>
+                                <option value="F">F. drive</option>
+                                <option value="G">G. power</option>
+                                <option value="H">H. rise</option>
+                                <option value="I">I. shoot</option>
+                            </select></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-nav">
+                <div class="progress-items">
+                    <div class="progress-item current" data-question="1">1</div>
+                    <div class="progress-item" data-question="2">2</div>
+                    <div class="progress-item" data-question="3">3</div>
+                    <div class="progress-item" data-question="4">4</div>
+                    <div class="progress-item" data-question="5">5</div>
+                    <div class="progress-item" data-question="6">6</div>
+                    <div class="progress-item" data-question="7">7</div>
+                    <div class="progress-item" data-question="8">8</div>
+                    <div class="progress-item" data-question="9">9</div>
+                    <div class="progress-item" data-question="10">10</div>
+                    <div class="progress-item" data-question="11">11</div>
+                    <div class="progress-item" data-question="12">12</div>
+                    <div class="progress-item" data-question="13">13</div>
+                    <div class="progress-item" data-question="14">14</div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" id="prev-btn" disabled><i class="fas fa-arrow-left"></i>
+                        Previous</button>
+                    <button class="btn btn-secondary" id="next-btn">Next <i class="fas fa-arrow-right"></i></button>
+                    <button class="btn btn-submit" id="submit-btn">Submit Test <i
+                            class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div class="modal" id="results-modal">
+        <div class="modal-content">
+            <h2>Test Results</h2>
+            <div class="score-display" id="score-display">0/14</div>
+            <div class="score-breakdown">
+                <div class="score-item">
+                    <span>Passage 3:</span>
+                    <span id="passage3-score">0/14</span>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="close-modal">Close</button>
+                <button class="btn btn-primary" id="review-answers">Review Answers</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Correct Answers for Questions 1-14
+        const correctAnswers = {
+            q1: "NO",
+            q2: "YES",
+            q3: "YES",
+            q4: "NO",
+            q5: "YES",
+            q6: "D",
+            q7: "A",
+            q8: "C",
+            q9: "C",
+            q10: "I",
+            q11: "F",
+            q12: "C",
+            q13: "G",
+            q14: "D"
+        };
+
+        let lastSelection = null;
+        let highlightTarget = null;
+        let currentPanel = null;
+        let submitted = false;
+        let currentQuestion = 1;
+        let isResizing = false;
+        let seconds = 20 * 60; // 20 minutes for Passage 3
+        let timerInterval;
+
+        const highlightBtn = document.getElementById('highlight-btn');
+        const removeHighlightBtn = document.getElementById('remove-highlight-btn');
+        const passagePanel = document.querySelector('.passage-container');
+        const questionsPanel = document.getElementById('questions');
+        const resizer = document.getElementById('resizer');
+        const submitBtn = document.getElementById('submit-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resultsModal = document.getElementById('results-modal');
+        const scoreDisplay = document.getElementById('score-display');
+        const passage3Score = document.getElementById('passage3-score');
+        const closeModalBtn = document.getElementById('close-modal');
+        const reviewBtn = document.getElementById('review-answers');
+        const timerElement = document.querySelector('.timer span');
+        const timerContainer = document.querySelector('.timer');
+
+        // Timer
+        function updateTimer() {
+            seconds--;
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            if (seconds <= 2 * 60) {
+                timerContainer.classList.add('warning');
+            }
+            if (seconds <= 0) {
+                clearInterval(timerInterval);
+                if (!submitted) {
+                    alert('Time is up! Submitting your test.');
+                    submitTest();
+                }
+            }
+        }
+
+        // Highlight functionality
+        function getValidSelection() {
+            const sel = window.getSelection();
+            if (!sel.rangeCount || sel.isCollapsed) return null;
+            const range = sel.getRangeAt(0);
+            if (passagePanel.contains(range.commonAncestorContainer)) {
+                currentPanel = passagePanel;
+            } else if (questionsPanel.contains(range.commonAncestorContainer)) {
+                currentPanel = questionsPanel;
+            } else {
+                return null;
+            }
+            return range;
+        }
+
+        function showHighlightBtn(range) {
+            const rect = range.getBoundingClientRect();
+            highlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            highlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            highlightBtn.style.display = 'block';
+        }
+
+        function hideHighlightBtn() {
+            highlightBtn.style.display = 'none';
+        }
+
+        function showRemoveBtn(span) {
+            const rect = span.getBoundingClientRect();
+            removeHighlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            removeHighlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            removeHighlightBtn.style.display = 'block';
+            highlightTarget = span;
+        }
+
+        function hideRemoveBtn() {
+            removeHighlightBtn.style.display = 'none';
+            highlightTarget = null;
+        }
+
+        highlightBtn.addEventListener('click', () => {
+            if (lastSelection) {
+                const span = document.createElement('span');
+                span.className = 'highlight';
+                span.appendChild(lastSelection.extractContents());
+                lastSelection.insertNode(span);
+                window.getSelection().removeAllRanges();
+                hideHighlightBtn();
+            }
+        });
+
+        removeHighlightBtn.addEventListener('click', () => {
+            if (highlightTarget) {
+                const parent = highlightTarget.parentNode;
+                while (highlightTarget.firstChild) {
+                    parent.insertBefore(highlightTarget.firstChild, highlightTarget);
+                }
+                parent.removeChild(highlightTarget);
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('selectionchange', () => {
+            hideHighlightBtn();
+            hideRemoveBtn();
+            const range = getValidSelection();
+            if (range) {
+                lastSelection = range;
+                showHighlightBtn(range);
+            } else {
+                lastSelection = null;
+            }
+        });
+
+        [passagePanel, questionsPanel].forEach(panel => {
+            panel.addEventListener('scroll', () => {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            });
+        });
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.target !== highlightBtn && e.target !== removeHighlightBtn) {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('highlight')) {
+                e.preventDefault();
+                showRemoveBtn(e.target);
+            }
+        });
+
+        // Resizer
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const container = document.querySelector('.main-content');
+            const containerRect = container.getBoundingClientRect();
+            const mouseX = e.clientX - containerRect.left;
+            const containerWidth = containerRect.width;
+            const leftPercentage = (mouseX / containerWidth) * 100;
+            const rightPercentage = 100 - leftPercentage;
+            if (leftPercentage >= 30 && leftPercentage <= 70) {
+                document.querySelector('.passage-container').style.flex = leftPercentage + '%';
+                document.querySelector('.questions-container').style.width = rightPercentage + '%';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            }
+        });
+
+        // Navigation
+        function scrollToQuestion(num) {
+            const el = document.querySelector(`[data-question="${num}"]`) || document.querySelector(`select[name="q${num}"]`) || document.querySelector(`input[name="q${num}"]`);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            updateCurrentQuestion(num);
+        }
+
+        function updateCurrentQuestion(num) {
+            currentQuestion = num;
+            document.querySelectorAll('.progress-item').forEach(item => {
+                item.classList.remove('current');
+                if (parseInt(item.dataset.question) === num) item.classList.add('current');
+            });
+            prevBtn.disabled = num <= 1;
+            nextBtn.disabled = num >= 14;
+        }
+
+        document.querySelectorAll('.progress-item').forEach(item => {
+            item.addEventListener('click', () => {
+                scrollToQuestion(parseInt(item.dataset.question));
+            });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 1) scrollToQuestion(currentQuestion - 1);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestion < 14) scrollToQuestion(currentQuestion + 1);
+        });
+
+        // Event listener for marking questions as answered
+        document.querySelectorAll('select, input[type="radio"]').forEach(input => {
+            input.addEventListener('change', () => {
+                if (submitted) return;
+                const qNumMatch = input.name.match(/^q(\d+)$/);
+                if (qNumMatch) {
+                    const qNum = qNumMatch[1];
+                    const item = document.querySelector(`.progress-item[data-question="${qNum}"]`);
+                    if (item && !item.classList.contains('answered')) {
+                        const value = input.value;
+                        if (value) {
+                            item.classList.add('answered');
+                        }
+                    }
+                }
+            });
+        });
+
+        submitBtn.addEventListener('click', submitTest);
+
+        function submitTest() {
+            if (submitted) return;
+            if (!confirm('Are you sure you want to submit?')) return;
+            submitted = true;
+            clearInterval(timerInterval);
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Submitted';
+            let score = 0;
+            const results = {};
+
+            // Process questions 1-9 (radio buttons)
+            for (let i = 1; i <= 9; i++) {
+                const key = `q${i}`;
+                const radioEl = document.querySelector(`input[name="${key}"]:checked`);
+                let userAnswer = '';
+                let isCorrect = false;
+                if (radioEl) {
+                    userAnswer = radioEl.value;
+                    isCorrect = userAnswer === correctAnswers[key];
+                    document.querySelectorAll(`input[name="${key}"]`).forEach(radio => {
+                        radio.disabled = true;
+                    });
+                }
+                if (isCorrect) score++;
+                results[key] = { userAnswer, correct: correctAnswers[key], isCorrect };
+            }
+
+            // Process questions 10-14 (dropdowns)
+            for (let i = 10; i <= 14; i++) {
+                const key = `q${i}`;
+                const selectEl = document.querySelector(`select[name="${key}"]`);
+                let userAnswer = '';
+                let isCorrect = false;
+                if (selectEl && selectEl.value !== '') {
+                    userAnswer = selectEl.value;
+                    isCorrect = userAnswer === correctAnswers[key];
+                    selectEl.disabled = true;
+                }
+                if (isCorrect) score++;
+                results[key] = { userAnswer, correct: correctAnswers[key], isCorrect };
+            }
+
+            scoreDisplay.textContent = `${score}/14`;
+            passage3Score.textContent = `${score}/14`;
+            for (let i = 1; i <= 14; i++) {
+                const qNum = i.toString();
+                const item = document.querySelector(`.progress-item[data-question="${qNum}"]`);
+                const res = results[`q${qNum}`];
+                if (item && res) {
+                    item.classList.remove('current', 'answered');
+                    item.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+                }
+            }
+            window.testResults = results;
+            resultsModal.style.display = 'flex';
+        }
+
+        function showCorrectAnswers() {
+            if (!submitted) return;
+            document.querySelectorAll('.answer-indicator').forEach(el => el.remove());
+
+            // Process questions 1-9 (radio buttons)
+            for (let i = 1; i <= 9; i++) {
+                const key = `q${i}`;
+                const res = window.testResults[key];
+                if (!res) continue;
+                const radioGroup = document.querySelector(`[data-question="${i}"] .options`);
+                if (!radioGroup) continue;
+                const div = document.createElement('div');
+                div.className = 'answer-indicator';
+                div.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+                div.style.marginTop = '10px';
+                if (res.isCorrect) {
+                    div.innerHTML = `<i class="fas fa-check"></i> Correct! You chose: <strong>${res.userAnswer || 'No answer'}</strong>`;
+                } else {
+                    const userDisplay = res.userAnswer || 'No answer';
+                    div.innerHTML = `<i class="fas fa-times"></i> Incorrect. You chose: <strong>${userDisplay}</strong><br><strong>Correct:</strong> ${res.correct}`;
+                }
+                radioGroup.appendChild(div);
+            }
+
+            // Process questions 10-14 (dropdowns)
+            for (let i = 10; i <= 14; i++) {
+                const key = `q${i}`;
+                const res = window.testResults[key];
+                if (!res) continue;
+                const selectEl = document.querySelector(`select[name="${key}"]`);
+                if (!selectEl) continue;
+                const targetElement = selectEl.parentNode;
+                const div = document.createElement('div');
+                div.className = 'answer-indicator';
+                div.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+                div.style.display = 'inline-block';
+                div.style.marginLeft = '10px';
+                if (res.isCorrect) {
+                    div.innerHTML = `<i class="fas fa-check"></i> Correct! You chose: <strong>${res.userAnswer || 'No answer'}</strong>`;
+                } else {
+                    const userDisplay = res.userAnswer || 'No answer';
+                    div.innerHTML = `<i class="fas fa-times"></i> Incorrect. You chose: <strong>${userDisplay}</strong><br><strong>Correct:</strong> ${res.correct}`;
+                }
+                targetElement.appendChild(div);
+            }
+        }
+
+        closeModalBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+        });
+
+        reviewBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+            showCorrectAnswers();
+            scrollToQuestion(1);
+        });
+
+        function startTest() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('testContainer').classList.remove('hidden');
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        setTimeout(() => {
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }, 2000);
+    </script>
+</body>
+
+</html>

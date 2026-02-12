@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Reading Test - Passage 1</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        /* Loading Screen Styles */
+        .loading-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .spinner {
+            width: 64px;
+            height: 64px;
+            border: 4px solid #d1d5db;
+            border-top: 4px solid #111827;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 32px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .loading-subtitle {
+            color: #6b7280;
+        }
+
+        .start-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9998;
+        }
+
+        .start-content {
+            text-align: center;
+        }
+
+        .start-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 24px;
+        }
+
+        .start-subtitle {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        .start-button {
+            padding: 12px 32px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .start-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #4a5568;
+            color: white;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+
+        .passage-info {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #e2e8f0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s;
+            color: #ee7272;
+        }
+
+        .logo:hover {
+            color: #90cdf4;
+        }
+
+        .logo i {
+            margin-right: 6px;
+            font-size: 1.3rem;
+        }
+
+        .timer {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+            min-width: 80px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .timer.warning {
+            color: #fed7d7;
+            background-color: rgba(245, 101, 101, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .passage-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #fafafa;
+            position: relative;
+        }
+
+        .resizer {
+            width: 4px;
+            background-color: #cbd5e0;
+            cursor: col-resize;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .resizer:hover {
+            background-color: #a0aec0;
+        }
+
+        .resizer::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 40px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23718096"><circle cx="8" cy="12" r="1"/><circle cx="16" cy="12" r="1"/><circle cx="8" cy="6" r="1"/><circle cx="16" cy="6" r="1"/><circle cx="8" cy="18" r="1"/><circle cx="16" cy="18" r="1"/></svg>') center/contain no-repeat;
+        }
+
+        .section-title {
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .passage-content {
+            background: white;
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .passage-content h3 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage-content p {
+            margin-bottom: 18px;
+            text-align: justify;
+            color: #4a5568;
+        }
+
+        .questions-container {
+            width: 45%;
+            min-width: 400px;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: white;
+            position: relative;
+        }
+
+        .question {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .question:last-child {
+            border-bottom: none;
+        }
+
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #2d3748;
+            font-size: 0.95rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .option:hover {
+            background-color: #f7fafc;
+            border-color: #cbd5e0;
+        }
+
+        .option input {
+            margin-right: 10px;
+            width: 16px;
+            height: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f7fafc;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background-color: #4a5568;
+            padding: 4px 20px;
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .progress-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 0;
+        }
+
+        .progress-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .progress-item.current {
+            background-color: #63b3ed;
+            transform: scale(1.1);
+        }
+
+        .progress-item.answered {
+            background-color: #68d391;
+        }
+
+        .progress-item.correct {
+            background-color: #48bb78;
+        }
+
+        .progress-item.incorrect {
+            background-color: #f56565;
+        }
+
+        .progress-item:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .highlight {
+            background-color: #ffff00;
+            cursor: pointer;
+        }
+
+        #highlight-btn,
+        #remove-highlight-btn {
+            position: absolute;
+            z-index: 9999;
+            display: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            border: 1px solid #888;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        #highlight-btn {
+            background: #fffbe7;
+        }
+
+        #remove-highlight-btn {
+            background: #ffeaea;
+            color: #b00;
+            border-color: #b00;
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.95rem;
+        }
+
+        .btn i {
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: #4299e1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #3182ce;
+        }
+
+        .btn-secondary {
+            background-color: #edf2f7;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+        }
+
+        .btn-submit {
+            background-color: #48bb78;
+            color: white;
+            font-weight: 900;
+        }
+
+        .btn-submit:hover {
+            background-color: #459ef1;
+        }
+
+        .btn-submit:disabled {
+            background-color: #9ae6b4;
+            cursor: not-allowed;
+        }
+
+        /* Results Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .modal h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .score-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2d3748;
+        }
+
+        .score-breakdown {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 100%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        .input-field:focus {
+            border-color: #4299e1;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+        }
+
+        .question-group {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-group-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .questions-container {
+                width: 50%;
+                min-width: 350px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .passage-container,
+            .questions-container {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .resizer {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-wrap: wrap;
+                gap: 10px;
+                padding: 10px 15px;
+            }
+
+            .logo {
+                font-size: 1.1rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8rem;
+            }
+
+            .btn {
+                padding: 5px 10px;
+                font-size: 0.85rem;
+            }
+
+            .progress-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-buttons {
+                margin-top: 10px;
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h2 class="loading-title">Your test will begin shortly</h2>
+            <p class="loading-subtitle">Please wait</p>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="startScreen" class="start-screen hidden">
+        <div class="start-content">
+            <h1 class="start-title">IELTSwithJurabek</h1>
+            <p class="start-subtitle">Ready to begin your reading test?</p>
+            <button class="start-button" onclick="startTest()">Start Test</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="testContainer">
+        <!-- Header -->
+        <header>
+            <div class="passage-info">IELTSwithJurabek</div>
+            <div class="logo" onclick="window.open('https://t.me/IELTSwithJurabek', '_blank')">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Click for more TESTS</span>
+            </div>
+            <div class="timer">
+                <i class="fas fa-clock"></i>
+                <span>20:00</span>
+            </div>
+        </header>
+
+        <!-- Highlight Buttons -->
+        <button id="highlight-btn" type="button">Highlight</button>
+        <button id="remove-highlight-btn" type="button">Remove Highlight</button>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Reading Passage -->
+            <div class="passage-container" role="region" aria-label="Reading Passage">
+                <h2 class="section-title">READING PASSAGE 3</h2>
+                <div class="passage-content" id="passage">
+                    <h3>The lost animals of Australia</h3>
+                    <p>The history of Australia's animals over the past 50,000 years has been largely one of extinction.
+                        The time has been too short for new species of large animals to evolve and, over this period,
+                        nearly one-third of Australia's mammal species have become extinct, along with nearly all the
+                        large reptiles and many of the flightless birds. The cause of these extinctions is still hotly
+                        debated. One school of thought suggests that humans caused the extinctions, and another that
+                        they were due to changes in climate. The greatest problem in evaluating these theories is that
+                        we do not know exactly when these animals became extinct. Fossils from a number of well-dated
+                        cave and lakeside sites suggest that all the now-extinct species had already vanished 35,000
+                        years ago, but a few other sites suggest that giant marsupials might have survived until 25.0
+                        years ago, or even as late as 6.0 years ago.</p>
+                    <p>One certainty is that Australia's climate has changed greatly over the past 40,000 years. Between
+                        25,000 and 15,000 years ago, the sea level dropped by more than 100 metres and the continent
+                        experienced an extremely arid phase. Clearly, the timing of the extinctions is of critical
+                        importance. If they can be shown to coincide with the arrival of humans, about 50,000 years ago,
+                        then circumstantial evidence would point to humans as the cause. If, however, the giant
+                        marsupials survived until 25,000 years ago, in a type of mammal which carries its young in a
+                        pouch.</p>
+                    <p>Before these extinctions, Australia was a very different place. Naturally occurring fires were
+                        probably less frequent than they are now, because large marsupial herbivores (of which there
+                        were about forty species) reduced the standing crop of vegetation. Rainforest plants were
+                        widespread in the parts of Australia which are now very dry. The largest marsupial species was
+                        the diprotodon, which, like other Australian marsupial giants, was about one-third the weight of
+                        its equivalent Afro-Asian elephant. The relatively small size of the Australian marsupial giants
+                        has been attributed to Australia's extraordinarily poor soils and erratic climate, both factors
+                        which typically limit plant growth.</p>
+                    <p>Judging by the teeth of extinct species, there were many specialist grazers and browsers,
+                        paralleling the great mammal communities of Africa today. But the Australian carnivores were
+                        very different to their African equivalents. For example, the Australian marsupial lion was only
+                        about the size of a leopard; there was no equivalent of the large group of cat- and dog-like
+                        carnivores of Africa. The marsupial lion was Australia’s only cat-like species; there was one
+                        dog-like species, the thylocine, which vanished from mainland Australia about 3,000 years ago,
+                        but seems to have survived on the Australian island of Tasmania until the 1930s, and one
+                        scavenger/carnivore, the Tasmanian devil. The larger Australian carnivores were all reptiles.
+                        The largest of these, the gigantic snakes of the genus Wonambi, were more than 8 metres long,
+                        and together with the 7-metre goanna and the 3-metre land crocodile, were the main predators.
+                        There were never vast numbers of most species. Large, warm-blooded creatures were at a
+                        disadvantage, their prey being limited by the nature of the soil and the climate. The
+                        cold-blooded reptilian carnivores, which required less energy, were therefore able to dominate.
+                    </p>
+                    <p>There is strong evidence to support the theory that humans were responsible for the decline of
+                        large animals in Australia. In their Afro- Eurasian homeland, humans were medium-sized members
+                        of a very large community of carnivores and omnivores. But by 40,000 years ago, they were taking
+                        a very broad range of prey, including mammals much larger than themselves. Studies have shown
+                        that when humans or other predators arrive in areas where there have previously been no
+                        ecologically equivalent species, they invariably have a profound impact. For example, over the
+                        past 1,000 years, Polynesians in Hawaii have destroyed more than 70% of the bird species, and,
+                        during the 1800s, hunters on islands close to Antarctica severely depleted many seal species.
+                    </p>
+                    <p>Australian animals were particularly vulnerable to the impact of humans. Marsupial herbivores
+                        were adapted only to avoiding predation by large but relatively unintelligent reptiles, while
+                        humans are the most efficient predators that have ever existed. From the mountain rainforests to
+                        the desert centre, effinctions emptied landscape after landscape, until finally the largest
+                        surviving mammals were humans themselves. Medium-sized animal species weighing between 10 and
+                        100 kilograms either also became extinct or became smaller over thousands of years. Grey
+                        kangaroos are now only half the size they once were, while koalas and Tasmanian devils weigh, on
+                        average, one-third less than they once did..</p>
+                    <p>In general, in Australia, the larger the species, the more it has reduced in size, with the
+                        exception of humans and wombats; the latter may have been protected by their burrowing habits.
+                        This shrinking may also be attributable to human hunting practices. If hunters claimed the
+                        largest individuals of these species, fast-maturing small specimens would have been more likely
+                        to survive to maturity. Increasingly, they would have produced smaller offspring. Only the
+                        smallest mammals, those weighing less than 10 kilograms, survived unaltered, although some may
+                        have been restricted to a smaller number of areas. This extinction pattern changed with the
+                        arrival of Europeans towards the end of the 18th century. As a result of this, a large number of
+                        smaller species also became extinct over the course of the following century, together with 21
+                        medium-sized mammals and one large mammal species.</p>
+                </div>
+            </div>
+
+            <!-- Resizer -->
+            <div class="resizer" id="resizer"></div>
+
+            <!-- Questions -->
+            <div class="questions-container" id="questions" role="region" aria-label="Questions">
+                <h2 class="section-title">Questions 27-40</h2>
+                <p>You should spend about 20 minutes on Questions 27-40, which are based on Reading Passage 3 on pages 9
+                    and 10.</p>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 27-32</div>
+                    <p>Choose the correct letter, A, B, C or D. Write the correct letter in boxes 27-32 on your answer
+                        sheet.</p>
+
+                    <div class="question" data-question="27">
+                        <div class="question-text">27. The writer states that it is difficult to decide why prehistoric
+                            Australian animals became extinct because</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q27" value="A">A. relevant fossils are
+                                scarce.</label>
+                            <label class="option"><input type="radio" name="q27" value="B">B. fossil evidence has been
+                                destroyed.</label>
+                            <label class="option"><input type="radio" name="q27" value="C">C. the evidence is somewhat
+                                contradictory.</label>
+                            <label class="option"><input type="radio" name="q27" value="D">D. there has not been enough
+                                time to carry out research.</label>
+                        </div>
+                    </div>
+
+                    <div class="question" data-question="28">
+                        <div class="question-text">28. The writer suggests that Australia's larger mammals were smaller
+                            than those of Africa and Asia because</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q28" value="A">A. there was an insufficient
+                                supply of food.</label>
+                            <label class="option"><input type="radio" name="q28" value="B">B. the country was covered
+                                with thick forest.</label>
+                            <label class="option"><input type="radio" name="q28" value="C">C. smaller animals escaped
+                                predators more easily.</label>
+                            <label class="option"><input type="radio" name="q28" value="D">D. they had difficulty
+                                digesting the available food.</label>
+                        </div>
+                    </div>
+
+                    <div class="question" data-question="29">
+                        <div class="question-text">29. According to the writer, large Australian carnivores were mostly
+                            reptiles because</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q29" value="A">A. mammals were less skilful
+                                at hunting.</label>
+                            <label class="option"><input type="radio" name="q29" value="B">B. reptiles had faster
+                                breeding rates.</label>
+                            <label class="option"><input type="radio" name="q29" value="C">C. reptiles were more suited
+                                to the environment.</label>
+                            <label class="option"><input type="radio" name="q29" value="D">D. mammals had to compete for
+                                territory.</label>
+                        </div>
+                    </div>
+
+                    <div class="question" data-question="30">
+                        <div class="question-text">30. According to the writer, the effect of the first humans in
+                            Australia was particularly great because Australian animals</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q30" value="A">A. were slow and
+                                awkward.</label>
+                            <label class="option"><input type="radio" name="q30" value="B">B. had skins that could be
+                                used for several purposes.</label>
+                            <label class="option"><input type="radio" name="q30" value="C">C. had little experience in
+                                escaping such skilful hunters.</label>
+                            <label class="option"><input type="radio" name="q30" value="D">D. were attracted towards
+                                human settlements because of the food available there.</label>
+                        </div>
+                    </div>
+
+                    <div class="question" data-question="31">
+                        <div class="question-text">31. What, according to the writer, does the wombat have in common
+                            with humans?</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q31" value="A">A. Its size has remained the
+                                same.</label>
+                            <label class="option"><input type="radio" name="q31" value="B">B. Its diet was similar to
+                                the human diet.</label>
+                            <label class="option"><input type="radio" name="q31" value="C">C. It made shelters to
+                                protect itself.</label>
+                            <label class="option"><input type="radio" name="q31" value="D">D. It was able to evade
+                                reptiles easily.</label>
+                        </div>
+                    </div>
+
+                    <div class="question" data-question="32">
+                        <div class="question-text">32. The writer suggests that Australian mammals have become smaller
+                            because</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q32" value="A">A. they were able to live
+                                underground.</label>
+                            <label class="option"><input type="radio" name="q32" value="B">B. they were vulnerable to
+                                human diseases.</label>
+                            <label class="option"><input type="radio" name="q32" value="C">C. examples of the species
+                                were killed.</label>
+                            <label class="option"><input type="radio" name="q32" value="D">D. their territories expanded
+                                in size.</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 33-36</div>
+                    <p>Complete each sentence with the correct ending, A-F, below. Write the correct letter, A-F, in
+                        boxes 33-36 on your answer sheet.</p>
+
+                    <div class="question" data-question="33">
+                        <div class="question-text">33. The failure of a new species of large mammals to evolve</div>
+                        <select name="q33" class="input-field">
+                            <option value="" disabled selected>Select an ending</option>
+                            <option value="A">A. is due to the fact that not enough time has passed.</option>
+                            <option value="B">B. is evidenced by the remains of their teeth.</option>
+                            <option value="C">C. is responsible for the disappearance of habitat.</option>
+                            <option value="D">D. is often responsible for a significant number of extinctions.</option>
+                            <option value="E">E. is theoretically based on a large herbivore population.</option>
+                            <option value="F">F. is a crucial factor that has yet to be resolved.</option>
+                        </select>
+                    </div>
+
+                    <div class="question" data-question="34">
+                        <div class="question-text">34. The extinction date of the large Australian animals</div>
+                        <select name="q34" class="input-field">
+                            <option value="" disabled selected>Select an ending</option>
+                            <option value="A">A. is due to the fact that not enough time has passed.</option>
+                            <option value="B">B. is evidenced by the remains of their teeth.</option>
+                            <option value="C">C. is responsible for the disappearance of habitat.</option>
+                            <option value="D">D. is often responsible for a significant number of extinctions.</option>
+                            <option value="E">E. is theoretically based on a large herbivore population.</option>
+                            <option value="F">F. is a crucial factor that has yet to be resolved.</option>
+                        </select>
+                    </div>
+
+                    <div class="question" data-question="35">
+                        <div class="question-text">35. A reduction in the number of forest fires</div>
+                        <select name="q35" class="input-field">
+                            <option value="" disabled selected>Select an ending</option>
+                            <option value="A">A. is due to the fact that not enough time has passed.</option>
+                            <option value="B">B. is evidenced by the remains of their teeth.</option>
+                            <option value="C">C. is responsible for the disappearance of habitat.</option>
+                            <option value="D">D. is often responsible for a significant number of extinctions.</option>
+                            <option value="E">E. is theoretically based on a large herbivore population.</option>
+                            <option value="F">F. is a crucial factor that has yet to be resolved.</option>
+                        </select>
+                    </div>
+
+                    <div class="question" data-question="36">
+                        <div class="question-text">36. The arrival of humans in a previously uninhabited area</div>
+                        <select name="q36" class="input-field">
+                            <option value="" disabled selected>Select an ending</option>
+                            <option value="A">A. is due to the fact that not enough time has passed.</option>
+                            <option value="B">B. is evidenced by the remains of their teeth.</option>
+                            <option value="C">C. is responsible for the disappearance of habitat.</option>
+                            <option value="D">D. is often responsible for a significant number of extinctions.</option>
+                            <option value="E">E. is theoretically based on a large herbivore population.</option>
+                            <option value="F">F. is a crucial factor that has yet to be resolved.</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 37-40</div>
+                    <p>Do the following statements agree with the claims of the writer in Reading Passage 3? In boxes
+                        37-40 on your answer sheet, write</p>
+                    <p>YES if the statement agrees with the claims of the writer</p>
+                    <p>NO if the statement contradicts the claims of the writer</p>
+                    <p>NOT GIVEN if it is impossible to say what the writer thinks about this</p>
+
+                    <div class="question" data-question="37">
+                        <div class="question-text">37. Mass extinction in Australia was limited to giant mammals.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q37" value="YES">YES</label>
+                            <label class="option"><input type="radio" name="q37" value="NO">NO</label>
+                            <label class="option"><input type="radio" name="q37" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+
+                    <div class="question" data-question="38">
+                        <div class="question-text">38. Australian climate became cooler about 50,000 years ago.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q38" value="YES">YES</label>
+                            <label class="option"><input type="radio" name="q38" value="NO">NO</label>
+                            <label class="option"><input type="radio" name="q38" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+
+                    <div class="question" data-question="39">
+                        <div class="question-text">39. The wonambi snake was the biggest Australian carnivore.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q39" value="YES">YES</label>
+                            <label class="option"><input type="radio" name="q39" value="NO">NO</label>
+                            <label class="option"><input type="radio" name="q39" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+
+                    <div class="question" data-question="40">
+                        <div class="question-text">40. Europeans caused the extinction of some smaller Australian
+                            mammals.</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="q40" value="YES">YES</label>
+                            <label class="option"><input type="radio" name="q40" value="NO">NO</label>
+                            <label class="option"><input type="radio" name="q40" value="NOT GIVEN">NOT GIVEN</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-nav">
+                <div class="progress-items">
+                    <div class="progress-item current" data-question="27">27</div>
+                    <div class="progress-item" data-question="28">28</div>
+                    <div class="progress-item" data-question="29">29</div>
+                    <div class="progress-item" data-question="30">30</div>
+                    <div class="progress-item" data-question="31">31</div>
+                    <div class="progress-item" data-question="32">32</div>
+                    <div class="progress-item" data-question="33">33</div>
+                    <div class="progress-item" data-question="34">34</div>
+                    <div class="progress-item" data-question="35">35</div>
+                    <div class="progress-item" data-question="36">36</div>
+                    <div class="progress-item" data-question="37">37</div>
+                    <div class="progress-item" data-question="38">38</div>
+                    <div class="progress-item" data-question="39">39</div>
+                    <div class="progress-item" data-question="40">40</div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" id="prev-btn"><i class="fas fa-arrow-left"></i> Previous</button>
+                    <button class="btn btn-secondary" id="next-btn">Next <i class="fas fa-arrow-right"></i></button>
+                    <button class="btn btn-submit" id="submit-btn">Submit Test <i
+                            class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div class="modal" id="results-modal">
+        <div class="modal-content">
+            <h2>Test Results</h2>
+            <div class="score-display" id="score-display">0/14</div>
+            <div class="score-breakdown">
+                <div class="score-item">
+                    <span>Passage 3:</span>
+                    <span id="passage3-score">0/14</span>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="close-modal">Close</button>
+                <button class="btn btn-primary" id="review-answers">Review Answers</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Correct answers
+        const correctAnswers = {
+            q27: 'C',
+            q28: 'A',
+            q29: 'C',
+            q30: 'C',
+            q31: 'A',
+            q32: 'C',
+            q33: 'A',
+            q34: 'F',
+            q35: 'E',
+            q36: 'D',
+            q37: 'NO',
+            q38: 'NOT GIVEN',
+            q39: 'YES',
+            q40: 'YES'
+        };
+
+        // Initialize variables
+        const highlightBtn = document.getElementById('highlight-btn');
+        const removeHighlightBtn = document.getElementById('remove-highlight-btn');
+        const passagePanel = document.getElementById('passage');
+        const questionsPanel = document.getElementById('questions');
+        const submitBtn = document.getElementById('submit-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resultsModal = document.getElementById('results-modal');
+        const scoreDisplay = document.getElementById('score-display');
+        const passage3Score = document.getElementById('passage3-score');
+        const closeModalBtn = document.getElementById('close-modal');
+        const reviewBtn = document.getElementById('review-answers');
+        const resizer = document.getElementById('resizer');
+
+        let lastSelection = null;
+        let highlightTarget = null;
+        let currentPanel = null;
+        let submitted = false;
+        let currentQuestion = 27;
+        let isResizing = false;
+        let seconds = 20 * 60; // 20 minutes
+        let timerInterval;
+
+        // Timer functionality
+        const timerElement = document.querySelector('.timer span');
+        const timerContainer = document.querySelector('.timer');
+
+        function updateTimer() {
+            seconds--;
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+            if (seconds <= 2 * 60) {
+                timerContainer.classList.add('warning');
+            }
+
+            if (seconds <= 0) {
+                clearInterval(timerInterval);
+                if (!submitted) {
+                    alert('Time is up! Please submit your answers.');
+                    submitTest();
+                }
+            }
+        }
+
+        // Resizer functionality
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+
+            const container = document.querySelector('.main-content');
+            const containerRect = container.getBoundingClientRect();
+            const mouseX = e.clientX - containerRect.left;
+            const containerWidth = containerRect.width;
+
+            const leftPercentage = (mouseX / containerWidth) * 100;
+            const rightPercentage = 100 - leftPercentage;
+
+            if (leftPercentage >= 30 && leftPercentage <= 70) {
+                document.querySelector('.passage-container').style.flex = leftPercentage + '%';
+                document.querySelector('.questions-container').style.width = rightPercentage + '%';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            }
+        });
+
+        // Highlighting functionality
+        function getValidSelection() {
+            const sel = window.getSelection();
+            if (!sel.rangeCount || sel.isCollapsed) return null;
+            const range = sel.getRangeAt(0);
+
+            if (passagePanel.contains(range.commonAncestorContainer)) {
+                currentPanel = passagePanel;
+            } else if (questionsPanel.contains(range.commonAncestorContainer)) {
+                currentPanel = questionsPanel;
+            } else {
+                currentPanel = null;
+                return null;
+            }
+
+            return range;
+        }
+
+        function showHighlightBtn(range) {
+            const rect = range.getBoundingClientRect();
+            highlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            highlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            highlightBtn.style.display = 'block';
+        }
+
+        function hideHighlightBtn() {
+            highlightBtn.style.display = 'none';
+        }
+
+        function showRemoveBtn(span) {
+            const rect = span.getBoundingClientRect();
+            removeHighlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            removeHighlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            removeHighlightBtn.style.display = 'block';
+            highlightTarget = span;
+        }
+
+        function hideRemoveBtn() {
+            removeHighlightBtn.style.display = 'none';
+            highlightTarget = null;
+        }
+
+        highlightBtn.addEventListener('click', () => {
+            if (lastSelection) {
+                const span = document.createElement('span');
+                span.className = 'highlight';
+                span.appendChild(lastSelection.extractContents());
+                lastSelection.insertNode(span);
+                window.getSelection().removeAllRanges();
+                hideHighlightBtn();
+            }
+        });
+
+        removeHighlightBtn.addEventListener('click', () => {
+            if (highlightTarget) {
+                const parent = highlightTarget.parentNode;
+                while (highlightTarget.firstChild) {
+                    parent.insertBefore(highlightTarget.firstChild, highlightTarget);
+                }
+                parent.removeChild(highlightTarget);
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('selectionchange', () => {
+            hideHighlightBtn();
+            hideRemoveBtn();
+
+            const range = getValidSelection();
+            if (range) {
+                lastSelection = range;
+                showHighlightBtn(range);
+            } else {
+                lastSelection = null;
+            }
+        });
+
+        [passagePanel, questionsPanel].forEach(panel => {
+            panel.addEventListener('scroll', () => {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            });
+        });
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.target !== highlightBtn && e.target !== removeHighlightBtn) {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('highlight')) {
+                e.preventDefault();
+                showRemoveBtn(e.target);
+            }
+        });
+
+        // Question navigation
+        function scrollToQuestion(questionNumber) {
+            const questionElement = document.querySelector(`[data-question="${questionNumber}"]`);
+            if (questionElement) {
+                questionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                updateCurrentQuestion(questionNumber);
+            }
+        }
+
+        function updateCurrentQuestion(questionNumber) {
+            currentQuestion = questionNumber;
+            document.querySelectorAll('.progress-item').forEach(item => {
+                item.classList.remove('current');
+                if (item.dataset.question == questionNumber) {
+                    item.classList.add('current');
+                }
+            });
+
+            prevBtn.disabled = currentQuestion <= 27;
+            nextBtn.disabled = currentQuestion >= 40;
+        }
+
+        // Progress item clicks
+        document.querySelectorAll('.progress-item').forEach(item => {
+            item.addEventListener('click', function () {
+                const questionNumber = parseInt(this.dataset.question);
+                scrollToQuestion(questionNumber);
+            });
+        });
+
+        // Navigation buttons
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 27) {
+                scrollToQuestion(currentQuestion - 1);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestion < 40) {
+                scrollToQuestion(currentQuestion + 1);
+            }
+        });
+
+        // Mark questions as answered
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('change', () => {
+                if (submitted) return;
+
+                const questionNumber = input.closest('.question')?.dataset.question ||
+                    (input.name.startsWith('q') ? input.name.substring(1) : null);
+
+                if (questionNumber) {
+                    const progressItem = document.querySelector(`.progress-item[data-question="${questionNumber}"]`);
+                    if (progressItem && !progressItem.classList.contains('answered')) {
+                        progressItem.classList.add('answered');
+                    }
+                }
+            });
+        });
+
+        // Submit functionality
+        submitBtn.addEventListener('click', submitTest);
+
+        function submitTest() {
+            if (submitted) return;
+
+            if (!confirm('Are you sure you want to submit your answers? You won\'t be able to make changes after submission.')) {
+                return;
+            }
+
+            submitted = true;
+            clearInterval(timerInterval);
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Submitted';
+
+            // Calculate score
+            let score = 0;
+            const results = {};
+
+            // Questions 27-32: Multiple choice
+            for (let i = 27; i <= 32; i++) {
+                const questionKey = `q${i}`;
+                const selected = document.querySelector(`input[name="${questionKey}"]:checked`);
+                const userAnswer = selected ? selected.value : '';
+                const correct = correctAnswers[questionKey];
+                const isCorrect = userAnswer === correct;
+
+                if (isCorrect) {
+                    score++;
+                }
+
+                results[questionKey] = {
+                    userAnswer,
+                    correct,
+                    isCorrect
+                };
+            }
+
+            // Questions 33-36: Dropdown selection
+            for (let i = 33; i <= 36; i++) {
+                const questionKey = `q${i}`;
+                const select = document.querySelector(`select[name="${questionKey}"]`);
+                const userAnswer = select ? select.value : '';
+                const correct = correctAnswers[questionKey];
+                const isCorrect = userAnswer === correct;
+
+                if (isCorrect) {
+                    score++;
+                }
+
+                results[questionKey] = {
+                    userAnswer,
+                    correct,
+                    isCorrect
+                };
+            }
+
+            // Questions 37-40: Yes/No/Not Given
+            for (let i = 37; i <= 40; i++) {
+                const questionKey = `q${i}`;
+                const selected = document.querySelector(`input[name="${questionKey}"]:checked`);
+                const userAnswer = selected ? selected.value : '';
+                const correct = correctAnswers[questionKey];
+                const isCorrect = userAnswer === correct;
+
+                if (isCorrect) {
+                    score++;
+                }
+
+                results[questionKey] = {
+                    userAnswer,
+                    correct,
+                    isCorrect
+                };
+            }
+
+            // Update progress items
+            for (let i = 27; i <= 40; i++) {
+                const progressItem = document.querySelector(`.progress-item[data-question="${i}"]`);
+                if (progressItem) {
+                    progressItem.classList.remove('current', 'answered');
+                    const result = results[`q${i}`];
+                    if (result && result.isCorrect) {
+                        progressItem.classList.add('correct');
+                    } else {
+                        progressItem.classList.add('incorrect');
+                    }
+                }
+            }
+
+            // Store results globally for review
+            window.testResults = results;
+
+            // Display results
+            scoreDisplay.textContent = `${score}/14`;
+            passage3Score.textContent = `${score}/14`;
+
+            // Show modal
+            resultsModal.style.display = 'flex';
+        }
+
+        // Show correct answers after submission
+        function showCorrectAnswers() {
+            if (!submitted) return;
+
+            for (let i = 27; i <= 40; i++) {
+                const questionKey = `q${i}`;
+                const result = window.testResults[questionKey];
+                const questionElement = document.querySelector(`[data-question="${i}"]`);
+
+                if (questionElement) {
+                    const existingIndicator = questionElement.querySelector('.answer-indicator');
+                    if (existingIndicator) {
+                        existingIndicator.remove();
+                    }
+
+                    const indicator = document.createElement('div');
+                    indicator.className = 'answer-indicator';
+
+                    if (i <= 32 || i >= 37) {
+                        if (result.isCorrect) {
+                            indicator.innerHTML = `<i class="fas fa-check"></i> <strong>Correct!</strong> Your answer: ${result.userAnswer}`;
+                        } else {
+                            indicator.className += ' incorrect';
+                            indicator.innerHTML = `<i class="fas fa-times"></i> <strong>Incorrect.</strong> Your answer: ${result.userAnswer || 'No answer'}<br><strong>Correct answer:</strong> ${result.correct}`;
+                        }
+                    } else if (i >= 33 && i <= 36) {
+                        const endingText = {
+                            'A': 'is due to the fact that not enough time has passed.',
+                            'B': 'is evidenced by the remains of their teeth.',
+                            'C': 'is responsible for the disappearance of habitat.',
+                            'D': 'is often responsible for a significant number of extinctions.',
+                            'E': 'is theoretically based on a large herbivore population.',
+                            'F': 'is a crucial factor that has yet to be resolved.'
+                        };
+                        const userEnding = result.userAnswer ? endingText[result.userAnswer] : 'No answer';
+                        const correctEnding = endingText[result.correct];
+                        if (result.isCorrect) {
+                            indicator.innerHTML = `<i class="fas fa-check"></i> <strong>Correct!</strong> Your answer: ${userEnding}`;
+                        } else {
+                            indicator.className += ' incorrect';
+                            indicator.innerHTML = `<i class="fas fa-times"></i> <strong>Incorrect.</strong> Your answer: ${userEnding}<br><strong>Correct answer:</strong> ${correctEnding}`;
+                        }
+                    }
+
+                    if (i !== 36 && i !== 40) { // Avoid duplicate indicators for paired questions
+                        questionElement.appendChild(indicator);
+                    }
+                }
+            }
+        }
+
+        // Modal functionality
+        closeModalBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+        });
+
+        reviewBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+            showCorrectAnswers();
+            scrollToQuestion(27);
+        });
+
+        // Initialize
+        updateCurrentQuestion(27);
+
+        // Loading and Start Screen functionality
+        function showStartScreen() {
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }
+
+        function startTest() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('testContainer').classList.remove('hidden');
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        setTimeout(showStartScreen, 2000);
+    </script>
+</body>
+
+</html>

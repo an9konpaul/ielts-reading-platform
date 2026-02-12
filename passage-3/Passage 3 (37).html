@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Reading Practice - Multi-purpose Meeting Spaces</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .header {
+            background: #fff;
+            padding: 12px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 60px;
+        }
+
+        .timer-container {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 8px;
+            margin-left: 15px;
+        }
+
+        .timer-controls button {
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .timer-controls button:hover {
+            background: #e0e0e0;
+        }
+
+        .timer-controls svg {
+            width: 20px;
+            height: 20px;
+            fill: #333;
+        }
+
+        .telegram-ad {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #0088cc;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .telegram-ad:hover {
+            background: #006b9f;
+        }
+
+        .telegram-ad svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .main-container {
+            margin-top: 60px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 60px);
+        }
+
+        .panels-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .passage-panel {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            min-width: 200px;
+        }
+
+        .questions-panel {
+            flex: 1;
+            padding: 20px 20px 100px;
+            overflow-y: auto;
+            min-width: 200px;
+            border-left: 1px solid #e0e0e0;
+        }
+
+        .resizer {
+            width: 10px;
+            cursor: col-resize;
+            background: #f0f0f0;
+            flex-shrink: 0;
+        }
+
+        .reading-passage h2 {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .reading-passage p {
+            margin-bottom: 1.2em;
+        }
+
+        .part-header {
+            background: #f1f2ec;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+        }
+
+        .question {
+            margin-bottom: 40px;
+        }
+
+        .question-prompt {
+            margin-bottom: 20px;
+        }
+
+        .multi-choice-option {
+            margin-bottom: 10px;
+        }
+
+        .multi-choice-option label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .multi-choice-option input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.3);
+        }
+
+        .tf-question {
+            margin-bottom: 25px;
+        }
+
+        .tf-question-line {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .tf-question-number {
+            border: 2px solid #ccc;
+            padding: 2px 8px;
+            margin-right: 10px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .tf-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .tf-option input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .matching-question-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .matching-question-item select {
+            width: 80px;
+            padding: 4px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .correct {
+            background-color: #e9f7ef;
+            border-color: #28a745;
+        }
+
+        .incorrect {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .nav-row {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            height: 80px;
+            z-index: 100;
+        }
+
+        .footer__questionWrapper___1tZ46 {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        .footer__questionNo___3WNct {
+            background: none;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .footer__questionNo___3WNct:hover {
+            background-color: #f8f9fa;
+        }
+
+        .footer__subquestionWrapper___9GgoP {
+            display: none;
+            gap: 2px;
+            margin-left: 10px;
+        }
+
+        .footer__questionWrapper___1tZ46.selected .footer__subquestionWrapper___9GgoP {
+            display: flex;
+        }
+
+        .subQuestion {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #ccc;
+            background: white;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2px;
+            transition: all 0.2s;
+        }
+
+        .subQuestion.answered {
+            background-color: #e9ecef;
+        }
+
+        .subQuestion.correct {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .subQuestion.incorrect {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .subQuestion.active {
+            background-color: #4a90e2;
+            color: white;
+        }
+
+        .footer__deliverButton___3FM07 {
+            margin-left: auto;
+            margin-right: 20px;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .footer__deliverButton___3FM07:hover {
+            background: #e0e0e0;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            max-width: 600px;
+            max-height: 80vh;
+            position: relative;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .results-summary {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .results-details-container {
+            overflow-y: auto;
+        }
+
+        .result-row {
+            display: grid;
+            grid-template-columns: 40px 1fr 1fr;
+            gap: 15px;
+            padding: 8px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .result-row.incorrect {
+            background-color: #f8d7da;
+        }
+
+        .highlight {
+            background-color: #ffff00;
+        }
+
+        #highlight-btn,
+        #remove-highlight-btn {
+            position: absolute;
+            z-index: 9999;
+            display: none;
+            padding: 4px 10px;
+            font-size: 14px;
+            border: 1px solid #888;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #highlight-btn {
+            background: #fffbe7;
+        }
+
+        #remove-highlight-btn {
+            background: #ffeaea;
+            color: #b00;
+            border-color: #b00;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="highlight-btn" type="button">Highlight</button>
+    <button id="remove-highlight-btn" type="button">Remove Highlight</button>
+    <div class="header">
+        <div class="timer-container">
+            <span class="timer-display">20:00</span>
+            <div class="timer-controls">
+                <button id="timer-toggle-btn" title="Pause/Resume Timer">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                </button>
+                <button id="timer-reset-btn" title="Reset Timer">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path
+                            d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <a href="https://t.me/IELTSwithJurabek" class="telegram-ad" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.1-.03-.15-.04-.05-.1-.06-.15-.03-.07.02-2.49 1.56-7.03 4.62-.66.46-1.14.69-1.61.67-.52-.02-1.48-.55-2.2-.99-.89-.54-.9-.85-.56-1.35.23-.34 2.99-2.77 3.06-2.99.1-.29.12-.58-.02-.84-.15-.26-.46-.31-.76-.21-1.14.39-4.33 1.63-5.76 2.17-.34.13-.66.26-.95.29-.36.03-.73-.05-1.09-.24-.48-.26-.83-.63-1.02-1.02-.26-.52-.04-1.15.48-1.67 2.47-2.46 6.15-6.14 10.29-10.29 4.88-4.88 8.9-5.62 10.07-5.07 1.58.74.86 4.52-.48 8.62z" />
+            </svg>
+            Join IELTSwithJurabek
+        </a>
+    </div>
+
+    <div class="main-container">
+        <div class="part-header">
+            <p><strong>READING PASSAGE 3</strong></p>
+            <p>You should spend about 20 minutes on Questions 27-40, which are based on Reading Passage 3.</p>
+        </div>
+        <div class="panels-container">
+            <div class="passage-panel">
+                <div class="reading-passage">
+                    <h2>Multi-purpose meeting spaces: Trends in 21st-century architecture</h2>
+                    <p>At the Nomad Café in California, Katrina Canlas, a law student at a nearby university, places her
+                        espresso next to her mobile phone, opens her laptop, logs on to the internet and begins
+                        preparing for her next class. She's a regular here but doesn't usually bring cash, so her
+                        credit-card statement each month reads 'Nomad, Nomad, Nomad'. That says it all, she thinks.
+                        She's one of today's 'urban nomads', permanently connected and constantly moving from place to
+                        place. She communicates all day by text, photo, video or voice with friends and family, and
+                        amazingly does her 'work stuff' at the same time. She roams around town, but alights at oases
+                        that cater to her and her fellow nomads.</p>
+                    <p>Christopher Waters opened the Nomad Café in 2003 to provide a watering-hole for 'techno-Bedouins'
+                        such as himself. Since Bedouins, whether in Arabian deserts or American suburbs, are tribal
+                        creatures, Waters understood from the outset that a good urban oasis has to do more than provide
+                        internet access; it must above all be a new — or very old — kind of gathering place. Urban
+                        nomads and their lifestyles are causing architects and planners to rethink how they design
+                        buildings and public spaces and even entire cities.</p>
+                    <p>A prime example of this new architecture can be found in the Stata Center at the Massachusetts
+                        Institute of Technology, designed by architect Frank Gehry. Gehry likes to cause a bit of
+                        controversy, and the Stata Center certainly did the trick. Opened in 2004, its façade of bizarre
+                        angles and windows became a Boston landmark. But the building's most radical innovation is on
+                        the inside. The entire structure was conceived as a kind of 'hybrid space', with the nomadic
+                        lifestyles of modern students and academic staff in mind. This is best seen in the building's
+                        'student street', an interior passage, dotted with nooks and crannies, that twists and meanders
+                        through the complex and is open 24 hours a day. Cafés and lounges are interspersed with work
+                        desks and whiteboards, and there is free internet access everywhere. Students, teachers and
+                        visitors are studying, chatting, napping, emailing, researching, and reading. Every bit of this
+                        space can instantaneously become the venue for a seminar, a snack or a friendship.</p>
+                    <p>The fact that people are no longer tied to specific places for functions such as studying or
+                        learning means that since the turn of the 21st century there has been a huge drop in demand for
+                        traditional, private, enclosed spaces such as offices or classrooms. Simultaneously there has
+                        been a tremendous rise in demand for semi-public spaces that can be informally appropriated as
+                        ad-hoc work-spaces. This shift marks the biggest change in architecture in the 21st century. In
+                        the previous century, architecture was about specialised structures — offices for working,
+                        cafeterias for eating and so forth. This was necessary because workers needed to be near
+                        landline phones, fax machines and filing cabinets, and because the economics of building
+                        materials favoured repetitive and simple structures, such as grid patterns and cubicles.</p>
+                    <p>With spaces made intentionally multi-functional, 21st-century aesthetics will probably be the
+                        exact opposite of the sci-fi chic that 20th-century futurists once imagined. For example,
+                        buildings will have much more varied shapes than before. People working on laptops find it
+                        comforting to have their backs to a wall, so hybrid spaces will become curvier and snake-like in
+                        order to make best use of the surface area of their inner walls. This is more affordable today
+                        because computer-aided design and new materials make non-repetitive forms cheaper to build.</p>
+                    <p>Flexibility is what separates today's successful spaces from unsuccessful ones. For example, a
+                        not-for-profit organisation in New York turned Bryant Park, a once-derelict but charming garden
+                        in front of the city's public library, into a hybrid-space park popular with office workers. The
+                        park's manager noticed that a lot of visitors were using mobile phones and laptops there, so
+                        they installed Wi-Fi and added some chairs and desks. The idea was not to distract people from
+                        the flowers but to let them use their little bit of park as they saw fit.</p>
+                    <p>The academic name for such spaces is 'third places', a term coined by the sociologist Ray
+                        Oldenburg in 1989. Oldenburg wanted to distinguish between the sociological functions of
+                        people's first places where they live, their second places where they work and the other public
+                        spaces that serve them as safe, neutral and informal meeting points which would encourage
+                        conversation. As Oldenburg saw it, a good third place makes admission free or cheap—the price of
+                        a cup of coffee, say—offers creature comforts, and draws a group of regulars. He felt that most
+                        people, especially in suburban areas, were moving only between first and second places. Society,
+                        Oldenburg feared, was at risk of coming unstuck in these areas without third place venues for
+                        spreading ideas and forming bonds.</p>
+                    <p>But, do the oasis-like internet cafés for urban nomads play the role that Oldenburg envisioned?
+                        James Katz of Rutgers University warns that these cafés are often full of people with headphones
+                        on, speaking on their mobile phones and hacking away at their laptop keyboards. They are more
+                        engaged with their email inbox than with the people touching their elbows. These places are
+                        'physically inhabited but psychologically evacuated', says Katz, which leaves people feeling
+                        'more isolated than they would be if the café were merely empty'. Many cafés are trying to deal
+                        with this problem by, for example, hosting special events such as live jazz and poetry readings
+                        and actually turning off their internet connections at this time so that people mingle more.
+                        Clearly the new oases and the urban nomads who spawned them are still evolving.</p>
+                </div>
+            </div>
+            <div class="resizer"></div>
+            <div class="questions-panel">
+                <div class="question-set">
+                    <div class="question" data-q-start="27" data-q-end="30">
+                        <div class="question-prompt">
+                            <p><strong>Questions 27-30</strong></p>
+                            <p>Choose the correct letter, <strong>A, B, C or D</strong>.</p>
+                            <p>Write the correct letter in boxes 27-30 on your answer sheet.</p>
+                        </div>
+                        <div class="multi-choice-question" data-q-start="27">
+                            <span><strong>27</strong> According to Katrina Canlas, her monthly credit card bill</span>
+                            <div class="multi-choice-option"><label><input type="radio" name="q27" value="A"> A.
+                                    typifies her way of life.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q27" value="B"> B. makes
+                                    her conscious of her overspending.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q27" value="C"> C. helps
+                                    her to budget her expenses.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q27" value="D"> D. reminds
+                                    her not to carry cash.</label></div>
+                        </div>
+                        <div class="multi-choice-question" data-q-start="28">
+                            <span><strong>28</strong> Christopher Waters believes that the most important ingredient of
+                                a successful urban oasis is</span>
+                            <div class="multi-choice-option"><label><input type="radio" name="q28" value="A"> A. its
+                                    inclusion of the latest technology.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q28" value="B"> B. its
+                                    creation of a pleasant social atmosphere.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q28" value="C"> C. its
+                                    provision of excellent food and drink.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q28" value="D"> D. its
+                                    location in the city.</label></div>
+                        </div>
+                        <div class="multi-choice-question" data-q-start="29">
+                            <span><strong>29</strong> According to the writer, the design for the interior of the Stata
+                                Center was</span>
+                            <div class="multi-choice-option"><label><input type="radio" name="q29" value="A"> A. the
+                                    most controversial feature.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q29" value="B"> B. the
+                                    most difficult part to construct.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q29" value="C"> C. its
+                                    most revolutionary aspect.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q29" value="D"> D. its
+                                    most visually pleasing quality.</label></div>
+                        </div>
+                        <div class="multi-choice-question" data-q-start="30">
+                            <span><strong>30</strong> The individual parts of ‘student street’ at the Stata Center were
+                                planned</span>
+                            <div class="multi-choice-option"><label><input type="radio" name="q30" value="A"> A. to
+                                    serve specific well-defined functions.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q30" value="B"> B. to
+                                    incorporate traditional building designs.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q30" value="C"> C. to
+                                    provide separate areas for guests.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q30" value="D"> D. to be
+                                    interchangeable in their uses.</label></div>
+                        </div>
+                    </div>
+                    <div class="question" data-q-start="31" data-q-end="35">
+                        <div class="question-prompt">
+                            <p><strong>Questions 31-35</strong></p>
+                            <p>Do the following statements agree with the views of the writer in Reading Passage 3?</p>
+                            <p>In boxes 31-35 on your answer sheet, write</p>
+                            <p><strong>YES</strong> if the statement agrees with the views of the writer</p>
+                            <p><strong>NO</strong> if the statement contradicts the views of the writer</p>
+                            <p><strong>NOT GIVEN</strong> if it is impossible to say what the writer thinks about this
+                            </p>
+                        </div>
+                        <div class="tf-question" data-q-start="31">
+                            <div class="tf-question-line">
+                                <span class="tf-question-number">31</span>
+                                <span class="tf-question-text">Today there are fewer single-purpose buildings and spaces
+                                    being built.</span>
+                            </div>
+                            <div class="tf-options">
+                                <label class="tf-option"><input type="radio" name="q31" value="YES"> YES</label>
+                                <label class="tf-option"><input type="radio" name="q31" value="NO"> NO</label>
+                                <label class="tf-option"><input type="radio" name="q31" value="NOT GIVEN"> NOT
+                                    GIVEN</label>
+                            </div>
+                        </div>
+                        <div class="tf-question" data-q-start="32">
+                            <div class="tf-question-line">
+                                <span class="tf-question-number">32</span>
+                                <span class="tf-question-text">The job of 21st-century architects is more difficult and
+                                    complex than in the past.</span>
+                            </div>
+                            <div class="tf-options">
+                                <label class="tf-option"><input type="radio" name="q32" value="YES"> YES</label>
+                                <label class="tf-option"><input type="radio" name="q32" value="NO"> NO</label>
+                                <label class="tf-option"><input type="radio" name="q32" value="NOT GIVEN"> NOT
+                                    GIVEN</label>
+                            </div>
+                        </div>
+                        <div class="tf-question" data-q-start="33">
+                            <div class="tf-question-line">
+                                <span class="tf-question-number">33</span>
+                                <span class="tf-question-text">Specialised structures in offices were necessary when
+                                    most communications and data storage facilities could not be moved.</span>
+                            </div>
+                            <div class="tf-options">
+                                <label class="tf-option"><input type="radio" name="q33" value="YES"> YES</label>
+                                <label class="tf-option"><input type="radio" name="q33" value="NO"> NO</label>
+                                <label class="tf-option"><input type="radio" name="q33" value="NOT GIVEN"> NOT
+                                    GIVEN</label>
+                            </div>
+                        </div>
+                        <div class="tf-question" data-q-start="34">
+                            <div class="tf-question-line">
+                                <span class="tf-question-number">34</span>
+                                <span class="tf-question-text">In the 21st century, buildings will tend to be in a
+                                    limited number of styles.</span>
+                            </div>
+                            <div class="tf-options">
+                                <label class="tf-option"><input type="radio" name="q34" value="YES"> YES</label>
+                                <label class="tf-option"><input type="radio" name="q34" value="NO"> NO</label>
+                                <label class="tf-option"><input type="radio" name="q34" value="NOT GIVEN"> NOT
+                                    GIVEN</label>
+                            </div>
+                        </div>
+                        <div class="tf-question" data-q-start="35">
+                            <div class="tf-question-line">
+                                <span class="tf-question-number">35</span>
+                                <span class="tf-question-text">Computer-aided design has increased the speed of
+                                    construction.</span>
+                            </div>
+                            <div class="tf-options">
+                                <label class="tf-option"><input type="radio" name="q35" value="YES"> YES</label>
+                                <label class="tf-option"><input type="radio" name="q35" value="NO"> NO</label>
+                                <label class="tf-option"><input type="radio" name="q35" value="NOT GIVEN"> NOT
+                                    GIVEN</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="question" data-q-start="36" data-q-end="40">
+                        <div class="question-prompt">
+                            <p><strong>Questions 36-40</strong></p>
+                            <p>Complete each sentence with the correct ending, <strong>A-H</strong>, below.</p>
+                            <p>Write the correct letter, <strong>A-H</strong>, in boxes 36-40 on your answer sheet.</p>
+                        </div>
+                        <div class="matching-question-item" data-q-start="36">
+                            <span><strong>36</strong> The features found in the remodelled Bryant Park in New
+                                York</span>
+                            <select id="q36">
+                                <option value=""></option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                                <option value="G">G</option>
+                                <option value="H">H</option>
+                            </select>
+                        </div>
+                        <div class="matching-question-item" data-q-start="37">
+                            <span><strong>37</strong> As originally defined by Oldenburg, third places</span>
+                            <select id="q37">
+                                <option value=""></option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                                <option value="G">G</option>
+                                <option value="H">H</option>
+                            </select>
+                        </div>
+                        <div class="matching-question-item" data-q-start="38">
+                            <span><strong>38</strong> Oldenburg believes that suburbs lacking third places</span>
+                            <select id="q38">
+                                <option value=""></option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                                <option value="G">G</option>
+                                <option value="H">H</option>
+                            </select>
+                        </div>
+                        <div class="matching-question-item" data-q-start="39">
+                            <span><strong>39</strong> Katz believes that people interacting only with inanimate
+                                objects</span>
+                            <select id="q39">
+                                <option value=""></option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                                <option value="G">G</option>
+                                <option value="H">H</option>
+                            </select>
+                        </div>
+                        <div class="matching-question-item" data-q-start="40">
+                            <span><strong>40</strong> The special events which some cafés sponsor</span>
+                            <select id="q40">
+                                <option value=""></option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                                <option value="G">G</option>
+                                <option value="H">H</option>
+                            </select>
+                        </div>
+                        <div class="example-box">
+                            <p><strong>List of Endings</strong></p>
+                            <ul style="list-style-type: upper-alpha;">
+                                <li>A. are more popular in areas of urban concentration.</li>
+                                <li>B. encourage users to temporarily give up their mobile electronics.</li>
+                                <li>C. should be inexpensive, relaxing and secure.</li>
+                                <li>D. are found among virtually all levels of society.</li>
+                                <li>E. are based on people's previously observed patterns of activity.</li>
+                                <li>F. are locations that are neither workplaces nor homes.</li>
+                                <li>G. are a common sight in internet cafés.</li>
+                                <li>H. are in danger of losing their social cohesion.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="nav-row">
+        <div class="footer__questionWrapper___1tZ46 selected" role="tablist">
+            <button class="footer__questionNo___3WNct" onclick="switchToPart(3)">
+                <span>Part 3</span>
+                <span class="attemptedCount">0 of 14</span>
+            </button>
+            <div class="footer__subquestionWrapper___9GgoP">
+                <button class="subQuestion" onclick="goToQuestion(27)">27</button>
+                <button class="subQuestion" onclick="goToQuestion(28)">28</button>
+                <button class="subQuestion" onclick="goToQuestion(29)">29</button>
+                <button class="subQuestion" onclick="goToQuestion(30)">30</button>
+                <button class="subQuestion" onclick="goToQuestion(31)">31</button>
+                <button class="subQuestion" onclick="goToQuestion(32)">32</button>
+                <button class="subQuestion" onclick="goToQuestion(33)">33</button>
+                <button class="subQuestion" onclick="goToQuestion(34)">34</button>
+                <button class="subQuestion" onclick="goToQuestion(35)">35</button>
+                <button class="subQuestion" onclick="goToQuestion(36)">36</button>
+                <button class="subQuestion" onclick="goToQuestion(37)">37</button>
+                <button class="subQuestion" onclick="goToQuestion(38)">38</button>
+                <button class="subQuestion" onclick="goToQuestion(39)">39</button>
+                <button class="subQuestion" onclick="goToQuestion(40)">40</button>
+            </div>
+        </div>
+        <button id="deliver-button" class="footer__deliverButton___3FM07">Check Answers</button>
+    </nav>
+
+    <div id="results-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeResultsModal()">&times;</button>
+            <h2>Results</h2>
+            <div class="results-summary">
+                <p>Score: <span id="results-score"></span> / 14</p>
+                <p>IELTS Band: <span id="results-band"></span></p>
+            </div>
+            <div id="results-details" class="results-details-container"></div>
+        </div>
+    </div>
+
+    <script>
+        const correctAnswers = {
+            '27': 'A', '28': 'B', '29': 'C', '30': 'D',
+            '31': 'YES', '32': 'NOT GIVEN', '33': 'YES', '34': 'NO', '35': 'NOT GIVEN',
+            '36': 'E', '37': 'F', '38': 'H', '39': 'G', '40': 'B'
+        };
+
+        let currentQuestion = 27;
+        let timeInSeconds = 1200; // 20 minutes
+        let timerInterval;
+        const timerDisplay = document.querySelector('.timer-display');
+        const timerToggleButton = document.getElementById('timer-toggle-btn');
+        const deliverButton = document.getElementById('deliver-button');
+        const resizer = document.querySelector('.resizer');
+        const passagePanel = document.querySelector('.passage-panel');
+        const questionsPanel = document.querySelector('.questions-panel');
+
+        const playIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+        const pauseIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+
+        // Highlighting
+        (function () {
+            const highlightBtn = document.getElementById('highlight-btn');
+            const removeHighlightBtn = document.getElementById('remove-highlight-btn');
+            let lastSelection = null;
+            let highlightTarget = null;
+
+            function getValidSelection() {
+                const sel = window.getSelection();
+                if (!sel.rangeCount || sel.isCollapsed) return null;
+                const range = sel.getRangeAt(0);
+                if (passagePanel.contains(range.commonAncestorContainer) || questionsPanel.contains(range.commonAncestorContainer)) {
+                    return range;
+                }
+                return null;
+            }
+
+            function showHighlightBtn(range) {
+                const rect = range.getBoundingClientRect();
+                highlightBtn.style.top = (window.scrollY + rect.bottom + 4) + 'px';
+                highlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+                highlightBtn.style.display = 'block';
+            }
+
+            function hideHighlightBtn() { highlightBtn.style.display = 'none'; }
+
+            function showRemoveBtn(span) {
+                const rect = span.getBoundingClientRect();
+                removeHighlightBtn.style.top = (window.scrollY + rect.bottom + 4) + 'px';
+                removeHighlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+                removeHighlightBtn.style.display = 'block';
+                highlightTarget = span;
+            }
+
+            function hideRemoveBtn() {
+                removeHighlightBtn.style.display = 'none';
+                highlightTarget = null;
+            }
+
+            highlightBtn.addEventListener('click', () => {
+                if (lastSelection) {
+                    const span = document.createElement('span');
+                    span.className = 'highlight';
+                    span.appendChild(lastSelection.extractContents());
+                    lastSelection.insertNode(span);
+                    window.getSelection().removeAllRanges();
+                    hideHighlightBtn();
+                }
+            });
+
+            removeHighlightBtn.addEventListener('click', () => {
+                if (highlightTarget) {
+                    const parent = highlightTarget.parentNode;
+                    while (highlightTarget.firstChild) {
+                        parent.insertBefore(highlightTarget.firstChild, highlightTarget);
+                    }
+                    parent.removeChild(highlightTarget);
+                    hideRemoveBtn();
+                }
+            });
+
+            document.addEventListener('selectionchange', () => {
+                hideHighlightBtn();
+                const range = getValidSelection();
+                if (range) {
+                    lastSelection = range;
+                    showHighlightBtn(range);
+                } else {
+                    lastSelection = null;
+                }
+            });
+
+            document.addEventListener('scroll', () => {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            }, true);
+
+            document.addEventListener('mousedown', (e) => {
+                if (!highlightBtn.contains(e.target) && !removeHighlightBtn.contains(e.target)) {
+                    hideHighlightBtn();
+                    hideRemoveBtn();
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('highlight')) {
+                    e.preventDefault();
+                    showRemoveBtn(e.target);
+                }
+            });
+        })();
+
+        function initialize() {
+            startTimer();
+            document.body.addEventListener('change', updateAllIndicators);
+            deliverButton.addEventListener('click', checkAnswers);
+            timerToggleButton.addEventListener('click', toggleTimer);
+            resizer.addEventListener('mousedown', initResize);
+            goToQuestion(27);
+        }
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeInSeconds--;
+                const minutes = Math.floor(timeInSeconds / 60);
+                const seconds = timeInSeconds % 60;
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                if (timeInSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.textContent = "Time's up!";
+                }
+            }, 1000);
+            timerToggleButton.innerHTML = pauseIcon;
+        }
+
+        function toggleTimer() {
+            if (timerToggleButton.innerHTML.includes('M6 19h4V5H6v14z')) {
+                clearInterval(timerInterval);
+                timerToggleButton.innerHTML = playIcon;
+            } else {
+                startTimer();
+            }
+        }
+
+        function initResize(e) {
+            e.preventDefault();
+            const startX = e.clientX;
+            const startWidth = passagePanel.offsetWidth;
+            const doDrag = (e) => {
+                const newWidth = startWidth + e.clientX - startX;
+                if (newWidth > 200 && (document.body.clientWidth - newWidth - resizer.offsetWidth) > 200) {
+                    passagePanel.style.flex = `0 0 ${newWidth}px`;
+                }
+            };
+            const stopDrag = () => {
+                window.removeEventListener('mousemove', doDrag);
+                window.removeEventListener('mouseup', stopDrag);
+            };
+            window.addEventListener('mousemove', doDrag);
+            window.addEventListener('mouseup', stopDrag);
+        }
+
+        function checkAnswers() {
+            clearInterval(timerInterval);
+            let score = 0;
+            const resultsDetails = document.getElementById('results-details');
+            resultsDetails.innerHTML = '';
+
+            for (let i = 27; i <= 40; i++) {
+                const correctAnswer = correctAnswers[i];
+                const radioInput = document.querySelector(`input[name="q${i}"]:checked`);
+                const selectInput = document.getElementById(`q${i}`);
+                let userAnswer = '';
+                let isCorrect = false;
+                let element;
+
+                if (radioInput) {
+                    userAnswer = radioInput.value;
+                    element = radioInput.closest('.multi-choice-question, .tf-question');
+                    isCorrect = userAnswer === correctAnswer;
+                } else if (selectInput) {
+                    userAnswer = selectInput.value;
+                    element = selectInput.closest('.matching-question-item');
+                    isCorrect = userAnswer === correctAnswer;
+                }
+
+                if (isCorrect) score++;
+                if (element) element.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+                const resultRow = document.createElement('div');
+                resultRow.className = `result-row ${isCorrect ? '' : 'incorrect'}`;
+                resultRow.innerHTML = `
+                    <span>${i}</span>
+                    <span>${userAnswer || 'Not Answered'}</span>
+                    <span>${correctAnswer}</span>
+                `;
+                resultsDetails.appendChild(resultRow);
+
+                const subQuestionBtn = document.querySelector(`.subQuestion[onclick="goToQuestion(${i})"]`);
+                if (subQuestionBtn) subQuestionBtn.classList.add(isCorrect ? 'correct' : 'incorrect');
+            }
+
+            document.getElementById('results-score').textContent = score;
+            document.getElementById('results-band').textContent = calculateBandScore(score);
+            document.getElementById('results-modal').classList.add('active');
+        }
+
+        function calculateBandScore(score) {
+            const mapping = { 14: 9.0, 13: 8.5, 12: 8.0, 11: 7.5, 10: 7.0, 9: 6.5, 8: 6.0, 7: 5.5, 6: 5.0, 5: 4.5 };
+            return mapping[score] || 4.0;
+        }
+
+        window.goToQuestion = function (qNum) {
+            currentQuestion = qNum;
+            document.querySelectorAll('.active').forEach(el => el.classList.remove('active'));
+            const target = document.querySelector(`[data-q-start="${qNum}"]`) || document.getElementById(`q${qNum}`);
+            if (target) {
+                target.classList.add('active');
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            document.querySelectorAll('.subQuestion').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.subQuestion[onclick="goToQuestion(${qNum})"]`).classList.add('active');
+        };
+
+        window.switchToPart = function (partNum) {
+            goToQuestion(27);
+        };
+
+        window.closeResultsModal = function () {
+            document.getElementById('results-modal').classList.remove('active');
+        };
+
+        function updateAllIndicators() {
+            const answeredCount = document.querySelectorAll('.subQuestion.answered, .subQuestion.correct, .subQuestion.incorrect').length;
+            document.querySelector('.attemptedCount').textContent = `${answeredCount} of 14`;
+
+            for (let i = 27; i <= 40; i++) {
+                const btn = document.querySelector(`.subQuestion[onclick="goToQuestion(${i})"]`);
+                if (btn.classList.contains('correct') || btn.classList.contains('incorrect')) continue;
+                const radioInput = document.querySelector(`input[name="q${i}"]:checked`);
+                const selectInput = document.getElementById(`q${i}`);
+                btn.classList.toggle('answered', (radioInput && radioInput.value) || (selectInput && selectInput.value));
+            }
+        }
+
+        document.body.addEventListener('change', updateAllIndicators);
+        initialize();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Reading Practice - The Voynich Manuscript</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .header {
+            background: #fff;
+            padding: 12px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 60px;
+        }
+
+        .timer-container {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 8px;
+            margin-left: 15px;
+        }
+
+        .timer-controls button {
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .timer-controls button:hover {
+            background: #e0e0e0;
+        }
+
+        .timer-controls svg {
+            width: 20px;
+            height: 20px;
+            fill: #333;
+        }
+
+        .telegram-ad {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #0088cc;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .telegram-ad:hover {
+            background: #006b9f;
+        }
+
+        .telegram-ad svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .main-container {
+            margin-top: 60px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 60px);
+        }
+
+        .panels-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .passage-panel {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            min-width: 200px;
+        }
+
+        .questions-panel {
+            flex: 1;
+            padding: 20px 20px 100px;
+            overflow-y: auto;
+            min-width: 200px;
+            border-left: 1px solid #e0e0e0;
+        }
+
+        .resizer {
+            width: 10px;
+            cursor: col-resize;
+            background: #f0f0f0;
+            flex-shrink: 0;
+        }
+
+        .reading-passage h2 {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .reading-passage p {
+            margin-bottom: 1.2em;
+        }
+
+        .part-header {
+            background: #f1f2ec;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+        }
+
+        .question {
+            margin-bottom: 40px;
+        }
+
+        .question-prompt {
+            margin-bottom: 20px;
+        }
+
+        .multi-choice-option {
+            margin-bottom: 10px;
+        }
+
+        .multi-choice-option label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .multi-choice-option input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.3);
+        }
+
+        .tf-question {
+            margin-bottom: 25px;
+        }
+
+        .tf-question-line {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .tf-question-number {
+            border: 2px solid #ccc;
+            padding: 2px 8px;
+            margin-right: 10px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .tf-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .tf-option input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .matching-question-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .matching-question-item select {
+            width: 80px;
+            padding: 4px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .summary-question-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 10px;
+            margin-bottom: 12px;
+        }
+
+        .summary-question-item input[type="text"] {
+            width: 150px;
+            padding: 4px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .correct {
+            background-color: #e9f7ef;
+            border-color: #28a745;
+        }
+
+        .incorrect {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .nav-row {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            height: 80px;
+            z-index: 100;
+        }
+
+        .footer__questionWrapper___1tZ46 {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        .footer__questionNo___3WNct {
+            background: none;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .footer__questionNo___3WNct:hover {
+            background-color: #f8f9fa;
+        }
+
+        .footer__subquestionWrapper___9GgoP {
+            display: none;
+            gap: 2px;
+            margin-left: 10px;
+        }
+
+        .footer__questionWrapper___1tZ46.selected .footer__subquestionWrapper___9GgoP {
+            display: flex;
+        }
+
+        .subQuestion {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #ccc;
+            background: white;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2px;
+            transition: all 0.2s;
+        }
+
+        .subQuestion.answered {
+            background-color: #e9ecef;
+        }
+
+        .subQuestion.correct {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .subQuestion.incorrect {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .subQuestion.active {
+            background-color: #4a90e2;
+            color: white;
+        }
+
+        .footer__deliverButton___3FM07 {
+            margin-left: auto;
+            margin-right: 20px;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .footer__deliverButton___3FM07:hover {
+            background: #e0e0e0;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            max-width: 600px;
+            max-height: 80vh;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .results-summary {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .results-details-container {
+            overflow-y: auto;
+        }
+
+        .result-row {
+            display: grid;
+            grid-template-columns: 40px 1fr 1fr;
+            gap: 15px;
+            padding: 8px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .result-row.incorrect {
+            background-color: #f8d7da;
+        }
+
+        .highlight {
+            background-color: #ffff00;
+        }
+
+        #highlight-btn,
+        #remove-highlight-btn {
+            position: absolute;
+            z-index: 9999;
+            display: none;
+            padding: 4px 10px;
+            font-size: 14px;
+            border: 1px solid #888;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #highlight-btn {
+            background: #fffbe7;
+        }
+
+        #remove-highlight-btn {
+            background: #ffeaea;
+            color: #b00;
+            border-color: #b00;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="highlight-btn" type="button">Highlight</button>
+    <button id="remove-highlight-btn" type="button">Remove Highlight</button>
+    <div class="header">
+        <div class="timer-container">
+            <span class="timer-display">20:00</span>
+            <div class="timer-controls">
+                <button id="timer-toggle-btn" title="Pause/Resume Timer">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                </button>
+                <button id="timer-reset-btn" title="Reset Timer">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path
+                            d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <a href="https://t.me/IELTSwithJurabek" class="telegram-ad" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.1-.03-.15-.04-.05-.10-.06-.15-.03-.07.02-2.49 1.56-7.03 4.62-.66.46-1.14.69-1.61.67-.52-.02-1.48-.55-2.2-.99-.89-.54-.9-.85-.56-1.35.23-.34 2.99-2.77 3.06-2.99.1-.29.12-.58-.02-.84-.15-.26-.46-.31-.76-.21-1.14.39-4.33 1.63-5.76 2.17-.34.13-.66.26-.95.29-.36.03-.73-.05-1.09-.24-.48-.26-.83-.63-1.02-1.02-.26-.52-.04-1.15.48-1.67 2.47-2.46 6.15-6.14 10.29-10.29 4.88-4.88 8.9-5.62 10.07-5.07 1.58.74.86 4.52-.48 8.62z" />
+            </svg>
+            Join IELTSwithJurabek
+        </a>
+    </div>
+
+    <div class="main-container">
+        <div class="part-header">
+            <p><strong>READING PASSAGE 3</strong></p>
+            <p>You should spend about 20 minutes on Questions 27-40, which are based on Reading Passage 3.</p>
+        </div>
+        <div class="panels-container">
+            <div class="passage-panel">
+                <div class="reading-passage">
+                    <h2>The Voynich Manuscript</h2>
+                    <p>The starkly modern Beinecke Library at Yale University is home to some of the most valuable books
+                        in the world: first folios of Shakespeare, Gutenberg Bibles and manuscripts from the early
+                        Middle Ages. Yet the library's most controversial possession is an unprepossessing vellum
+                        manuscript about the size of a hardback book, containing 240-odd pages of drawings and text of
+                        unknown age and authorship. Catalogued as MS408, the manuscript would attract little attention
+                        were it not for the fact that the drawings hint at esoteric knowledge, while the text seems to
+                        be some sort of code - one that no-one has been able to break. It's known to scholars as the
+                        Voynich manuscript, after the American book dealer Wilfrid Voynich, who bought the manuscript
+                        from a Jesuit college in Italy in 1912.</p>
+                    <p>Over the years, the manuscript has attracted the attention of everyone from amateur dabblers to
+                        top codebreakers, all determined to succeed where countless others have failed. Academic
+                        research papers, books and websites are devoted to making sense of the contents of the
+                        manuscript, which are freely available to all. 'Most other mysteries involve second-hand
+                        reports,' says Dr Gordon Rugg of Keele University, a leading Voynich expert. 'But this is one
+                        that you can see for yourself.'</p>
+                    <p>It is certainly strange; page after page of drawings of weird plants, astrological symbolism and
+                        human figures, accompanied by a script that looks like some form of shorthand. What does it say
+                        - and what are the drawings about? Voynich himself believed that the manuscript was the work of
+                        the 13th-century English monk Roger Bacon, famed for his knowledge of alchemy, philosophy and
+                        science. In 1921 Voynich's view that Bacon was the writer appeared to win support from the work
+                        of William Newbold, Professor of Philosophy at the University of Pennsylvania, who claimed to
+                        have found the key to the cipher system used by Bacon. According to Newbold, the manuscript
+                        proved that Bacon had access to a microscope centuries before they were supposedly first
+                        invented. The claim that this medieval monk had observed living cells created a sensation. It
+                        soon became clear, however, that Newbold had fallen victim to wishful thinking. Other scholars
+                        showed that his 'decoding' methods produced a host of possible interpretations.</p>
+                    <p>The Voynich manuscript has continued to defy the efforts of world-class experts. In 1944, a team
+                        was assembled to tackle the mystery, led by William Friedman, the renowned American codebreaker.
+                        They began with the most basic codebreaking task: analysing the relative frequencies of the
+                        characters making up the text, looking for signs of an underlying structure. Yet Friedman's team
+                        soon found themselves in deep water. The precise size of the 'alphabet' of the Voynich
+                        manuscript was unclear: it's possible to make out more than 70 distinct symbols among the
+                        170,000-character text. Furthermore, Friedman discovered that some words and phrases appeared
+                        more often than expected in a standard language, casting doubt on claims that the manuscript
+                        concealed a real language, as encryption typically reduces word frequencies. Friedman concluded
+                        that the most plausible resolution of this paradox was that 'Voynichese' is some sort of
+                        specially created artificial language, whose words are devised from concepts, rather than
+                        linguistics. So could the Voynich manuscript be the earliest-known example of an artificial
+                        language? 'Friedman's hypothesis commands respect because of the lifetime of cryptanalytical
+                        expertise he brought to bear,' says Rob Churchill, co-author of The Voynich Manuscript. That
+                        still leaves a host of questions unanswered, however, such as the identity of the author and the
+                        meaning of the bizarre drawings. 'It does little to advance our understanding of the manuscript
+                        as a whole,' says Churchill.</p>
+                    <p>Even though Friedman was working more than 60 years ago, he suspected that major insights would
+                        come from using the device that had already transformed codebreaking: the computer. In this he
+                        was right - it is now the key tool for uncovering clues about the manuscript's language.</p>
+                    <p>The insights so far have been perplexing. For example, in 2001 another leading Voynich scholar,
+                        Dr Gabriel Landini of Birmingham University in the UK, published the results of his study of the
+                        manuscript using a pattern-detecting method called spectral analysis. This revealed evidence
+                        that the manuscript contains genuine words, rather than random nonsense, consistent with the
+                        existence of some underlying natural language. Yet the following year, Voynich expert René
+                        Zandbergen of the European Space Agency in Darmstadt, Germany showed that the entropy of the
+                        text (a measure of the rate of transfer of information) was consistent with Friedman's
+                        suspicions that an artificial language had been used.</p>
+                    <p>Many are convinced that the Voynich manuscript isn't a hoax. For how could a medieval hoaxer
+                        create so many telltale signs of a message from random nonsense? Yet even this has been
+                        challenged in new research by Rugg. Using a system, first published by the Italian mathematician
+                        Girolamo Cardano in 1150, in which a specially constructed grille is used to pick out symbols
+                        from a table, Rugg found he could rapidly generate text with many of the basic traits of the
+                        Voynich manuscript. Publishing his results in 2004, Rugg stresses that he hadn't set out to
+                        prove the manuscript a hoax. 'I simply demonstrated that it's feasible to hoax something this
+                        complex in a few months,' he says.</p>
+                    <p>Inevitably, others beg to differ. Some scholars, such as Zandbergen, still suspect the text has
+                        genuine meaning, though believe it may never be decipherable. Others, such as Churchill, have
+                        suggested that the sheer weirdness of the illustrations and text hint at an author who had lost
+                        touch with reality.</p>
+                    <p>What is clear is that the book-sized manuscript kept under lock and key at Yale University has
+                        lost none of its fascination. 'Many derive great intellectual pleasure from solving puzzles,'
+                        says Rugg. 'The Voynich manuscript is as challenging a puzzle as anyone could ask for.'</p>
+                </div>
+            </div>
+            <div class="resizer"></div>
+            <div class="questions-panel">
+                <div class="question-set">
+                    <div class="question" data-q-start="27" data-q-end="30">
+                        <div class="question-prompt">
+                            <p><strong>Questions 27-30</strong></p>
+                            <p>Do the following statements agree with the information given in Reading Passage 3?</p>
+                            <p>In boxes 27-30 on your answer sheet, write</p>
+                            <p><strong>TRUE</strong> if the statement agrees with the information</p>
+                            <p><strong>FALSE</strong> if the statement contradicts the information</p>
+                            <p><strong>NOT GIVEN</strong> if there is no information on this</p>
+                        </div>
+                        <div class="tf-question" data-q-start="27">
+                            <div class="tf-question-line">
+                                <span class="tf-question-number">27</span>
+                                <span class="tf-question-text">It is uncertain when the Voynich manuscript was
+                                    written.</span>
+                            </div>
+                            <div class="tf-options">
+                                <label class="tf-option"><input type="radio" name="q27" value="TRUE"> TRUE</label>
+                                <label class="tf-option"><input type="radio" name="q27" value="FALSE"> FALSE</label>
+                                <label class="tf-option"><input type="radio" name="q27" value="NOT GIVEN"> NOT
+                                    GIVEN</label>
+                            </div>
+                        </div>
+                        <div class="tf-question" data-q-start="28">
+                            <div class="tf-question-line">
+                                <span class="tf-question-number">28</span>
+                                <span class="tf-question-text">Wilfrid Voynich donated the manuscript to the Beinecke
+                                    Library.</span>
+                            </div>
+                            <div class="tf-options">
+                                <label class="tf-option"><input type="radio" name="q28" value="TRUE"> TRUE</label>
+                                <label class="tf-option"><input type="radio" name="q28" value="FALSE"> FALSE</label>
+                                <label class="tf-option"><input type="radio" name="q28" value="NOT GIVEN"> NOT
+                                    GIVEN</label>
+                            </div>
+                        </div>
+                        <div class="tf-question" data-q-start="29">
+                            <div class="tf-question-line">
+                                <span class="tf-question-number">29</span>
+                                <span class="tf-question-text">Interest in the Voynich manuscript extends beyond that of
+                                    academics and professional codebreakers.</span>
+                            </div>
+                            <div class="tf-options">
+                                <label class="tf-option"><input type="radio" name="q29" value="TRUE"> TRUE</label>
+                                <label class="tf-option"><input type="radio" name="q29" value="FALSE"> FALSE</label>
+                                <label class="tf-option"><input type="radio" name="q29" value="NOT GIVEN"> NOT
+                                    GIVEN</label>
+                            </div>
+                        </div>
+                        <div class="tf-question" data-q-start="30">
+                            <div class="tf-question-line">
+                                <span class="tf-question-number">30</span>
+                                <span class="tf-question-text">The text of the Voynich manuscript contains just under 70
+                                    symbols.</span>
+                            </div>
+                            <div class="tf-options">
+                                <label class="tf-option"><input type="radio" name="q30" value="TRUE"> TRUE</label>
+                                <label class="tf-option"><input type="radio" name="q30" value="FALSE"> FALSE</label>
+                                <label class="tf-option"><input type="radio" name="q30" value="NOT GIVEN"> NOT
+                                    GIVEN</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="question" data-q-start="31" data-q-end="34">
+                        <div class="question-prompt">
+                            <p><strong>Questions 31-34</strong></p>
+                            <p>Look at the following statements (Questions 31-34) and the list of people below.</p>
+                            <p>Match each statement with the correct person, <strong>A-H</strong>.</p>
+                            <p>Write the correct letter, <strong>A-H</strong>, in boxes 31-34 on your answer sheet.</p>
+                        </div>
+                        <div class="matching-question-item" data-q-start="31">
+                            <span><strong>31</strong> The number of times that some words occur make it unlikely that
+                                the manuscript is based on an authentic language.</span>
+                            <select id="q31">
+                                <option value=""></option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                                <option value="G">G</option>
+                                <option value="H">H</option>
+                            </select>
+                        </div>
+                        <div class="matching-question-item" data-q-start="32">
+                            <span><strong>32</strong> Unlike some other similar objects of fascination, people can gain
+                                direct access to the Voynich manuscript.</span>
+                            <select id="q32">
+                                <option value=""></option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                                <option value="G">G</option>
+                                <option value="H">H</option>
+                            </select>
+                        </div>
+                        <div class="matching-question-item" data-q-start="33">
+                            <span><strong>33</strong> The person who wrote the manuscript may not have been entirely
+                                sane.</span>
+                            <select id="q33">
+                                <option value=""></option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                                <option value="G">G</option>
+                                <option value="H">H</option>
+                            </select>
+                        </div>
+                        <div class="matching-question-item" data-q-start="34">
+                            <span><strong>34</strong> It is likely that the author of the manuscript is the same person
+                                as suggested by Wilfrid Voynich.</span>
+                            <select id="q34">
+                                <option value=""></option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                                <option value="G">G</option>
+                                <option value="H">H</option>
+                            </select>
+                        </div>
+                        <div class="example-box">
+                            <p><strong>List of People</strong></p>
+                            <ul style="list-style-type: upper-alpha;">
+                                <li>A. Gordon Rugg</li>
+                                <li>B. Roger Bacon</li>
+                                <li>C. William Newbold</li>
+                                <li>D. William Friedman</li>
+                                <li>E. Rob Churchill</li>
+                                <li>F. Gabriel Landini</li>
+                                <li>G. René Zandbergen</li>
+                                <li>H. Girolamo Cardano</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="question" data-q-start="35" data-q-end="39">
+                        <div class="question-prompt">
+                            <p><strong>Questions 35-39</strong></p>
+                            <p>Complete the summary below.</p>
+                            <p>Choose <strong>NO MORE THAN TWO WORDS</strong> from the passage for each answer.</p>
+                            <p>Write your answers in boxes 35-39 on your answer sheet.</p>
+                            <p><strong>Voynich Researchers</strong></p>
+                        </div>
+                        <div class="summary-question-item" data-q-start="35">
+                            <p><strong>35</strong> William Newbold believed that the author of the Voynich manuscript
+                                had been able to look at cells through a <input type="text" id="q35">. Other researchers
+                                later demonstrated that there were flaws in his argument.</p>
+                        </div>
+                        <div class="summary-question-item" data-q-start="36">
+                            <p><strong>36</strong> William Friedman concluded that the manuscript was written in an
+                                artificial language that was based on <input type="text" id="q36">.</p>
+                        </div>
+                        <div class="summary-question-item" data-q-start="37">
+                            <p><strong>37</strong> He couldn't find out the meaning of this language but he believed
+                                that the <input type="text" id="q37"> would continue to bring advances in codebreaking.
+                            </p>
+                        </div>
+                        <div class="summary-question-item" data-q-start="38">
+                            <p><strong>38</strong> Dr Gabriel Landini used a system known as <input type="text"
+                                    id="q38"> in his research, and claims to have demonstrated the presence of genuine
+                                words.</p>
+                        </div>
+                        <div class="summary-question-item" data-q-start="39">
+                            <p><strong>39</strong> Dr Gordon Rugg's system involved a grille, that made it possible to
+                                quickly select symbols that appeared in a <input type="text" id="q39">. Rugg's
+                                conclusion was that the manuscript lacked genuine meaning.</p>
+                        </div>
+                    </div>
+                    <div class="question" data-q-start="40" data-q-end="40">
+                        <div class="question-prompt">
+                            <p><strong>Question 40</strong></p>
+                            <p>Choose the correct letter, <strong>A, B, C or D</strong>.</p>
+                            <p>Write the correct letter in box 40 on your answer sheet.</p>
+                        </div>
+                        <div class="multi-choice-question" data-q-start="40">
+                            <span><strong>40</strong> The writer's main aim in this passage is to</span>
+                            <div class="multi-choice-option"><label><input type="radio" name="q40" value="A"> A. explain
+                                    the meaning of the manuscript.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q40" value="B"> B.
+                                    determine the true identity of the manuscript's author.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q40" value="C"> C.
+                                    describe the numerous attempts to decode the manuscript.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q40" value="D"> D.
+                                    identify which research into the manuscript has had the most media coverage.</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="nav-row">
+        <div class="footer__questionWrapper___1tZ46 selected" role="tablist">
+            <button class="footer__questionNo___3WNct" onclick="switchToPart(3)">
+                <span>Part 3</span>
+                <span class="attemptedCount">0 of 14</span>
+            </button>
+            <div class="footer__subquestionWrapper___9GgoP">
+                <button class="subQuestion" onclick="goToQuestion(27)">27</button>
+                <button class="subQuestion" onclick="goToQuestion(28)">28</button>
+                <button class="subQuestion" onclick="goToQuestion(29)">29</button>
+                <button class="subQuestion" onclick="goToQuestion(30)">30</button>
+                <button class="subQuestion" onclick="goToQuestion(31)">31</button>
+                <button class="subQuestion" onclick="goToQuestion(32)">32</button>
+                <button class="subQuestion" onclick="goToQuestion(33)">33</button>
+                <button class="subQuestion" onclick="goToQuestion(34)">34</button>
+                <button class="subQuestion" onclick="goToQuestion(35)">35</button>
+                <button class="subQuestion" onclick="goToQuestion(36)">36</button>
+                <button class="subQuestion" onclick="goToQuestion(37)">37</button>
+                <button class="subQuestion" onclick="goToQuestion(38)">38</button>
+                <button class="subQuestion" onclick="goToQuestion(39)">39</button>
+                <button class="subQuestion" onclick="goToQuestion(40)">40</button>
+            </div>
+        </div>
+        <button id="deliver-button" class="footer__deliverButton___3FM07">Check Answers</button>
+    </nav>
+
+    <div id="results-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeResultsModal()">&times;</button>
+            <h2>Results</h2>
+            <div class="results-summary">
+                <p>Score: <span id="results-score"></span> / 14</p>
+                <p>IELTS Band: <span id="results-band"></span></p>
+            </div>
+            <div id="results-details" class="results-details-container"></div>
+        </div>
+    </div>
+
+    <script>
+        const correctAnswers = {
+            '27': 'TRUE', '28': 'NOT GIVEN', '29': 'TRUE', '30': 'FALSE',
+            '31': 'D', '32': 'A', '33': 'E', '34': 'C',
+            '35': 'microscope', '36': 'concepts', '37': 'computer', '38': 'spectral analysis', '39': 'table',
+            '40': 'C'
+        };
+
+        let currentQuestion = 27;
+        let timeInSeconds = 1200; // 20 minutes
+        let timerInterval;
+        const timerDisplay = document.querySelector('.timer-display');
+        const timerToggleButton = document.getElementById('timer-toggle-btn');
+        const deliverButton = document.getElementById('deliver-button');
+        const resizer = document.querySelector('.resizer');
+        const passagePanel = document.querySelector('.passage-panel');
+        const questionsPanel = document.querySelector('.questions-panel');
+
+        const playIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+        const pauseIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+
+        // Highlighting
+        (function () {
+            const highlightBtn = document.getElementById('highlight-btn');
+            const removeHighlightBtn = document.getElementById('remove-highlight-btn');
+            let lastSelection = null;
+            let highlightTarget = null;
+
+            function getValidSelection() {
+                const sel = window.getSelection();
+                if (!sel.rangeCount || sel.isCollapsed) return null;
+                const range = sel.getRangeAt(0);
+                if (passagePanel.contains(range.commonAncestorContainer) || questionsPanel.contains(range.commonAncestorContainer)) {
+                    return range;
+                }
+                return null;
+            }
+
+            function showHighlightBtn(range) {
+                const rect = range.getBoundingClientRect();
+                highlightBtn.style.top = (window.scrollY + rect.bottom + 4) + 'px';
+                highlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+                highlightBtn.style.display = 'block';
+            }
+
+            function hideHighlightBtn() { highlightBtn.style.display = 'none'; }
+
+            function showRemoveBtn(span) {
+                const rect = span.getBoundingClientRect();
+                removeHighlightBtn.style.top = (window.scrollY + rect.bottom + 4) + 'px';
+                removeHighlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+                removeHighlightBtn.style.display = 'block';
+                highlightTarget = span;
+            }
+
+            function hideRemoveBtn() {
+                removeHighlightBtn.style.display = 'none';
+                highlightTarget = null;
+            }
+
+            highlightBtn.addEventListener('click', () => {
+                if (lastSelection) {
+                    const span = document.createElement('span');
+                    span.className = 'highlight';
+                    span.appendChild(lastSelection.extractContents());
+                    lastSelection.insertNode(span);
+                    window.getSelection().removeAllRanges();
+                    hideHighlightBtn();
+                }
+            });
+
+            removeHighlightBtn.addEventListener('click', () => {
+                if (highlightTarget) {
+                    const parent = highlightTarget.parentNode;
+                    while (highlightTarget.firstChild) {
+                        parent.insertBefore(highlightTarget.firstChild, highlightTarget);
+                    }
+                    parent.removeChild(highlightTarget);
+                    hideRemoveBtn();
+                }
+            });
+
+            document.addEventListener('selectionchange', () => {
+                hideHighlightBtn();
+                const range = getValidSelection();
+                if (range) {
+                    lastSelection = range;
+                    showHighlightBtn(range);
+                } else {
+                    lastSelection = null;
+                }
+            });
+
+            document.addEventListener('scroll', () => {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            }, true);
+
+            document.addEventListener('mousedown', (e) => {
+                if (!highlightBtn.contains(e.target) && !removeHighlightBtn.contains(e.target)) {
+                    hideHighlightBtn();
+                    hideRemoveBtn();
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('highlight')) {
+                    e.preventDefault();
+                    showRemoveBtn(e.target);
+                }
+            });
+        })();
+
+        function initialize() {
+            startTimer();
+            document.body.addEventListener('change', updateAllIndicators);
+            document.body.addEventListener('input', updateAllIndicators);
+            deliverButton.addEventListener('click', checkAnswers);
+            timerToggleButton.addEventListener('click', toggleTimer);
+            resizer.addEventListener('mousedown', initResize);
+            goToQuestion(27);
+        }
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeInSeconds--;
+                const minutes = Math.floor(timeInSeconds / 60);
+                const seconds = timeInSeconds % 60;
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                if (timeInSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.textContent = "Time's up!";
+                }
+            }, 1000);
+            timerToggleButton.innerHTML = pauseIcon;
+        }
+
+        function toggleTimer() {
+            if (timerToggleButton.innerHTML.includes('M6 19h4V5H6v14z')) {
+                clearInterval(timerInterval);
+                timerToggleButton.innerHTML = playIcon;
+            } else {
+                startTimer();
+            }
+        }
+
+        function initResize(e) {
+            e.preventDefault();
+            const startX = e.clientX;
+            const startWidth = passagePanel.offsetWidth;
+            const doDrag = (e) => {
+                const newWidth = startWidth + e.clientX - startX;
+                if (newWidth > 200 && (document.body.clientWidth - newWidth - resizer.offsetWidth) > 200) {
+                    passagePanel.style.flex = `0 0 ${newWidth}px`;
+                }
+            };
+            const stopDrag = () => {
+                window.removeEventListener('mousemove', doDrag);
+                window.removeEventListener('mouseup', stopDrag);
+            };
+            window.addEventListener('mousemove', doDrag);
+            window.addEventListener('mouseup', stopDrag);
+        }
+
+        function checkAnswers() {
+            clearInterval(timerInterval);
+            let score = 0;
+            const resultsDetails = document.getElementById('results-details');
+            resultsDetails.innerHTML = '';
+
+            for (let i = 27; i <= 40; i++) {
+                const correctAnswer = correctAnswers[i];
+                const radioInput = document.querySelector(`input[name="q${i}"]:checked`);
+                const selectInput = document.getElementById(`q${i}`);
+                const textInput = document.getElementById(`q${i}`);
+                let userAnswer = '';
+                let isCorrect = false;
+                let element;
+
+                if (radioInput) {
+                    userAnswer = radioInput.value;
+                    element = radioInput.closest('.multi-choice-question, .tf-question');
+                    isCorrect = userAnswer === correctAnswer;
+                } else if (selectInput) {
+                    userAnswer = selectInput.value;
+                    element = selectInput.closest('.matching-question-item');
+                    isCorrect = userAnswer === correctAnswer;
+                } else if (textInput) {
+                    userAnswer = textInput.value.trim().toLowerCase();
+                    element = textInput.closest('.summary-question-item');
+                    isCorrect = userAnswer === correctAnswer.toLowerCase();
+                }
+
+                if (isCorrect) score++;
+                if (element) element.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+                const resultRow = document.createElement('div');
+                resultRow.className = `result-row ${isCorrect ? '' : 'incorrect'}`;
+                resultRow.innerHTML = `
+                    <span>${i}</span>
+                    <span>${userAnswer || 'Not Answered'}</span>
+                    <span>${correctAnswer}</span>
+                `;
+                resultsDetails.appendChild(resultRow);
+
+                const subQuestionBtn = document.querySelector(`.subQuestion[onclick="goToQuestion(${i})"]`);
+                if (subQuestionBtn) subQuestionBtn.classList.add(isCorrect ? 'correct' : 'incorrect');
+            }
+
+            document.getElementById('results-score').textContent = score;
+            document.getElementById('results-band').textContent = calculateBandScore(score);
+            document.getElementById('results-modal').classList.add('active');
+        }
+
+        function calculateBandScore(score) {
+            const mapping = { 14: 9.0, 13: 8.5, 12: 8.0, 11: 7.5, 10: 7.0, 9: 6.5, 8: 6.0, 7: 5.5, 6: 5.0, 5: 4.5 };
+            return mapping[score] || 4.0;
+        }
+
+        window.goToQuestion = function (qNum) {
+            currentQuestion = qNum;
+            document.querySelectorAll('.active').forEach(el => el.classList.remove('active'));
+            const target = document.querySelector(`[data-q-start="${qNum}"]`) || document.getElementById(`q${qNum}`);
+            if (target) {
+                target.classList.add('active');
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            document.querySelectorAll('.subQuestion').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.subQuestion[onclick="goToQuestion(${qNum})"]`).classList.add('active');
+        };
+
+        window.switchToPart = function (partNum) {
+            goToQuestion(27);
+        };
+
+        window.closeResultsModal = function () {
+            document.getElementById('results-modal').classList.remove('active');
+        };
+
+        function updateAllIndicators() {
+            const answeredCount = document.querySelectorAll('.subQuestion.answered, .subQuestion.correct, .subQuestion.incorrect').length;
+            document.querySelector('.attemptedCount').textContent = `${answeredCount} of 14`;
+
+            for (let i = 27; i <= 40; i++) {
+                const btn = document.querySelector(`.subQuestion[onclick="goToQuestion(${i})"]`);
+                if (btn.classList.contains('correct') || btn.classList.contains('incorrect')) continue;
+                const radioInput = document.querySelector(`input[name="q${i}"]:checked`);
+                const selectInput = document.getElementById(`q${i}`);
+                const textInput = document.getElementById(`q${i}`);
+                btn.classList.toggle('answered', (radioInput && radioInput.value) || (selectInput && selectInput.value) || (textInput && textInput.value.trim()));
+            }
+        }
+
+        document.body.addEventListener('change', updateAllIndicators);
+        document.body.addEventListener('input', updateAllIndicators);
+        initialize();
+    </script>
+</body>
+
+</html>
