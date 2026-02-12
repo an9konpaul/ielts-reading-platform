@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reading authentic material</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --passage-bg: #f8f9fa;
+            --questions-bg: #ffffff;
+            --border-color: #5770ff;
+            --highlight-color: rgb(255, 208, 0);
+            /* Changed highlight color */
+
+            /* New Header & Social Colors */
+            --header-bg: #F8F8F8;
+            /* Very light gray for header background */
+            --header-text: #333333;
+            /* Dark text for light header */
+            --telegram-blue: #0088CC;
+            --instagram-pink: #E4405F;
+            --youtube-red: #FF0000;
+
+            /* Button Colors (Red themed) */
+            --button-bg: #28a745;
+            /* Primary button red */
+            --button-hover: #218838;
+            /* Darker red on hover */
+
+            --correct-color: #28a745;
+            /* Standard green */
+            --incorrect-color: #dc3545;
+            /* Standard red */
+            --progress-complete: #28a745;
+            --progress-incomplete: #bdbdbd;
+
+            /* Timer Colors (Red themed) */
+            --timer-bg: #0088CC;
+            /* Very light red/pink */
+            --timer-text: #ffffff;
+            /* Darker red */
+
+            --footer-bg: #f5f5f5;
+        }
+
+        .night-mode {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --passage-bg: #1e1e1e;
+            --questions-bg: #1e1e1e;
+            --border-color: #424242;
+            --highlight-color: #0084ff;
+            /* Darker springgreen for night mode */
+
+            /* Night Mode Header & Social Colors */
+            --header-bg: #1a1a1a;
+            /* Dark gray for header background */
+            --header-text: #ffffff;
+            /* White text for dark header */
+            --telegram-blue: #005f99;
+            /* Darker telegram blue */
+            --instagram-pink: #b2334b;
+            /* Darker instagram pink */
+            --youtube-red: #b20000;
+            /* Darker YouTube red */
+
+            /* Night Mode Button Colors */
+            --button-bg: #990000;
+            /* Darker primary button red */
+            --button-hover: #7a0000;
+            /* Even darker red on hover */
+
+            --correct-color: #218838;
+            /* Darker green */
+            --incorrect-color: #c82333;
+            /* Darker red */
+            --progress-complete: #218838;
+            --progress-incomplete: #616161;
+
+            /* Night Mode Timer Colors */
+            --timer-bg: #0088CC;
+            /* Dark red */
+            --timer-text: #ffcdd2;
+            /* Lighter red */
+
+            --footer-bg: #121212;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .logo-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            /* Space between icon and text */
+            color: white;
+            /* Text color is always white for social links */
+            padding: 8px 15px;
+            border-radius: 50px;
+            /* Pill shape */
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .social-link:hover {
+            transform: translateY(-1px);
+        }
+
+        .social-link i {
+            font-size: 1.2em;
+            /* Makes icon slightly larger than text */
+        }
+
+        /* Specific styling for social links */
+        .social-link.telegram {
+            background-color: var(--telegram-blue);
+        }
+
+        .social-link.telegram:hover {
+            background-color: #007bb5;
+            /* Slightly darker */
+        }
+
+        .social-link.instagram {
+            background-color: var(--instagram-pink);
+        }
+
+        .social-link.instagram:hover {
+            background-color: #d62976;
+            /* Slightly darker */
+        }
+
+        .social-link.youtube {
+            background-color: var(--youtube-red);
+        }
+
+        .social-link.youtube:hover {
+            background-color: #CC0000;
+            /* Slightly darker */
+        }
+
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .timer-container {
+            background-color: var(--timer-bg);
+            color: var(--timer-text);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .timer-controls button {
+            background: none;
+            border: none;
+            color: var(--timer-text);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timer-controls button:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            /* Darker hover for light timer */
+        }
+
+        .night-mode .timer-controls button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            /* Lighter hover for dark timer */
+        }
+
+        .mode-toggle {
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+            font-size: 20px;
+            padding: 6px;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mode-toggle:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            /* Darker hover for light header */
+        }
+
+        .night-mode .mode-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            /* Lighter hover for dark header */
+        }
+
+        main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .passage-container,
+        .questions-container {
+            height: 100%;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .passage-container {
+            width: 50%;
+            background-color: var(--passage-bg);
+            border-right: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .questions-container {
+            width: 50%;
+            background-color: var(--questions-bg);
+        }
+
+        .passage-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .passage-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .passage-text {
+            font-size: 17px;
+        }
+
+        .question-text {
+            font-size: 17px;
+            line-height: 1.8;
+            /* Increased line-height for fill-in-the-blank */
+        }
+
+        .passage-text p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .highlight {
+            background-color: var(--highlight-color);
+            cursor: pointer;
+        }
+
+        .highlight-tooltip {
+            position: absolute;
+            background-color: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 1000;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 25px 0 15px;
+            color: var(--text-color);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .question-group {
+            margin-bottom: 30px;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: var(--passage-bg);
+            border-left: 4px solid var(--border-color);
+        }
+
+        .question-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: baseline;
+            /* Align baselines of number and text */
+        }
+
+        .question-number {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background-color: var(--progress-incomplete);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            margin-right: 10px;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .question.answered .question-number {
+            background-color: var(--progress-complete);
+        }
+
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .option input {
+            margin-right: 8px;
+        }
+
+        /* Styling for the new inline input fields */
+        .fill-in-the-blank {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--text-color);
+            width: 150px;
+            font-family: inherit;
+            font-size: 1em;
+            /* Inherit font size from parent */
+            color: inherit;
+            padding: 0 4px 2px 4px;
+            /* Add some padding */
+            margin: 0 3px;
+            /* Add some margin */
+            vertical-align: baseline;
+            /* Align with the text */
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .fill-in-the-blank:focus {
+            border-bottom-color: var(--button-bg);
+        }
+
+
+        .instructions {
+            font-size: 14px;
+            color: #757575;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .summary-box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #fafafa;
+            margin-top: 15px;
+        }
+
+        .summary-box p {
+            font-weight: normal !important;
+        }
+
+        .summary-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+
+        .summary-options span {
+            padding: 5px;
+        }
+
+        .summary-text {
+            line-height: 2.2;
+        }
+
+        .summary-text .gap {
+            display: inline-block;
+            width: 150px;
+        }
+
+        .summary-text .question-input {
+            width: 40px;
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: bold;
+        }        
+
+        footer {
+            background-color: var(--footer-bg);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-container {
+            display: flex;
+            gap: 8px;
+        }
+
+        .progress-item {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--progress-incomplete);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .progress-item:hover {
+            transform: scale(1.1);
+        }
+
+        .progress-item.completed {
+            background-color: var(--progress-complete);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--button-bg);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--button-hover);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--button-bg);
+            /* Use primary button color for border */
+            color: var(--button-bg);
+            /* Use primary button color for text */
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(204, 0, 0, 0.1);
+            /* Light red tint on hover */
+        }
+
+        .night-mode .btn-secondary:hover {
+            background-color: rgba(153, 0, 0, 0.2);
+            /* Darker red tint on hover for night mode */
+        }
+
+
+        .feedback-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: none;
+            /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .feedback-container {
+            background-color: var(--passage-bg);
+            width: 90%;
+            max-width: 900px;
+            height: 90%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feedback-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .feedback-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #close-feedback {
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .score-display {
+            font-size: 24px;
+            font-weight: 700;
+            margin-left: 10px;
+        }
+
+        .feedback-body {
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .feedback-item {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: var(--questions-bg);
+        }
+
+        .feedback-question {
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .feedback-answer {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .correct {
+            color: var(--correct-color);
+        }
+
+        .incorrect {
+            color: var(--incorrect-color);
+        }
+
+        .feedback-explanation {
+            margin-top: 10px;
+            padding: 10px;
+            border-left: 3px solid var(--button-bg);
+            /* Use primary button color for explanation border */
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+
+        .feedback-passage {
+            margin-top: 8px;
+            font-style: italic;
+            color: #757575;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            main {
+                flex-direction: column;
+            }
+
+            .passage-container,
+            .questions-container {
+                width: 100%;
+                height: 50%;
+            }
+
+            .passage-container {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .progress-container {
+                flex-wrap: wrap;
+                max-width: 60%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo-area {
+                flex-wrap: wrap;
+                /* Allow items to wrap to the next line */
+                justify-content: center;
+                /* Center items when wrapped */
+                gap: 8px;
+                /* Adjusted gap for smaller screens */
+            }
+
+            .social-link {
+                padding: 6px 10px;
+                /* Reduced padding for smaller screens */
+                font-size: 13px;
+                /* Reduced font size for smaller screens */
+            }
+
+            .social-link i {
+                font-size: 1.1em;
+                /* Slightly smaller icon */
+            }
+
+            .social-link span {
+                display: inline;
+                /* Ensure text is visible */
+            }
+        }
+
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .header-controls {
+                width: 100%;
+                justify-content: space-around;
+            }
+
+            .progress-container {
+                max-width: 50%;
+            }
+
+            .progress-item {
+                width: 26px;
+                height: 26px;
+                font-size: 12px;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .action-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+
+<div class="logo-area" style="display: flex; justify-content: center; align-items: center; text-align: center;">
+  <a class="social-link telegram" href="https://t.me/IELTSwithJurabek" target="_blank" title="Join on Telegram">
+    <i class="fab fa-telegram-plane"></i>
+    <span>IELTSwithJurabek</span>
+  </a>
+</div>
+
+<div class="header-controls">
+<div class="timer-container">
+<i class="fas fa-clock"></i>
+<span id="timer">20:00</span>
+<div class="timer-controls">
+<button id="start-timer" title="Start"><i class="fas fa-play"></i></button>
+<button id="pause-timer" title="Pause"><i class="fas fa-pause"></i></button>
+<button id="reset-timer" title="Reset"><i class="fas fa-redo"></i></button>
+</div>
+</div>
+<button class="mode-toggle" id="night-mode-toggle" title="Toggle Night Mode">
+<i class="fas fa-moon"></i>
+</button>
+</div>
+</header>
+<main>
+    <div class="passage-container" id="passage-container">
+        <div class="passage-content">
+            <div class="passage-title">Reading Passage 1: Teenage Brains</div>
+                <div class="passage-text" id="passage-text">
+
+        <p>In the 1990s, the National Institutes of Health in the US conducted the first full series of scans of the developing adolescent brain. They studied over a hundred young people and found that human brains undergo a considerable reorganization between the ages of 12 and 25. The brain doesn't actually grow very much during this period. It has already reached 90 percent of its full size by the time a person is six, and a thickening of the bones in the skull accounts for most head growth afterward. But as we move through adolescence, the brain undergoes extensive changes, resembling a network and wiring upgrade.</p>
+
+        <p>To begin with, the brain's axons – the long nerve fibers that neurons (nerve cells) use to send signals to other neurons – gradually become more coated with a fatty substance called myelin (the brain's white matter). This increases the axons' transmission speed up to a hundred times. Meanwhile, the most heavily used synapses – the little chemical junctions across which signals are transported from one neuron to another – grow richer and stronger. At the same time, synapses that are not often used are gradually lost. This causes the brain's cortex – the outer layer of gray matter where we do much of our conscious and complicated thinking – to become less thick but more efficient. Taken together, these changes make the entire brain a much faster and more sophisticated organ.</p>
+
+        <p>This process of maturation, once thought to be largely finished by elementary school, continues throughout adolescence. Brain scans done since the 1990s show that these physical changes move in a slow wave from the brain's rear to its front, from areas close to the brain stem that look after older and more basic functions, such as vision, movement, and fundamental processing, to the newer and more complicated thinking areas up front. In addition, the corpus callosum, which links the brain's left and right hemispheres and carries traffic essential to many advanced brain functions, steadily thickens. More powerful links also develop between the area of the brain that controls memory and the region that manages goal setting; as a consequence, we get better at integrating memory and experience when deciding what to do. At the same time, the frontal areas develop greater speed and richer connections, allowing us to generate and consider many more variables than before.</p>
+
+        <p>When this development proceeds normally, we get better at balancing impulse, desire, goals, self-interest, rules, ethics, and even selflessness. We generate behavior that is more complex and, sometimes at least, more sensible. But at times, and especially at first, the brain does this work clumsily.</p>
+
+        <p>Beatriz Luna, a professor of psychiatry at the University of Pittsburgh, US, who applies neuroimaging to investigate the teen brain, illustrated this learning curve experimentally. Luna's experimental subjects were children, teens and twentysomethings. The researcher scanned the subjects' brains while they played a game in which they have to stop themselves from looking at a suddenly appearing light. They view a screen on which the red cross at the center occasionally disappears just as a light appears elsewhere on the screen. Their instructions are not to look at this light and instead to look in the opposite direction. A sensor detects any eye movement. It's a difficult assignment, since suddenly appearing lights naturally draw our attention. To succeed, they must overcome both a normal impulse to attend to new information and curiosity about something forbidden. This is called response inhibition.</p>
+
+        <p>Ten-year-olds are terrible at it. They only have a 55 percent success rate. Teens do much better. In fact, by age 15 they can perform as well as adults if they're motivated, resisting temptation about 80 percent of the time. What Luna found most interesting, however, was not those scores but the brain scans she took of the teenaged participants. Compared with adults, teens tended to make less use of brain regions that monitor performance, plan, and stay focused – areas the adults seemed to access automatically. This let the adults use a variety of brain resources and better resist temptation, while the teens generally used those areas less often and, consequently, more readily gave in to the impulse to look at the light.</p>
+
+        <p>If offered an extra reward, however, teens showed they could push those executive regions to work harder, improving their scores. And by age 20, their brains respond to this task much as the adults' brains do. Luna suspects the improvement comes as richer networks and faster connections make the executive region more effective.</p>
+
+        <p>These studies help explain why teens' behavior exhibits considerable inconsistency. As well as lacking experience generally, they're still learning to employ their brain's networks. The slow and uneven pattern of development revealed by these imaging studies offers one explanation for why teens sometimes come to unwise decisions. It suggests that they act that way because their brains are still developing.</p>
+
+            </div>
+        </div>
+    </div>
+
+<div class="questions-container" id="questions-container">
+    <div class="section-title">Questions 1–8</div>
+    <div class="instructions">Do the following statements agree with the information given in Reading Passage 1?</div>
+    <div class="instructions">In boxes 1-8 on your answer sheet, write:<br>
+        TRUE - if the statement agrees with the information<br>
+        FALSE - if the statement contradicts the information<br>
+        NOT GIVEN - if there is no information on this
+    </div>
+    <div class="question-group">
+
+        <div class="question" id="q1">
+            <div class="question-title">
+                <div class="question-number">1</div>
+                <div class="question-text">The adolescent brain experiences a significant increase in size.</div>
+            </div>
+            <label><input type="radio" name="q1" value="TRUE"> TRUE</label><br>
+            <label><input type="radio" name="q1" value="FALSE"> FALSE</label><br>
+            <label><input type="radio" name="q1" value="NOT GIVEN"> NOT GIVEN</label><br>
+        </div>
+
+        <div class="question" id="q2">
+            <div class="question-title">
+                <div class="question-number">2</div>
+                <div class="question-text">The reason why axons send messages faster during adolescence is because the axons get longer.</div>
+            </div>
+            <label><input type="radio" name="q2" value="TRUE"> TRUE</label><br>
+            <label><input type="radio" name="q2" value="FALSE"> FALSE</label><br>
+            <label><input type="radio" name="q2" value="NOT GIVEN"> NOT GIVEN</label><br>
+        </div>
+
+        <div class="question" id="q3">
+            <div class="question-title">
+                <div class="question-number">3</div>
+                <div class="question-text">Some synapses are primarily needed in childhood.</div>
+            </div>
+            <label><input type="radio" name="q3" value="TRUE"> TRUE</label><br>
+            <label><input type="radio" name="q3" value="FALSE"> FALSE</label><br>
+            <label><input type="radio" name="q3" value="NOT GIVEN"> NOT GIVEN</label><br>
+        </div>
+
+        <div class="question" id="q4">
+            <div class="question-title">
+                <div class="question-number">4</div>
+                <div class="question-text">During adolescence, thinning occurs in the part of the brain that controls complex thoughts.</div>
+            </div>
+            <label><input type="radio" name="q4" value="TRUE"> TRUE</label><br>
+            <label><input type="radio" name="q4" value="FALSE"> FALSE</label><br>
+            <label><input type="radio" name="q4" value="NOT GIVEN"> NOT GIVEN</label><br>
+        </div>
+
+        <div class="question" id="q5">
+            <div class="question-title">
+                <div class="question-number">5</div>
+                <div class="question-text">Brain scans show that changes to the teenage brain begin at the back of the brain.</div>
+            </div>
+            <label><input type="radio" name="q5" value="TRUE"> TRUE</label><br>
+            <label><input type="radio" name="q5" value="FALSE"> FALSE</label><br>
+            <label><input type="radio" name="q5" value="NOT GIVEN"> NOT GIVEN</label><br>
+        </div>
+
+        <div class="question" id="q6">
+            <div class="question-title">
+                <div class="question-number">6</div>
+                <div class="question-text">The connection between the two halves of the brain gets stronger during adolescence.</div>
+            </div>
+            <label><input type="radio" name="q6" value="TRUE"> TRUE</label><br>
+            <label><input type="radio" name="q6" value="FALSE"> FALSE</label><br>
+            <label><input type="radio" name="q6" value="NOT GIVEN"> NOT GIVEN</label><br>
+        </div>
+
+        <div class="question" id="q7">
+            <div class="question-title">
+                <div class="question-number">7</div>
+                <div class="question-text">Teenagers tend to set conflicting goals.</div>
+            </div>
+            <label><input type="radio" name="q7" value="TRUE"> TRUE</label><br>
+            <label><input type="radio" name="q7" value="FALSE"> FALSE</label><br>
+            <label><input type="radio" name="q7" value="NOT GIVEN"> NOT GIVEN</label><br>
+        </div>
+
+        <div class="question" id="q8">
+            <div class="question-title">
+                <div class="question-number">8</div>
+                <div class="question-text">The development of the front region in the teenage brain facilitates thinking about multiple factors.</div>
+            </div>
+            <label><input type="radio" name="q8" value="TRUE"> TRUE</label><br>
+            <label><input type="radio" name="q8" value="FALSE"> FALSE</label><br>
+            <label><input type="radio" name="q8" value="NOT GIVEN"> NOT GIVEN</label><br>
+        </div>
+    </div>
+
+    <div class="section-title">Questions 9–16</div>
+<div class="instructions">Complete the notes below.</div>
+<div class="instructions">Choose ONE WORD ONLY from the passage for each answer.</div>
+<div class="instructions">Write your answers in boxes 9–16 on your answer sheet.</div>
+
+<div class="question-group">
+    <!-- Description Section -->
+    <div class="question-subtitle"><strong>Beatriz Luna’s test</strong></div>
+    <div class="question-subtitle"><strong>Description</strong></div>
+
+    <div class="question" id="q9">
+        <div class="question-title">
+            <div class="question-number">9</div>
+            <div class="question-text">The subjects of the experiment took part in a <input type="text" class="fill-in-the-blank" name="q9">, which involved watching for a light.</div>
+        </div>
+    </div>
+
+    <div class="question" id="q10">
+        <div class="question-title">
+            <div class="question-number">10</div>
+            <div class="question-text">A <input type="text" class="fill-in-the-blank" name="q10"> automatically monitored where subjects were focusing.</div>
+        </div>
+    </div>
+
+    <div class="question" id="q11">
+        <div class="question-title">
+            <div class="question-number">11</div>
+            <div class="question-text">Challenge for subjects: to control interest in previously unknown <input type="text" class="fill-in-the-blank" name="q11">.</div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="question-subtitle"><strong>Results</strong></div>
+
+    <div class="question-static">
+        <div class="question-text">
+            <strong>Success rates:</strong><br>
+            Age 10: 55 percent<br>
+            Age 15: approx. 80 percent
+        </div>
+    </div>
+
+    <div class="question" id="q12">
+        <div class="question-title">
+            <div class="question-number">12</div>
+            <div class="question-text">The brain scans drew the researcher’s attention more than the <input type="text" class="fill-in-the-blank" name="q12"> of the people in the study.</div>
+        </div>
+    </div>
+
+    <div class="question" id="q13">
+        <div class="question-title">
+            <div class="question-number">13</div>
+            <div class="question-text">Adults’ use of multiple brain resources helped them to avoid any <input type="text" class="fill-in-the-blank" name="q13"> they were exposed to.</div>
+        </div>
+    </div>
+
+    <div class="question" id="q14">
+        <div class="question-title">
+            <div class="question-number">14</div>
+            <div class="question-text">An additional <input type="text" class="fill-in-the-blank" name="q14"> motivated teens and bettered their performance.</div>
+        </div>
+    </div>
+
+    <!-- Conclusions Section -->
+    <div class="question-subtitle"><strong>Conclusions</strong></div>
+
+    <div class="question" id="q15">
+        <div class="question-title">
+            <div class="question-number">15</div>
+            <div class="question-text">Teens have not yet acquired full use of their brain’s networks, which is why they behave with such <input type="text" class="fill-in-the-blank" name="q15">.</div>
+        </div>
+    </div>
+
+    <div class="question" id="q16">
+        <div class="question-title">
+            <div class="question-number">16</div>
+            <div class="question-text">The incomplete development of teenagers’ brains may help account for bad <input type="text" class="fill-in-the-blank" name="q16">.</div>
+        </div>
+    </div>
+</div>
+</div>
+
+</main>
+<footer>
+<div class="progress-container" id="progress-container">
+</div>
+<div class="action-buttons">
+<button class="btn-secondary" id="reset-btn">Reset Answers</button>
+<button class="btn-primary" id="submit-btn">Submit Answers</button>
+</div>
+</footer>
+<div class="feedback-overlay" id="feedback-overlay">
+<div class="feedback-container" id="feedback-container">
+<div class="feedback-header">
+<div class="feedback-title">
+<i class="fas fa-chart-bar"></i> Your Results
+                    <span class="score-display" id="score-display">0/16</span>
+</div>
+<button id="close-feedback" title="Close"><i class="fas fa-times"></i></button>
+</div>
+<div class="feedback-body" id="feedback-body">
+</div>
+</div>
+</div>
+
+<script>
+// Modified highlight logic with color picker and remove functionality
+let highlightTooltip = null;
+let selectedRange = null;
+
+function createColorPicker(x, y, applyColorCallback) {
+    const colors = ["lightgreen", "yellow", "lightskyblue"];
+    const picker = document.createElement("div");
+    picker.className = "highlight-tooltip";
+    picker.style.top = `${y}px`;
+    picker.style.left = `${x}px`;
+    picker.style.position = "fixed";
+    picker.style.background = "#333";
+    picker.style.color = "white";
+    picker.style.padding = "5px 10px";
+    picker.style.borderRadius = "4px";
+    picker.style.zIndex = 1000;
+    picker.style.display = "flex";
+    colors.forEach(color => {
+        const btn = document.createElement("button");
+        btn.style.backgroundColor = color;
+        btn.style.border = "none";
+        btn.style.width = "20px";
+        btn.style.height = "20px";
+        btn.style.margin = "0 4px";
+        btn.style.borderRadius = "50%";
+        btn.title = `Highlight with ${color}`;
+        btn.addEventListener("click", () => {
+            applyColorCallback(color);
+            picker.remove();
+        });
+        picker.appendChild(btn);
+    });
+    document.body.appendChild(picker);
+    return picker;
+}
+
+function applyHighlight(color) {
+    if (!selectedRange) return;
+    const span = document.createElement("span");
+    span.className = "highlight";
+    span.style.backgroundColor = color;
+    span.setAttribute("data-color", color);
+    span.appendChild(selectedRange.extractContents());
+    selectedRange.insertNode(span);
+    selectedRange = null;
+    window.getSelection().removeAllRanges();
+
+    span.addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (highlightTooltip) highlightTooltip.remove();
+        highlightTooltip = document.createElement("div");
+        highlightTooltip.className = "highlight-tooltip";
+        highlightTooltip.style.top = `${e.clientY}px`;
+        highlightTooltip.style.left = `${e.clientX}px`;
+        highlightTooltip.innerHTML = `<button style="color:white;background:red;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;">Remove Highlight</button>`;
+        highlightTooltip.querySelector("button").addEventListener("click", function () {
+            const parent = span.parentNode;
+            while (span.firstChild) {
+                parent.insertBefore(span.firstChild, span);
+            }
+            parent.removeChild(span);
+            parent.normalize();
+            highlightTooltip.remove();
+        });
+        document.body.appendChild(highlightTooltip);
+    });
+}
+
+
+function handleMouseUp(e) {
+    const selection = window.getSelection();
+    if (selection.toString().trim() === '') return;
+    if (!e.currentTarget.contains(selection.anchorNode)) return;
+
+    selectedRange = selection.getRangeAt(0).cloneRange();
+    const rect = selectedRange.getBoundingClientRect();
+
+    if (highlightTooltip) highlightTooltip.remove();
+
+    highlightTooltip = createColorPicker(rect.left, rect.top - 40, applyHighlight);
+}
+
+document.getElementById('passage-text').addEventListener('mouseup', handleMouseUp);
+document.getElementById('questions-container').addEventListener('mouseup', handleMouseUp);
+
+document.addEventListener('mousedown', (e) => {
+    if (highlightTooltip && !highlightTooltip.contains(e.target)) {
+        highlightTooltip.remove();
+        highlightTooltip = null;
+        window.getSelection().removeAllRanges();
+    }
+});
+</script>
+
+<script>
+// === Night Mode Toggle ===
+document.getElementById('night-mode-toggle').addEventListener('click', function () {
+    document.body.classList.toggle('night-mode');
+    const icon = this.querySelector('i');
+    if (document.body.classList.contains('night-mode')) {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+    } else {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+    }
+});
+
+// === Submit Answers ===
+document.getElementById('submit-btn').addEventListener('click', function () {
+    const correctAnswers = {
+        q1: "FALSE",
+        q2: "FALSE",
+        q3: "TRUE",
+        q4: "TRUE",
+        q5: "TRUE",
+        q6: "TRUE",
+        q7: "NOT GIVEN",
+        q8: "TRUE",
+        q9: "game",
+        q10: "sensor",
+        q11: "light",
+        q12: "scores",
+        q13: "temptation",
+        q14: "reward",
+        q15: "inconsistency",
+        q16: "decisions"
+    };
+
+    let score = 0;
+    let feedbackHTML = "";
+
+    for (const [qid, correct] of Object.entries(correctAnswers)) {
+        let userAnswer = "";
+        let isAnswered = false;
+
+        // Check if the question is a text input (q9–q16) or radio button (q1–q8)
+        const textInput = document.querySelector(`input[name="${qid}"][type="text"]`);
+        const radios = document.getElementsByName(qid);
+
+        if (textInput) {
+            // Handle text input questions
+            userAnswer = textInput.value.trim().toLowerCase();
+            isAnswered = userAnswer !== "";
+        } else if (radios.length > 0) {
+            // Handle radio button questions
+            for (let r of radios) {
+                if (r.checked) {
+                    userAnswer = r.value;
+                    isAnswered = true;
+                    break;
+                }
+            }
+        }
+
+        // Compare answers (case-insensitive)
+        const isCorrect = userAnswer.toLowerCase() === correct.toLowerCase();
+        if (isCorrect && isAnswered) {
+            score++;
+        }
+
+        // Generate feedback
+        feedbackHTML += `
+        <div class="feedback-item">
+            <div class="feedback-question">Q${qid.replace("q", "")}</div>
+            <div class="feedback-answer ${isCorrect && isAnswered ? "correct" : "incorrect"}">
+                Your Answer: ${isAnswered ? userAnswer : "(no answer selected)"}<br/>
+                ${isAnswered ? (isCorrect ? "✔ Correct" : `✘ Incorrect (Correct: ${correct})`) : "✘ No answer selected (Correct: " + correct + ")"}
+            </div>
+        </div>`;
+    }
+
+    // Update feedback UI
+    document.getElementById("feedback-body").innerHTML = feedbackHTML;
+    document.getElementById("score-display").textContent = `${score}/16`;
+    document.getElementById("feedback-overlay").style.display = "flex";
+});
+document.getElementById('close-feedback').addEventListener('click', function () {
+    document.getElementById("feedback-overlay").style.display = "none";
+});
+
+// === Reset Button ===
+document.getElementById('reset-btn').addEventListener('click', function () {
+    const inputs = document.querySelectorAll("input[type='text']");
+    inputs.forEach(input => input.value = "");
+
+    const radios = document.querySelectorAll("input[type='radio']");
+    radios.forEach(r => r.checked = false);
+
+    const progressItems = document.querySelectorAll('.progress-item.completed');
+    progressItems.forEach(item => item.classList.remove('completed'));
+});
+</script>
+
+<script>
+function initializeProgressTracker() {
+    const progressContainer = document.getElementById("progress-container");
+    const questions = [
+        { id: 'q1', number: 1 },
+        { id: 'q2', number: 2 },
+        { id: 'q3', number: 3 },
+        { id: 'q4', number: 4 },
+        { id: 'q5', number: 5 },
+        { id: 'q6', number: 6 },
+        { id: 'q7', number: 7 },
+        { id: 'q8', number: 8 },
+        { id: 'q9', number: 9 },
+        { id: 'q10', number: 10 },
+        { id: 'q11', number: 11 },
+        { id: 'q12', number: 12 },
+        { id: 'q13', number: 13 },
+        { id: 'q14', number: 14 },
+        { id: 'q15', number: 15 },
+        { id: 'q16', number: 16 }
+    ];
+
+    questions.forEach(({id, number}) => {
+        const item = document.createElement("div");
+        item.className = "progress-item";
+        item.textContent = number;
+        item.dataset.qid = id;
+
+        item.addEventListener("click", () => {
+            document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+        });
+
+        progressContainer.appendChild(item);
+    });
+}
+
+function updateProgressStatus() {
+    const progressItems = document.querySelectorAll(".progress-item");
+
+    progressItems.forEach(item => {
+        const qid = item.dataset.qid;
+        const questionElem = document.getElementById(qid);
+        let answered = false;
+
+        const input = questionElem.querySelector("input[type='text']");
+        const radios = questionElem.querySelectorAll("input[type='radio']");
+
+        if (input && input.value.trim() !== "") {
+            answered = true;
+        } else if (radios.length > 0) {
+            radios.forEach(r => {
+                if (r.checked) answered = true;
+            });
+        }
+
+        // Update progress item color in footer
+        if (answered) {
+            item.classList.add("completed");
+        } else {
+            item.classList.remove("completed");
+        }
+
+        // NEW: also update the .question div class to trigger .question.answered
+        if (answered) {
+            questionElem.classList.add("answered");
+        } else {
+            questionElem.classList.remove("answered");
+        }
+    });
+}
+
+
+document.addEventListener("change", updateProgressStatus);
+document.addEventListener("input", updateProgressStatus); // For text inputs
+document.addEventListener("DOMContentLoaded", () => {
+    initializeProgressTracker();
+    updateProgressStatus();
+});
+</script>
+
+<script>
+// === Timer Functionality ===
+let timerInterval;
+let timeRemaining = 20 * 60; // 20 minutes
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+    const seconds = (timeRemaining % 60).toString().padStart(2, '0');
+    document.getElementById("timer").textContent = `${minutes}:${seconds}`;
+}
+
+document.getElementById("start-timer").addEventListener("click", () => {
+    if (timerInterval) return;
+    timerInterval = setInterval(() => {
+        if (timeRemaining > 0) {
+            timeRemaining--;
+            updateTimerDisplay();
+        } else {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            alert("Time is up!");
+        }
+    }, 1000);
+});
+
+document.getElementById("pause-timer").addEventListener("click", () => {
+    clearInterval(timerInterval);
+    timerInterval = null;
+});
+
+document.getElementById("reset-timer").addEventListener("click", () => {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    timeRemaining = 20 * 60;
+    updateTimerDisplay();
+});
+
+document.addEventListener("DOMContentLoaded", updateTimerDisplay);
+</script>
+</body>
+</html>

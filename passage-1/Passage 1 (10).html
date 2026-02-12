@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Reading Test - Passage 2: The Importance of Law</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        .loading-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #2563eb;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-title {
+            font-size: 1.2rem;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .loading-subtitle {
+            font-size: 1rem;
+            color: #9ca3af;
+        }
+
+        .start-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9998;
+        }
+
+        .start-content {
+            text-align: center;
+        }
+
+        .start-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 24px;
+        }
+
+        .start-subtitle {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        .start-button {
+            padding: 12px 32px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .start-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            background-color: #ffffff;
+            color: #333;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .passage-info {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .timer {
+            background-color: rgba(255, 193, 193, 0.5);
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+            min-width: 80px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #c53030;
+            border: 1px solid rgba(255, 120, 120, 0.3);
+        }
+
+        .timer.warning {
+            color: #9b2c2c;
+            background-color: rgba(254, 178, 178, 0.7);
+            border-color: rgba(245, 101, 101, 0.5);
+        }
+
+        .logo-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+            cursor: pointer;
+        }
+
+        .logo-area:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+        }
+
+        .logo-area i {
+            font-size: 1.1rem;
+        }
+
+        .progress-container {
+            background-color: #f8f9fa;
+            padding: 4px 20px;
+            z-index: 100;
+            flex-shrink: 0;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .progress-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .progress-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            border: 1px solid #cbd5e0;
+        }
+
+        .progress-item.current {
+            background-color: #4299e1;
+            color: white;
+            transform: scale(1.1);
+            border-color: #2b6cb0;
+        }
+
+        .progress-item.answered {
+            background-color: #9ae6b4;
+            color: #22543d;
+            border-color: #68d391;
+        }
+
+        .progress-item.correct {
+            background-color: #48bb78;
+            color: white;
+            border-color: #38a169;
+        }
+
+        .progress-item.incorrect {
+            background-color: #fed7d7;
+            color: #c53030;
+            border-color: #feb2b2;
+        }
+
+        .progress-item:hover {
+            background-color: #cbd5e0;
+            transform: scale(1.05);
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.95rem;
+            background-color: #f7fafc;
+            color: #4a5568;
+        }
+
+        .btn i {
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-primary {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-primary:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-secondary {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-submit {
+            background-color: #48bb78;
+            color: white;
+            font-weight: 900;
+            border: 1px solid #38a169;
+        }
+
+        .btn-submit:hover {
+            background-color: #38a169;
+            border-color: #2f855a;
+        }
+
+        .btn-submit:disabled {
+            background-color: #9ae6b4;
+            color: #718096;
+            cursor: not-allowed;
+            border: 1px solid #68d391;
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .passage-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #fafafa;
+            position: relative;
+        }
+
+        .resizer {
+            width: 4px;
+            background-color: #cbd5e0;
+            cursor: col-resize;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .resizer:hover {
+            background-color: #a0aec0;
+        }
+
+        .resizer::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 60px;
+            background-color: rgba(203, 213, 224, 0.5);
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        .questions-container {
+            width: 40%;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: white;
+            border-left: 1px solid #e2e8f0;
+        }
+
+        .passage {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .passage h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage-content p {
+            margin-top: 15px;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .passage h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage p {
+            margin-top: 20px;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        .question-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background-color: #ffffff;
+            transition: box-shadow 0.2s;
+        }
+
+        .question:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #2d3748;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .option:hover {
+            background-color: #f7fafc;
+            border-color: #cbd5e0;
+        }
+
+        .option input {
+            margin-right: 2px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 20%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        .input-field:focus {
+            border-color: #4299e1;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+        }
+
+        select.input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 20%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .answer-indicator {
+            background-color: #e6fffa;
+            border: 1px solid #38b2ac;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .answer-indicator.correct {
+            background-color: #e6fffa;
+            border-color: #38b2ac;
+            color: #234e52;
+        }
+
+        .answer-indicator.incorrect {
+            background-color: #fed7d7;
+            border-color: #fc8181;
+            color: #742a2a;
+        }
+
+        .question-group {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-group-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+
+        .highlight {
+            background-color: #ffff00;
+            cursor: pointer;
+        }
+
+        #highlight-btn,
+        #remove-highlight-btn {
+            position: absolute;
+            z-index: 9999;
+            display: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            border: 1px solid #888;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .score-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2d3748;
+        }
+
+        .score-breakdown {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .questions-container {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid #e2e8f0;
+            }
+
+            .resizer {
+                width: 100%;
+                height: 4px;
+                cursor: row-resize;
+            }
+
+            .resizer::before {
+                width: 60px;
+                height: 30px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .logo-area {
+                order: 1;
+            }
+
+            .passage-info {
+                order: 2;
+            }
+
+            .timer {
+                order: 3;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h2 class="loading-title">Your test will begin shortly</h2>
+            <p class="loading-subtitle">Please wait</p>
+        </div>
+    </div>
+    <!-- Start Screen -->
+    <div id="startScreen" class="start-screen hidden">
+        <div class="start-content">
+            <h1 class="start-title">IELTS with Jurabek</h1>
+            <p class="start-subtitle">Ready to begin your reading test?</p>
+            <button class="start-button" onclick="startTest()">Start Test</button>
+        </div>
+    </div>
+    <div class="container hidden" id="testContainer">
+        <header>
+            <div class="passage-info">IELTS with Jurabek</div>
+            <div class="timer">
+                <i class="fas fa-clock"></i>
+                <span>20:00</span>
+            </div>
+            <div class="logo-area" onclick="window.open('https://t.me/IELTSwithJurabek', '_blank')">
+                <i class="fas fa-paper-plane"></i>
+                <span>Click for more TESTS</span>
+            </div>
+        </header>
+        <button id="highlight-btn" type="button">Highlight</button>
+        <button id="remove-highlight-btn" type="button">Remove Highlight</button>
+        <div class="main-content">
+            <!-- Reading Passage -->
+            <div class="passage-container" role="region" aria-label="Reading Passage">
+                <h2 class="section-title">READING PASSAGE 1</h2>
+                <div class="passage-content" id="passage">
+                    <h3>Jewels from the sea<br>Indigenous necklaces in Tasmania</h3>
+                    <p>Necklace-making is the most significant cultural tradition of Tasmanian Aboriginal women. It is
+                        also one of the few traditions that have continued without interruption since before the
+                        Europeans settled in Tasmania, the island to the south of the mainland of Australia, in 1803.
+                        Whereas colonisation disrupted or destroyed so much of Tasmanian Aboriginal life and heritage,
+                        necklace-making has not only continued but also evolved in various ways.</p>
+                    <p>The knowledge and skills of shell processing and stringing have been passed down through
+                        generations of women, particularly the women of the Furneaux Islands, off Tasmania’s north-east
+                        coast. Necklace-making is an opportunity for women of all ages to get together and share
+                        stories, pass knowledge to younger generations and continue to affirm their culture. Aunty
+                        Dulcie Greeno, an elder of the Tasmanian Aboriginal community, has been making necklaces for
+                        more than 40 years, but first began practising as a child. ‘My grandmother used to do shell
+                        necklaces and a couple of my aunties did too,’ she said in an interview for Australian Museums
+                        and Galleries Online. ‘We’d go round with them on the beach and collect shells with them.’ Now
+                        her sister (Corrie Fullard), daughter (Betty Grace), daughter-in-law (Lola Greeno) and niece
+                        (Jeanette James) – all celebrated artists in their own right – make necklaces.</p>
+                    <p>Shell necklaces were originally made as an adornment, as gifts and tokens of honour, and as
+                        objects to be exchanged with other groups for tools or for ochre, which could be used in
+                        important ceremonies. Archaeologist Rhys Jones found shells that had been pierced for a necklace
+                        dating back at least 2,000 years. After European colonisation, necklaces were also sold or
+                        exchanged for food, clothing and other essential supplies. Now, the artists are often
+                        commissioned to create necklaces for museums, galleries and private collectors.</p>
+                    <p>Early European explorers remarked on the beauty of these treasures, and held them in high esteem.
+                        The French naturalist Jacques Labillardière, travelling with the d’Entrecasteaux expedition of
+                        1791-94, observed women wearing ‘strings of brilliant pearly blue spiral shells upon their bare
+                        heads’. 18th- and 19th-century images show Tasmanian Aboriginal people wearing necklaces,
+                        including a photograph taken around 1866 of the leader and spokeswoman Truganini.</p>
+                    <p>Shell-stringing was, and remains, a painstaking process, requiring knowledge of coastal resources
+                        and a great deal of patience. Aunty Dulcie’s daughter Patsy Cameron has explained how the women
+                        pierced each shell with a tool consisting of a jawbone and sharpened tooth of a kangaroo or
+                        wallaby. The shells were then threaded on string made from natural fibres, smoked over a fire,
+                        and rubbed in grass to remove their outer coating and reveal the pearly surface. The shells were
+                        later treated with penguin or muttonbird oil. European colonisation introduced new tools and
+                        materials, including acidic liquids such as vinegar to clean the shells and steel punches to
+                        make holes in them. Needles and cotton or synthetic thread enabled the women to incorporate
+                        smaller shells into increasingly intricate designs.</p>
+                    <p>Necklace-making is dependent on the availability of shells, and shell collection has its season.
+                        Aunty Dulcie regularly returns to the Furneaux Islands to replenish her supplies. ‘We still walk
+                        for miles on the beach,’ she said. ‘We take our lunch and crawl along on our hands and knees to
+                        get the shells.’ Men often help women collect the shells, especially the maireeners (rainbow
+                        shells), which are found on kelp, a type of seaweed. These shells are best when picked directly
+                        from the sea. ‘We don’t use the ones we pick up on the beach because they are too brittle and
+                        they lose their colour,’ said Aunty Dulcie.</p>
+                    <p>After colonisation, women started making longer necklaces. In 1835, Benjamin Duterrau sketched
+                        Tanleboneyer, ‘a native of the district of Oyster Bay’, and Bruny Island man Woorraddy,
+                        Truganini’s husband, with long strands looped around their necks. Wortabowigee, a woman from
+                        Port Dalrymple, who is featured in an 1837 portrait by Thomas Bock, wears five loops of what
+                        must have been a necklace of astonishing beauty. It is possible that the new European tools
+                        adopted by the women enabled them to make longer necklaces, but it also indicates the changing
+                        circumstances of Tasmanian Aboriginal people. Historian Brian Plomley points out that long
+                        necklaces would have been impractical for women accustomed to a traditional lifestyle of diving
+                        for crabs, crayfish and abalone, digging for root vegetables, hunting seals or climbing trees to
+                        catch possums. Men tracking kangaroo, wallaby and emu through the bush would not have risked
+                        getting snagged by long necklaces – or risked damaging the valuable necklaces themselves.</p>
+                    <p>The change in necklaces after colonisation also points to the Tasmanians' courageous assertion of
+                        their identity, and a continuation of their culture at a time when their world was being taken
+                        apart.</p>
+                    <p>The connection of shell necklaces with the distinct culture and story of the Tasmanian Aboriginal
+                        people and with the Tasmanian natural environment means they have iconic status in the wider
+                        Tasmanian community. In 2009, they were listed as a Tasmanian Heritage Icon by the National
+                        Trust of Australia. The cultural and aesthetic value of the necklaces is also demonstrated by
+                        their inclusion in many national and international museum, gallery and private collections.</p>
+                </div>
+            </div>
+            <div class="resizer" id="resizer"></div>
+            <!-- Questions -->
+            <div class="questions-container" id="questions" role="region" aria-label="Questions">
+                <h2 class="section-title">Questions 1-13</h2>
+                <p>You should spend about 20 minutes on Questions 1-13, which are based on Reading Passage 1.</p>
+                <div class="question-section">
+                    <div class="question-group">
+                        <div class="question-group-title">Questions 1–6</div>
+                        <p>Do the following statements agree with the information given in Reading Passage 1? In boxes
+                            1-6 on your answer sheet, write</p>
+                        <p><strong>TRUE</strong> if the statement agrees with the information<br>
+                            <strong>FALSE</strong> if the statement contradicts the information<br>
+                            <strong>NOT GIVEN</strong> if there is no information on this
+                        </p>
+
+                        <div class="question" data-question="1">
+                            <div class="question-text">1. After European settlement, Tasmanian Aboriginals stopped
+                                making necklaces for a short time.</div>
+                            <div class="options">
+                                <label class="option"><input type="radio" name="q1" value="TRUE"> TRUE</label>
+                                <label class="option"><input type="radio" name="q1" value="FALSE"> FALSE</label>
+                                <label class="option"><input type="radio" name="q1" value="NOT GIVEN"> NOT GIVEN</label>
+                            </div>
+                        </div>
+
+                        <div class="question" data-question="2">
+                            <div class="question-text">2. Aboriginal women on the Furneaux Islands made the most
+                                beautiful necklaces.</div>
+                            <div class="options">
+                                <label class="option"><input type="radio" name="q2" value="TRUE"> TRUE</label>
+                                <label class="option"><input type="radio" name="q2" value="FALSE"> FALSE</label>
+                                <label class="option"><input type="radio" name="q2" value="NOT GIVEN"> NOT GIVEN</label>
+                            </div>
+                        </div>
+
+                        <div class="question" data-question="3">
+                            <div class="question-text">3. An 1866 photograph of the leader Truganini shows her wearing a
+                                necklace she had made herself.</div>
+                            <div class="options">
+                                <label class="option"><input type="radio" name="q3" value="TRUE"> TRUE</label>
+                                <label class="option"><input type="radio" name="q3" value="FALSE"> FALSE</label>
+                                <label class="option"><input type="radio" name="q3" value="NOT GIVEN"> NOT GIVEN</label>
+                            </div>
+                        </div>
+
+                        <div class="question" data-question="4">
+                            <div class="question-text">4. Men assist in gathering shells growing on sea plants.</div>
+                            <div class="options">
+                                <label class="option"><input type="radio" name="q4" value="TRUE"> TRUE</label>
+                                <label class="option"><input type="radio" name="q4" value="FALSE"> FALSE</label>
+                                <label class="option"><input type="radio" name="q4" value="NOT GIVEN"> NOT GIVEN</label>
+                            </div>
+                        </div>
+
+                        <div class="question" data-question="5">
+                            <div class="question-text">5. Tasmanian Aboriginal men wore long necklaces when hunting.
+                            </div>
+                            <div class="options">
+                                <label class="option"><input type="radio" name="q5" value="TRUE"> TRUE</label>
+                                <label class="option"><input type="radio" name="q5" value="FALSE"> FALSE</label>
+                                <label class="option"><input type="radio" name="q5" value="NOT GIVEN"> NOT GIVEN</label>
+                            </div>
+                        </div>
+
+                        <div class="question" data-question="6">
+                            <div class="question-text">6. Tasmanian Aboriginal necklaces are appreciated outside
+                                Australia.</div>
+                            <div class="options">
+                                <label class="option"><input type="radio" name="q6" value="TRUE"> TRUE</label>
+                                <label class="option"><input type="radio" name="q6" value="FALSE"> FALSE</label>
+                                <label class="option"><input type="radio" name="q6" value="NOT GIVEN"> NOT GIVEN</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <div class="question-group-title">Questions 7–13</div>
+                        <p>Complete the notes below. Choose ONE WORD ONLY from the passage for each answer. Write your
+                            answers in boxes 7-13 on your answer sheet.</p>
+                        <p><strong>The process of shell-stringing</strong></p>
+                        <p>Shell-stringers must have patience and an understanding of resources available near the sea.
+                        </p>
+                        <p><strong>The traditional procedure</strong></p>
+                        <ul>
+                            <li>hole put in shell with an instrument made of animal’s bone and <input type="text"
+                                    name="q7" class="input-field short-input" maxlength="20"></li>
+                            <li>shells strung on natural fibre and smoked</li>
+                            <li>shells wiped with <input type="text" name="q8" class="input-field short-input"
+                                    maxlength="20"> to achieve a pearly surface</li>
+                            <li>animal <input type="text" name="q9" class="input-field short-input" maxlength="20">
+                                applied</li>
+                        </ul>
+                        <p><strong>Changes after Europeans arrived</strong></p>
+                        <ul>
+                            <li>cleaning substances like <input type="text" name="q10" class="input-field short-input"
+                                    maxlength="20"> were used</li>
+                            <li>more complex designs achieved using needles as a tool</li>
+                        </ul>
+                        <p><strong>Furneaux Islands</strong></p>
+                        <ul>
+                            <li>shells need to be gathered in the right <input type="text" name="q11"
+                                    class="input-field short-input" maxlength="20"></li>
+                            <li>shell collectors walk along the beach then <input type="text" name="q12"
+                                    class="input-field short-input" maxlength="20"> in order to pick up shells</li>
+                            <li>shells from beach not suitable as do not keep <input type="text" name="q13"
+                                    class="input-field short-input" maxlength="20"> and break easily</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="progress-container">
+            <div class="progress-nav">
+                <div class="progress-items">
+                    <div class="progress-item current" data-question="1">1</div>
+                    <div class="progress-item" data-question="2">2</div>
+                    <div class="progress-item" data-question="3">3</div>
+                    <div class="progress-item" data-question="4">4</div>
+                    <div class="progress-item" data-question="5">5</div>
+                    <div class="progress-item" data-question="6">6</div>
+                    <div class="progress-item" data-question="7">7</div>
+                    <div class="progress-item" data-question="8">8</div>
+                    <div class="progress-item" data-question="9">9</div>
+                    <div class="progress-item" data-question="10">10</div>
+                    <div class="progress-item" data-question="11">11</div>
+                    <div class="progress-item" data-question="12">12</div>
+                    <div class="progress-item" data-question="13">13</div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" id="prev-btn" disabled><i class="fas fa-arrow-left"></i>
+                        Previous</button>
+                    <button class="btn btn-secondary" id="next-btn">Next <i class="fas fa-arrow-right"></i></button>
+                    <button class="btn btn-submit" id="submit-btn">Submit Test <i
+                            class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Results Modal -->
+    <div class="modal" id="results-modal">
+        <div class="modal-content">
+            <h2>Test Results</h2>
+            <div class="score-display" id="score-display">0/13</div>
+            <div class="score-breakdown">
+                <div class="score-item">
+                    <span>Passage 1:</span>
+                    <span id="passage1-score">0/13</span>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="close-modal">Close</button>
+                <button class="btn btn-primary" id="review-answers">Review Answers</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // --- Updated correctAnswers Object ---
+        const correctAnswers = {
+            q1: 'FALSE',
+            q2: 'NOT GIVEN',
+            q3: 'NOT GIVEN',
+            q4: 'TRUE',
+            q5: 'FALSE',
+            q6: 'TRUE',
+            q7: 'Tooth',
+            q8: 'Grass',
+            q9: 'Oil',
+            q10: 'Vinegar',
+            q11: 'season',
+            q12: 'Crawl',
+            q13: 'Colour'
+        };
+
+        // Ensure checkbox handling for multiple answers (q20)
+        document.addEventListener('change', function (e) {
+            if (e.target.name === 'q20') {
+                const checked = document.querySelectorAll('input[name="q20"]:checked');
+                if (checked.length > 2) {
+                    e.target.checked = false;
+                    alert("Please select only TWO options.");
+                }
+            }
+        });
+
+        let lastSelection = null;
+        let highlightTarget = null;
+        let currentPanel = null;
+        let submitted = false;
+        let currentQuestion = 1;
+        let isResizing = false;
+        let seconds = 20 * 60;
+        let timerInterval;
+        const highlightBtn = document.getElementById('highlight-btn');
+        const removeHighlightBtn = document.getElementById('remove-highlight-btn');
+        const passagePanel = document.getElementById('passage');
+        const questionsPanel = document.getElementById('questions');
+        const resizer = document.getElementById('resizer');
+        const submitBtn = document.getElementById('submit-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resultsModal = document.getElementById('results-modal');
+        const scoreDisplay = document.getElementById('score-display');
+        const passage1Score = document.getElementById('passage1-score'); // Tracking score for Passage 1
+        const closeModalBtn = document.getElementById('close-modal');
+        const reviewBtn = document.getElementById('review-answers');
+        const timerElement = document.querySelector('.timer span');
+        const timerContainer = document.querySelector('.timer');
+
+        function updateTimer() {
+            seconds--;
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            if (seconds <= 2 * 60) {
+                timerContainer.classList.add('warning');
+            }
+            if (seconds <= 0) {
+                clearInterval(timerInterval);
+                if (!submitted) {
+                    alert('Time is up! Submitting your test.');
+                    submitTest();
+                }
+            }
+        }
+
+        // Highlight functionality
+        function getValidSelection() {
+            const sel = window.getSelection();
+            if (!sel.rangeCount || sel.isCollapsed) return null;
+            const range = sel.getRangeAt(0);
+            if (passagePanel.contains(range.commonAncestorContainer)) {
+                currentPanel = passagePanel;
+            } else if (questionsPanel.contains(range.commonAncestorContainer)) {
+                currentPanel = questionsPanel;
+            } else {
+                return null;
+            }
+            return range;
+        }
+
+        function showHighlightBtn(range) {
+            const rect = range.getBoundingClientRect();
+            highlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            highlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            highlightBtn.style.display = 'block';
+        }
+
+        function hideHighlightBtn() {
+            highlightBtn.style.display = 'none';
+        }
+
+        function showRemoveBtn(span) {
+            const rect = span.getBoundingClientRect();
+            removeHighlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            removeHighlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            removeHighlightBtn.style.display = 'block';
+            highlightTarget = span;
+        }
+
+        function hideRemoveBtn() {
+            removeHighlightBtn.style.display = 'none';
+            highlightTarget = null;
+        }
+
+        highlightBtn.addEventListener('click', () => {
+            if (lastSelection) {
+                const span = document.createElement('span');
+                span.className = 'highlight';
+                span.appendChild(lastSelection.extractContents());
+                lastSelection.insertNode(span);
+                window.getSelection().removeAllRanges();
+                hideHighlightBtn();
+            }
+        });
+
+        removeHighlightBtn.addEventListener('click', () => {
+            if (highlightTarget) {
+                const parent = highlightTarget.parentNode;
+                while (highlightTarget.firstChild) {
+                    parent.insertBefore(highlightTarget.firstChild, highlightTarget);
+                }
+                parent.removeChild(highlightTarget);
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('selectionchange', () => {
+            hideHighlightBtn();
+            hideRemoveBtn();
+            const range = getValidSelection();
+            if (range) {
+                lastSelection = range;
+                showHighlightBtn(range);
+            } else {
+                lastSelection = null;
+            }
+        });
+
+        [passagePanel, questionsPanel].forEach(panel => {
+            panel.addEventListener('scroll', () => {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            });
+        });
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.target !== highlightBtn && e.target !== removeHighlightBtn) {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('highlight')) {
+                e.preventDefault();
+                showRemoveBtn(e.target);
+            }
+        });
+
+        // Resizer
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const container = document.querySelector('.main-content');
+            const containerRect = container.getBoundingClientRect();
+            const mouseX = e.clientX - containerRect.left;
+            const containerWidth = containerRect.width;
+            const leftPercentage = (mouseX / containerWidth) * 100;
+            const rightPercentage = 100 - leftPercentage;
+            if (leftPercentage >= 30 && leftPercentage <= 70) {
+                document.querySelector('.passage-container').style.flex = leftPercentage + '%';
+                document.querySelector('.questions-container').style.width = rightPercentage + '%';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            }
+        });
+
+        // Navigation
+        function scrollToQuestion(num) {
+            const el = document.querySelector(`[data-question="${num}"]`);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            updateCurrentQuestion(num);
+        }
+
+        function updateCurrentQuestion(num) {
+            currentQuestion = num;
+            document.querySelectorAll('.progress-item').forEach(item => {
+                item.classList.remove('current');
+                if (item.dataset.question == num) item.classList.add('current');
+            });
+            prevBtn.disabled = num <= 1;
+            nextBtn.disabled = num >= 13;
+        }
+
+        document.querySelectorAll('.progress-item').forEach(item => {
+            item.addEventListener('click', () => {
+                scrollToQuestion(parseInt(item.dataset.question));
+            });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 1) scrollToQuestion(currentQuestion - 1);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestion < 13) scrollToQuestion(currentQuestion + 1);
+        });
+
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('change', () => {
+                if (submitted) return;
+                const qNumMatch = input.name.match(/^q(\d+)$/);
+                if (qNumMatch) {
+                    const qNum = parseInt(qNumMatch[1]);
+                    const item = document.querySelector(`.progress-item[data-question="${qNum}"]`);
+                    if (item && !item.classList.contains('answered')) {
+                        item.classList.add('answered');
+                    }
+                }
+            });
+        });
+
+        submitBtn.addEventListener('click', submitTest);
+
+        // --- Corrected submitTest Function ---
+        function submitTest() {
+            if (submitted) return;
+            if (!confirm('Are you sure you want to submit?')) return;
+            submitted = true;
+            clearInterval(timerInterval);
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Submitted';
+            let score = 0;
+            const results = {};
+
+            // --- Scoring Logic for All Questions (1-13) ---
+            for (let i = 1; i <= 13; i++) {
+                const key = `q${i}`;
+                let userAnswer = '';
+                let isCorrect = false;
+                const correctAnswer = correctAnswers[key];
+
+                // Determine user's answer based on input type
+                const selectElement = document.querySelector(`select[name="${key}"]`);
+                const inputElement = document.querySelector(`input[name="${key}"]`); // For text inputs
+                const radioElements = document.querySelectorAll(`input[name="${key}"]`); // For potential future radio groups
+
+                if (selectElement) {
+                    userAnswer = selectElement.value;
+                    isCorrect = userAnswer === correctAnswer;
+                } else if (inputElement && inputElement.type === 'text') {
+                    userAnswer = inputElement.value.trim(); // Trim whitespace for text inputs
+                    isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase(); // Case-insensitive comparison
+                } else if (radioElements.length > 0) {
+                    // General case for radio groups if not caught above
+                    const checkedRadio = Array.from(radioElements).find(r => r.checked);
+                    userAnswer = checkedRadio ? checkedRadio.value : '';
+                    isCorrect = userAnswer === correctAnswer;
+                }
+
+                if (isCorrect) {
+                    score++;
+                }
+                results[key] = { userAnswer, correct: correctAnswer, isCorrect };
+            }
+            // --- End of Scoring Logic for Questions 1-13 ---
+
+            // Update score display (max 13 points)
+            scoreDisplay.textContent = `${score}/13`;
+            passage1Score.textContent = `${score}/13`;
+
+            // Update progress item visuals
+            for (let i = 1; i <= 13; i++) {
+                const item = document.querySelector(`.progress-item[data-question="${i}"]`);
+                const res = results[`q${i}`];
+                if (item && res) {
+                    item.classList.remove('current', 'answered');
+                    if (res.isCorrect) {
+                        item.classList.add('correct');
+                    } else {
+                        item.classList.add('incorrect');
+                    }
+                }
+            }
+
+            window.testResults = results;
+            resultsModal.style.display = 'flex';
+        }
+
+        // --- Corrected showCorrectAnswers Function ---
+        function showCorrectAnswers() {
+            if (!submitted) return;
+
+            // Handle Multiple Choice Questions (1-6)
+            for (let i = 1; i <= 6; i++) {
+                const qEl = document.querySelector(`.question[data-question="${i}"]`);
+                const res = window.testResults[`q${i}`];
+                if (!res || !qEl) continue;
+
+                // Remove any existing indicator
+                const existingInd = qEl.querySelector('.answer-indicator');
+                if (existingInd) existingInd.remove();
+
+                const div = document.createElement('div');
+                div.className = 'answer-indicator';
+                div.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+
+                if (res.isCorrect) {
+                    div.innerHTML = `<i class="fas fa-check"></i> Correct! You chose: <strong>${res.userAnswer}</strong>`;
+                } else {
+                    div.innerHTML = `<i class="fas fa-times"></i> Incorrect. You chose: <strong>${res.userAnswer || 'No answer'}</strong><br><strong>Correct:</strong> ${res.correct}`;
+                }
+
+                qEl.appendChild(div);
+            }
+
+            // Handle Summary Completion Questions (7-13)
+            const summaryGroup = document.querySelector('.question-group:has(input[name="q7"])');
+            if (summaryGroup) {
+                for (let i = 7; i <= 13; i++) {
+                    const inputEl = summaryGroup.querySelector(`input[name="q${i}"]`);
+                    const res = window.testResults[`q${i}`];
+                    if (!res || !inputEl) continue;
+
+                    // Remove any existing indicator for this input
+                    const existingInd = inputEl.parentNode.querySelector(`.answer-indicator[data-question="${i}"]`);
+                    if (existingInd) existingInd.remove();
+
+                    const div = document.createElement('div');
+                    div.className = 'answer-indicator';
+                    div.setAttribute('data-question', i); // Add data-question to identify indicator
+                    div.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+
+                    if (res.isCorrect) {
+                        div.innerHTML = `<i class="fas fa-check"></i> Correct! You chose: <strong>${res.userAnswer}</strong>`;
+                    } else {
+                        const displayAnswer = res.userAnswer || 'No answer';
+                        div.innerHTML = `<i class="fas fa-times"></i> Incorrect. You chose: <strong>${displayAnswer}</strong><br><strong>Correct:</strong> ${res.correct}`;
+                    }
+
+                    inputEl.parentNode.insertBefore(div, inputEl.nextSibling); // Insert after the input field
+                }
+            }
+        }
+        // --- End of Corrected showCorrectAnswers Function ---
+
+        closeModalBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+        });
+
+        reviewBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+            showCorrectAnswers();
+            scrollToQuestion(1);
+        });
+
+        function startTest() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('testContainer').classList.remove('hidden');
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        setTimeout(() => {
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }, 2000);
+    </script>
+</body>
+
+
+</html>
