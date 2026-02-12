@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        .loading-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #2563eb;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-title {
+            font-size: 1.2rem;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .loading-subtitle {
+            font-size: 1rem;
+            color: #9ca3af;
+        }
+
+        .start-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9998;
+        }
+
+        .start-content {
+            text-align: center;
+        }
+
+        .start-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 24px;
+        }
+
+        .start-subtitle {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        .start-button {
+            padding: 12px 32px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .start-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            background-color: #ffffff;
+            color: #333;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .passage-info {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .timer {
+            background-color: rgba(255, 193, 193, 0.5);
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+            min-width: 80px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #c53030;
+            border: 1px solid rgba(255, 120, 120, 0.3);
+        }
+
+        .timer.warning {
+            color: #9b2c2c;
+            background-color: rgba(254, 178, 178, 0.7);
+            border-color: rgba(245, 101, 101, 0.5);
+        }
+
+        .logo-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+            cursor: pointer;
+        }
+
+        .logo-area:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+        }
+
+        .logo-area i {
+            font-size: 1.1rem;
+        }
+
+        .progress-container {
+            background-color: #f8f9fa;
+            padding: 4px 20px;
+            z-index: 100;
+            flex-shrink: 0;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .progress-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .progress-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            border: 1px solid #cbd5e0;
+        }
+
+        .progress-item.current {
+            background-color: #4299e1;
+            color: white;
+            transform: scale(1.1);
+            border-color: #2b6cb0;
+        }
+
+        .progress-item.answered {
+            background-color: #9ae6b4;
+            color: #22543d;
+            border-color: #68d391;
+        }
+
+        .progress-item.correct {
+            background-color: #48bb78;
+            color: white;
+            border-color: #38a169;
+        }
+
+        .progress-item.incorrect {
+            background-color: #fed7d7;
+            color: #c53030;
+            border-color: #feb2b2;
+        }
+
+        .progress-item:hover {
+            background-color: #cbd5e0;
+            transform: scale(1.05);
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.95rem;
+            background-color: #f7fafc;
+            color: #4a5568;
+        }
+
+        .btn i {
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-primary {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-primary:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-secondary {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-submit {
+            background-color: #48bb78;
+            color: white;
+            font-weight: 900;
+            border: 1px solid #38a169;
+        }
+
+        .btn-submit:hover {
+            background-color: #38a169;
+            border-color: #2f855a;
+        }
+
+        .btn-submit:disabled {
+            background-color: #9ae6b4;
+            color: #718096;
+            cursor: not-allowed;
+            border: 1px solid #68d391;
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .passage-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #fafafa;
+            position: relative;
+        }
+
+        .resizer {
+            width: 4px;
+            background-color: #cbd5e0;
+            cursor: col-resize;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .resizer:hover {
+            background-color: #a0aec0;
+        }
+
+        .resizer::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 60px;
+            background-color: rgba(203, 213, 224, 0.5);
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        .questions-container {
+            width: 40%;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: white;
+            border-left: 1px solid #e2e8f0;
+        }
+
+        .passage {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .passage h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage-content p {
+            margin-top: 15px;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .passage h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage p {
+            margin-top: 20px;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        .question-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background-color: #ffffff;
+            transition: box-shadow 0.2s;
+        }
+
+        .question:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #2d3748;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .option:hover {
+            background-color: #f7fafc;
+            border-color: #cbd5e0;
+        }
+
+        .option input {
+            margin-right: 2px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 20%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        .input-field:focus {
+            border-color: #4299e1;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+        }
+
+        select.input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 20%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .answer-indicator {
+            background-color: #e6fffa;
+            border: 1px solid #38b2ac;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .answer-indicator.correct {
+            background-color: #e6fffa;
+            border-color: #38b2ac;
+            color: #234e52;
+        }
+
+        .answer-indicator.incorrect {
+            background-color: #fed7d7;
+            border-color: #fc8181;
+            color: #742a2a;
+        }
+
+        .question-group {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-group-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+
+        .highlight {
+            background-color: #ffff00;
+            cursor: pointer;
+        }
+
+        #highlight-btn,
+        #remove-highlight-btn {
+            position: absolute;
+            z-index: 9999;
+            display: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            border: 1px solid #888;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .score-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2d3748;
+        }
+
+        .score-breakdown {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .questions-container {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid #e2e8f0;
+            }
+
+            .resizer {
+                width: 100%;
+                height: 4px;
+                cursor: row-resize;
+            }
+
+            .resizer::before {
+                width: 60px;
+                height: 30px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .logo-area {
+                order: 1;
+            }
+
+            .passage-info {
+                order: 2;
+            }
+
+            .timer {
+                order: 3;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+
+
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h2 class="loading-title">Your test will begin shortly</h2>
+            <p class="loading-subtitle">Please wait</p>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="startScreen" class="start-screen hidden">
+        <div class="start-content">
+            <h1 class="start-title">IELTSwithJurabek</h1>
+            <p class="start-subtitle">Ready to begin your reading test?</p>
+            <button class="start-button" onclick="startTest()">Start Test</button>
+        </div>
+    </div>
+
+    <!-- Test Container -->
+    <div class="container hidden" id="testContainer">
+        <header>
+            <div class="passage-info">IELTSwithJurabek</div>
+            <div class="timer">
+                <i class="fas fa-clock"></i>
+                <span>20:00</span>
+            </div>
+            <div class="logo-area" onclick="window.open('https://t.me/IELTSwithJurabek', '_blank')">
+                <i class="fas fa-paper-plane"></i>
+                <span>Click for more TESTS</span>
+            </div>
+        </header>
+        <button id="highlight-btn" type="button">Highlight</button>
+        <button id="remove-highlight-btn" type="button">Remove Highlight</button>
+        <div class="main-content">
+            <!-- Reading Passage -->
+            <div class="passage-container" role="region" aria-label="Reading Passage">
+                <h2 class="section-title">READING PASSAGE 2</h2>
+                <div class="passage-content" id="passage">
+                    <h3>Australian parrots and their adaptation to habitat change</h3>
+                    <p><strong>A</strong> Parrots are found across the tropics and in all southern hemisphere continents
+                        except Antarctica, but nowhere do they display such a richness of diversity and form as in
+                        Australia. One-sixth of the world's 345 parrot species are found there, and Australia has long
+                        been renowned for the number and variety of its parrots.</p>
+                    <p><strong>B</strong> In the 16th century, the German cartographer Mercator made a world map that
+                        included a place, somewhere near present-day Australia, that he named Terra Psittacorum - the
+                        Land of Parrots - and the first European settlers in Australia often referred to the country as
+                        Parrot Land. In 1865, the celebrated British naturalist and wildlife artist John Gould said: "No
+                        group of birds gives Australia so tropical and benign an air as the numerous species of this
+                        great family by which it is tenanted."</p>
+                    <p><strong>C</strong> Parrots are descendants of an ancient line. Due to their great diversity, and
+                        since most species inhabit Africa, Australia and South America, it seems almost certain that
+                        parrots originated millions of years ago on the ancient southern continent of Gondwana, before
+                        it broke up into the separate southern hemisphere continents we know today. Much of Gondwana
+                        comprised vast rainforests intersected by huge slow-flowing rivers and expansive lakes, but by
+                        eight million years ago, great changes were underway. The center of the continent of Australia
+                        had begun to dry out, and the rainforests that once covered it gradually contracted to the
+                        continental margins, where, to a limited extent, they still exist today.</p>
+                    <p><strong>D</strong> The creatures that remained in those shrinking rainforests had to adapt to the
+                        drier conditions or face extinction. Reacting to these desperate circumstances, the parrot
+                        family, typically found in jungles in other parts of the world, has populated some of
+                        Australia's harshest environments. The parrots spread from ancestral forests through eucalypt
+                        woodlands to colonize the central deserts of Australia, and as a consequence they diversified
+                        into a wide range of species with adaptations that reflect the many changes animals and plants
+                        had to make to survive in these areas.</p>
+                    <p><strong>E</strong> These evolutionary pressures helped mould keratin, the substance from which
+                        beaks are made, into a range of tools capable of gathering the new food types favored by various
+                        species of parrot. The size of a parrot's short, blunt beak and the length of that beak's
+                        down-curved upper section are related to the type of food each species eats. Some have
+                        comparatively long beaks that are perfect for extracting seeds from fruit; others have broader
+                        and stronger beaks that are designed for cracking hard seeds.</p>
+                    <p><strong>F</strong> Differently shaped beaks are not the only adaptations that have been made
+                        during the developing relationship between parrots and their food plants. Like all of
+                        Australia's many nectar-feeding birds, the rainbow-coloured lorikeets and the flowers on which
+                        they feed have long coevolved, with features such as the shape and colour of the flowers adapted
+                        to the bird's particular needs. For example, red is the most attractive colour to birds, and
+                        thus flowers which depend on birds for pollination are more often red, and lorikeets' tongues
+                        have bristles which help them to collect as much nectar and pollen as possible.</p>
+                    <p><strong>G</strong> Today, most of Australia's parrots inhabit woodland and open forest, and their
+                        numbers decline towards both deserts and wetter areas. The majority are nomadic to some degree,
+                        moving around to take advantage of feeding and breeding places. Two of the dry country parrots,
+                        the pink and grey galah and the pink, white and yellow corella, have expanded their ranges in
+                        recent years. They are among the species that have adapted well to the changes brought about by
+                        European settlement — forests cleared to create grasslands where galahs and corellas thrive.</p>
+                    <p><strong>H</strong> But other parrot species did not fare so well when their environments were
+                        altered. The clearing of large areas of rainforest is probably responsible for the disappearance
+                        of the double-eyed fig parrot, and numbers of ground parrots declined when a great part of their
+                        habitat was destroyed by the draining of coastal swamps. Even some parrot species that benefited
+                        from forest clearing at first are now confronted by a shortage of nesting sites due to further
+                        man-made changes.</p>
+                    <p><strong>I</strong> New conditions also sometimes favour an incoming species over one that
+                        originally inhabited the area. For example, after farmers cleared large areas of forest on
+                        Kangaroo Island off the coast of South Australia, the island was colonised by galahs. They were
+                        soon going down holes and destroying black cockatoo eggs in order to take the holes for their
+                        own
+                        use. Their success precipitated a partial collapse in the black cockatoo population when they
+                        lost the struggle for scarce nesting hollows.</p>
+                    <p><strong>J</strong> There may be no final answer to ensuring an equitable balance between parrot
+                        species. Nest box programs help ease the shortage of nesting sites in some places, but there are
+                        not enough, they are expensive and they are not an adequate substitute for large, old trees,
+                        such as the habitat they represent and the nectar, pollen and seeds they provide. Competition
+                        between parrots for nest sites is a result of the changes we humans have made to the Earth. We
+                        are the most widespread and dangerous competitors that parrots have ever had to face, but we
+                        also have the knowledge and skill to maintain the wonderfully rich diversity of Australia's
+                        parrots. All we need is the will to do so.</p>
+                </div>
+            </div>
+            <div class="resizer" id="resizer"></div>
+            <!-- Questions -->
+            <div class="questions-container" id="questions" role="region" aria-label="Questions">
+                <h2 class="section-title">Questions 14-26</h2>
+                <p>You should spend about 20 minutes on Questions 14-26, which are based on Reading Passage 2.</p>
+                <div class="question-section">
+                    <div class="question-group">
+                        <div class="question-group-title">Questions 14-19</div>
+                        <p>Reading Passage has ten paragraphs A-J<br>
+                            Which paragraph contains the following information?<br>
+                            Write the correct letter, A-J in boxes 14-19 on your answer sheet</p>
+                        <div class="question" data-question="14">
+                            <div class="question-text">14. An example of how one parrot species may survive at the
+                                expense of another</div>
+                            <div class="options">
+                                <select class="paragraph-select" name="q14">
+                                    <option value="">Select paragraph</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                    <option value="F">F</option>
+                                    <option value="G">G</option>
+                                    <option value="H">H</option>
+                                    <option value="I">I</option>
+                                    <option value="J">J</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="question" data-question="15">
+                            <div class="question-text">15. A description of how plants may adapt to attract birds</div>
+                            <div class="options">
+                                <select class="paragraph-select" name="q15">
+                                    <option value="">Select paragraph</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                    <option value="F">F</option>
+                                    <option value="G">G</option>
+                                    <option value="H">H</option>
+                                    <option value="I">I</option>
+                                    <option value="J">J</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="question" data-question="16">
+                            <div class="question-text">16. Example of two parrot species which benefited from changes to
+                                the environment</div>
+                            <div class="options">
+                                <select class="paragraph-select" name="q16">
+                                    <option value="">Select paragraph</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                    <option value="F">F</option>
+                                    <option value="G">G</option>
+                                    <option value="H">H</option>
+                                    <option value="I">I</option>
+                                    <option value="J">J</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="question" data-question="17">
+                            <div class="question-text">17. How the varied Australian landscape resulted in a great
+                                variety of parrot species</div>
+                            <div class="options">
+                                <select class="paragraph-select" name="q17">
+                                    <option value="">Select paragraph</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                    <option value="F">F</option>
+                                    <option value="G">G</option>
+                                    <option value="H">H</option>
+                                    <option value="I">I</option>
+                                    <option value="J">J</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="question" data-question="18">
+                            <div class="question-text">18. A reason why most parrot species are native to the southern
+                                hemisphere</div>
+                            <div class="options">
+                                <select class="paragraph-select" name="q18">
+                                    <option value="">Select paragraph</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                    <option value="F">F</option>
+                                    <option value="G">G</option>
+                                    <option value="H">H</option>
+                                    <option value="I">I</option>
+                                    <option value="J">J</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="question" data-question="19">
+                            <div class="question-text">19. An example of a parrot species which did not survive changes
+                                to its habitat</div>
+                            <div class="options">
+                                <select class="paragraph-select" name="q19">
+                                    <option value="">Select paragraph</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                    <option value="F">F</option>
+                                    <option value="G">G</option>
+                                    <option value="H">H</option>
+                                    <option value="I">I</option>
+                                    <option value="J">J</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="question-group">
+                        <div class="question-group-title">Questions 20-22</div>
+                        <p>Choose the correct letter A, B, C, or D<br>
+                            Write the correct letter in boxes 20-22 on your answer sheet</p>
+                        <div class="question" data-question="20">
+                            <div class="question-text">20. The writer believes that most parrot species</div>
+                            <div class="options">
+                                <label class="option"><input type="radio" name="q20" value="A">A. move from Africa and
+                                    South America to Australia</label>
+                                <label class="option"><input type="radio" name="q20" value="B">B. had ancestors in
+                                    either Africa, Australia or South America</label>
+                                <label class="option"><input type="radio" name="q20" value="C">C. had ancestors in a
+                                    continent which later split up</label>
+                                <label class="option"><input type="radio" name="q20" value="D">D. came from a continent
+                                    now covered by water</label>
+                            </div>
+                        </div>
+                        <div class="question" data-question="21">
+                            <div class="question-text">21. What does the writer say about parrot's beak?</div>
+                            <div class="options">
+                                <label class="option"><input type="radio" name="q21" value="A">A. They are longer than
+                                    those of other birds</label>
+                                <label class="option"><input type="radio" name="q21" value="B">B. They are made of a
+                                    unique material</label>
+                                <label class="option"><input type="radio" name="q21" value="C">C. They are used more
+                                    efficiently than those of other species</label>
+                                <label class="option"><input type="radio" name="q21" value="D">D. They are specially
+                                    adapted to suit the diet</label>
+                            </div>
+                        </div>
+                        <div class="question" data-question="22">
+                            <div class="question-text">22. Which of the following is NOT mentioned by the writer as a
+                                disadvantage of nesting boxes?</div>
+                            <div class="options">
+                                <label class="option"><input type="radio" name="q22" value="A">A. They cost too
+                                    much</label>
+                                <label class="option"><input type="radio" name="q22" value="B">B. They need to be
+                                    maintained</label>
+                                <label class="option"><input type="radio" name="q22" value="C">C. They provide only
+                                    shelter, not food</label>
+                                <label class="option"><input type="radio" name="q22" value="D">D. They are too few of
+                                    them</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="question-group">
+                        <div class="question-group-title">Questions 23-26</div>
+                        <p>Complete the summary below<br>
+                            Choose NO MORE THAN TWO WORDS AND/OR A NUMBER from the passage for each answer.<br>
+                            Write your answers in boxes 23-26 on your answer sheet.</p>
+                        <div class="summary">
+                            <p><strong>Parrots in Australia</strong></p>
+                            <p>There are 345 varieties of parrot in existence and, of these, <input type="text"
+                                    name="q23" class="input-field" maxlength="30"> live in Australia. As early as the
+                                <input type="text" name="q24" class="input-field" maxlength="30">, the mapmaker <input
+                                    type="text" name="q25" class="input-field" maxlength="30"> recognized that parrots
+                                lived in that part of the world. <input type="text" name="q26" class="input-field"
+                                    maxlength="30">, the famous painter of animals and birds, commented on the size and
+                                beauty of the Australian parrot family.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="progress-container">
+            <div class="progress-nav">
+                <div class="progress-items">
+                    <div class="progress-item current" data-question="14">14</div>
+                    <div class="progress-item" data-question="15">15</div>
+                    <div class="progress-item" data-question="16">16</div>
+                    <div class="progress-item" data-question="17">17</div>
+                    <div class="progress-item" data-question="18">18</div>
+                    <div class="progress-item" data-question="19">19</div>
+                    <div class="progress-item" data-question="20">20</div>
+                    <div class="progress-item" data-question="21">21</div>
+                    <div class="progress-item" data-question="22">22</div>
+                    <div class="progress-item" data-question="23">23</div>
+                    <div class="progress-item" data-question="24">24</div>
+                    <div class="progress-item" data-question="25">25</div>
+                    <div class="progress-item" data-question="26">26</div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" id="prev-btn" disabled><i class="fas fa-arrow-left"></i>
+                        Previous</button>
+                    <button class="btn btn-secondary" id="next-btn">Next <i class="fas fa-arrow-right"></i></button>
+                    <button class="btn btn-submit" id="submit-btn">Submit Test <i
+                            class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div class="modal" id="results-modal">
+        <div class="modal-content">
+            <h2>Test Results</h2>
+            <div class="score-display" id="score-display">0/13</div>
+            <div class="score-breakdown">
+                <div class="score-item">
+                    <span>Passage 2:</span>
+                    <span id="passage2-score">0/13</span>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="close-modal">Close</button>
+                <button class="btn btn-primary" id="review-answers">Review Answers</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Correct Answers for Questions 14-26
+        const correctAnswers = {
+            q14: "I",
+            q15: "F",
+            q16: "G",
+            q17: "D",
+            q18: "C",
+            q19: "H",
+            q20: "C",
+            q21: "D",
+            q22: "B",
+            q23: "one-sixth",
+            q24: "16th century",
+            q25: "Mercator",
+            q26: "John Gould"
+        };
+
+        let lastSelection = null;
+        let highlightTarget = null;
+        let currentPanel = null;
+        let submitted = false;
+        let currentQuestion = 14;
+        let isResizing = false;
+        let seconds = 20 * 60; // 20 minutes
+        let timerInterval;
+
+        const highlightBtn = document.getElementById('highlight-btn');
+        const removeHighlightBtn = document.getElementById('remove-highlight-btn');
+        const passagePanel = document.getElementById('passage');
+        const questionsPanel = document.getElementById('questions');
+        const resizer = document.getElementById('resizer');
+        const submitBtn = document.getElementById('submit-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resultsModal = document.getElementById('results-modal');
+        const scoreDisplay = document.getElementById('score-display');
+        const passage2Score = document.getElementById('passage2-score');
+        const closeModalBtn = document.getElementById('close-modal');
+        const reviewBtn = document.getElementById('review-answers');
+        const timerElement = document.querySelector('.timer span');
+        const timerContainer = document.querySelector('.timer');
+
+        // Timer
+        function updateTimer() {
+            seconds--;
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            if (seconds <= 2 * 60) {
+                timerContainer.classList.add('warning');
+            }
+            if (seconds <= 0) {
+                clearInterval(timerInterval);
+                if (!submitted) {
+                    alert('Time is up! Submitting your test.');
+                    submitTest();
+                }
+            }
+        }
+
+        // Highlight functionality
+        function getValidSelection() {
+            const sel = window.getSelection();
+            if (!sel.rangeCount || sel.isCollapsed) return null;
+            const range = sel.getRangeAt(0);
+            if (passagePanel.contains(range.commonAncestorContainer)) {
+                currentPanel = passagePanel;
+            } else if (questionsPanel.contains(range.commonAncestorContainer)) {
+                currentPanel = questionsPanel;
+            } else {
+                return null;
+            }
+            return range;
+        }
+
+        function showHighlightBtn(range) {
+            const rect = range.getBoundingClientRect();
+            highlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            highlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            highlightBtn.style.display = 'block';
+        }
+
+        function hideHighlightBtn() {
+            highlightBtn.style.display = 'none';
+        }
+
+        function showRemoveBtn(span) {
+            const rect = span.getBoundingClientRect();
+            removeHighlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            removeHighlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            removeHighlightBtn.style.display = 'block';
+            highlightTarget = span;
+        }
+
+        function hideRemoveBtn() {
+            removeHighlightBtn.style.display = 'none';
+            highlightTarget = null;
+        }
+
+        highlightBtn.addEventListener('click', () => {
+            if (lastSelection) {
+                const span = document.createElement('span');
+                span.className = 'highlight';
+                span.appendChild(lastSelection.extractContents());
+                lastSelection.insertNode(span);
+                window.getSelection().removeAllRanges();
+                hideHighlightBtn();
+            }
+        });
+
+        removeHighlightBtn.addEventListener('click', () => {
+            if (highlightTarget) {
+                const parent = highlightTarget.parentNode;
+                while (highlightTarget.firstChild) {
+                    parent.insertBefore(highlightTarget.firstChild, highlightTarget);
+                }
+                parent.removeChild(highlightTarget);
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('selectionchange', () => {
+            hideHighlightBtn();
+            hideRemoveBtn();
+            const range = getValidSelection();
+            if (range) {
+                lastSelection = range;
+                showHighlightBtn(range);
+            } else {
+                lastSelection = null;
+            }
+        });
+
+        [passagePanel, questionsPanel].forEach(panel => {
+            panel.addEventListener('scroll', () => {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            });
+        });
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.target !== highlightBtn && e.target !== removeHighlightBtn) {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('highlight')) {
+                e.preventDefault();
+                showRemoveBtn(e.target);
+            }
+        });
+
+        // Resizer
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const container = document.querySelector('.main-content');
+            const containerRect = container.getBoundingClientRect();
+            const mouseX = e.clientX - containerRect.left;
+            const containerWidth = containerRect.width;
+            const leftPercentage = (mouseX / containerWidth) * 100;
+            const rightPercentage = 100 - leftPercentage;
+            if (leftPercentage >= 30 && leftPercentage <= 70) {
+                document.querySelector('.passage-container').style.flex = leftPercentage + '%';
+                document.querySelector('.questions-container').style.width = rightPercentage + '%';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            }
+        });
+
+        // Navigation
+        function scrollToQuestion(num) {
+            const el = document.querySelector(`[data-question="${num}"]`);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            updateCurrentQuestion(num);
+        }
+
+        function updateCurrentQuestion(num) {
+            currentQuestion = num;
+            document.querySelectorAll('.progress-item').forEach(item => {
+                item.classList.remove('current');
+                if (item.dataset.question == num) item.classList.add('current');
+            });
+            prevBtn.disabled = num <= 14;
+            nextBtn.disabled = num >= 26;
+        }
+
+        document.querySelectorAll('.progress-item').forEach(item => {
+            item.addEventListener('click', () => {
+                scrollToQuestion(parseInt(item.dataset.question));
+            });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 14) scrollToQuestion(currentQuestion - 1);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestion < 26) scrollToQuestion(currentQuestion + 1);
+        });
+
+        document.querySelectorAll('input[type="radio"], input[type="text"], select').forEach(input => {
+            input.addEventListener('change', () => {
+                if (submitted) return;
+                const qNumMatch = input.name.match(/^q(\d+)$/);
+                if (qNumMatch) {
+                    const qNum = parseInt(qNumMatch[1]);
+                    const item = document.querySelector(`.progress-item[data-question="${qNum}"]`);
+                    if (item && !item.classList.contains('answered')) {
+                        item.classList.add('answered');
+                    }
+                }
+            });
+        });
+
+        submitBtn.addEventListener('click', submitTest);
+
+        function submitTest() {
+            if (submitted) return;
+            if (!confirm('Are you sure you want to submit?')) return;
+            submitted = true;
+            clearInterval(timerInterval);
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Submitted';
+
+            let score = 0;
+            const results = {};
+
+            // Score all questions 14-26
+            for (let i = 14; i <= 26; i++) {
+                const key = `q${i}`;
+                let userAnswer = '';
+                let isCorrect = false;
+
+                const selectEl = document.querySelector(`select[name="${key}"]`);
+                if (selectEl) {
+                    userAnswer = selectEl.value.trim();
+                    isCorrect = userAnswer.toLowerCase() === correctAnswers[key].toLowerCase();
+                    selectEl.disabled = true;
+                }
+
+                const radioEl = document.querySelector(`input[name="${key}"]:checked`);
+                if (radioEl) {
+                    userAnswer = radioEl.value;
+                    isCorrect = userAnswer === correctAnswers[key];
+                    document.querySelectorAll(`input[name="${key}"]`).forEach(r => r.disabled = true);
+                }
+
+                const inputEl = document.querySelector(`input[name="${key}"]`);
+                if (inputEl) {
+                    userAnswer = inputEl.value.trim();
+                    isCorrect = userAnswer.toLowerCase() === correctAnswers[key].toLowerCase();
+                    inputEl.disabled = true;
+                }
+
+                if (isCorrect) score++;
+                results[key] = { userAnswer, correct: correctAnswers[key], isCorrect };
+            }
+
+            // Update score display
+            scoreDisplay.textContent = `${score}/13`;
+            passage2Score.textContent = `${score}/13`;
+
+            // Update progress indicators
+            for (let i = 14; i <= 26; i++) {
+                const item = document.querySelector(`.progress-item[data-question="${i}"]`);
+                const res = results[`q${i}`];
+                if (item && res) {
+                    item.classList.remove('current', 'answered');
+                    item.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+                }
+            }
+
+            window.testResults = results;
+            resultsModal.style.display = 'flex';
+        }
+
+        function showCorrectAnswers() {
+            if (!submitted) return;
+
+            // Clear previous indicators
+            document.querySelectorAll('.answer-indicator').forEach(el => el.remove());
+
+            // Show results for all questions
+            for (let i = 14; i <= 26; i++) {
+                const key = `q${i}`;
+                const res = window.testResults[key];
+                if (!res) continue;
+
+                let targetElement;
+                const selectEl = document.querySelector(`select[name="${key}"]`);
+                const radioEl = document.querySelector(`input[name="${key}"]:checked`);
+                const inputEl = document.querySelector(`input[name="${key}"]`);
+
+                if (selectEl) {
+                    targetElement = selectEl.parentNode;
+                } else if (radioEl) {
+                    targetElement = radioEl.closest('.question');
+                } else if (inputEl) {
+                    targetElement = inputEl.parentNode;
+                }
+
+                if (!targetElement) continue;
+
+                const div = document.createElement('div');
+                div.className = 'answer-indicator';
+                div.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+
+                if (res.isCorrect) {
+                    div.innerHTML = `<i class="fas fa-check"></i> Correct! You chose: <strong>${res.userAnswer}</strong>`;
+                } else {
+                    const userDisplay = res.userAnswer || 'No answer';
+                    div.innerHTML = `<i class="fas fa-times"></i> Incorrect. You chose: <strong>${userDisplay}</strong><br><strong>Correct:</strong> ${res.correct}`;
+                }
+
+                targetElement.appendChild(div);
+            }
+        }
+
+
+        closeModalBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+        });
+
+        reviewBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+            showCorrectAnswers();
+            scrollToQuestion(14);
+        });
+
+        function startTest() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('testContainer').classList.remove('hidden');
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        setTimeout(() => {
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }, 2000);
+    </script>
+</body>
+
+</html>

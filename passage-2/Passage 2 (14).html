@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Reading Test - Effects of World Population Changes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        /* Loading Screen Styles */
+        .loading-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .spinner {
+            width: 64px;
+            height: 64px;
+            border: 4px solid #d1d5db;
+            border-top: 4px solid #111827;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 32px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .loading-subtitle {
+            color: #6b7280;
+        }
+
+        .start-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9998;
+        }
+
+        .start-content {
+            text-align: center;
+        }
+
+        .start-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 24px;
+        }
+
+        .start-subtitle {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        .start-button {
+            padding: 12px 32px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .start-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #4a5568;
+            color: white;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+
+        .passage-info {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #e2e8f0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s;
+            color: #ee7272;
+        }
+
+        .logo:hover {
+            color: #90cdf4;
+        }
+
+        .logo i {
+            margin-right: 6px;
+            font-size: 1.3rem;
+        }
+
+        .timer {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+            min-width: 80px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .timer.warning {
+            color: #fed7d7;
+            background-color: rgba(245, 101, 101, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .passage-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #fafafa;
+            position: relative;
+        }
+
+        .resizer {
+            width: 4px;
+            background-color: #cbd5e0;
+            cursor: col-resize;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .resizer:hover {
+            background-color: #a0aec0;
+        }
+
+        .resizer::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 40px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23718096"><circle cx="8" cy="12" r="1"/><circle cx="16" cy="12" r="1"/><circle cx="8" cy="6" r="1"/><circle cx="16" cy="6" r="1"/><circle cx="8" cy="18" r="1"/><circle cx="16" cy="18" r="1"/></svg>') center/contain no-repeat;
+        }
+
+        .section-title {
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .passage-content {
+            background: white;
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .passage-content h3 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage-content p {
+            margin-bottom: 18px;
+            text-align: justify;
+            color: #4a5568;
+        }
+
+        .section-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2b6cb0;
+            font-size: 1.1rem;
+        }
+
+        .questions-container {
+            width: 45%;
+            min-width: 400px;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: white;
+            position: relative;
+        }
+
+        .question {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .question:last-child {
+            border-bottom: none;
+        }
+
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #2d3748;
+            font-size: 0.95rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .option:hover {
+            background-color: #f7fafc;
+            border-color: #cbd5e0;
+        }
+
+        .option input {
+            margin-right: 10px;
+            width: 16px;
+            height: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f7fafc;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background-color: #4a5568;
+            padding: 4px 20px;
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .progress-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 0;
+        }
+
+        .progress-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .progress-item.current {
+            background-color: #63b3ed;
+            transform: scale(1.1);
+        }
+
+        .progress-item.answered {
+            background-color: #68d391;
+        }
+
+        .progress-item.correct {
+            background-color: #48bb78;
+        }
+
+        .progress-item.incorrect {
+            background-color: #f56565;
+        }
+
+        .progress-item:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .highlight {
+            background-color: #ffff00;
+            cursor: pointer;
+        }
+
+        #highlight-btn,
+        #remove-highlight-btn {
+            position: absolute;
+            z-index: 9999;
+            display: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            border: 1px solid #888;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        #highlight-btn {
+            background: #fffbe7;
+        }
+
+        #remove-highlight-btn {
+            background: #ffeaea;
+            color: #b00;
+            border-color: #b00;
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.95rem;
+        }
+
+        .btn i {
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: #4299e1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #3182ce;
+        }
+
+        .btn-secondary {
+            background-color: #edf2f7;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+        }
+
+        .btn-submit {
+            background-color: #48bb78;
+            color: white;
+            font-weight: 900;
+        }
+
+        .btn-submit:hover {
+            background-color: #459ef1;
+        }
+
+        .btn-submit:disabled {
+            background-color: #9ae6b4;
+            cursor: not-allowed;
+        }
+
+        /* Results Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .modal h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .score-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2d3748;
+        }
+
+        .score-breakdown {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 100%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        select.input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 100%;
+            font-size: 0.9rem;
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        select.input-field:focus {
+            border-color: #4299e1;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+        }
+
+        .input-field:focus {
+            border-color: #4299e1;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+        }
+
+        .question-group {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-group-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+
+        .answer-indicator {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .answer-indicator.incorrect {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .questions-container {
+                width: 50%;
+                min-width: 350px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .passage-container,
+            .questions-container {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .resizer {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-wrap: wrap;
+                gap: 10px;
+                padding: 10px 15px;
+            }
+
+            .logo {
+                font-size: 1.1rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8rem;
+            }
+
+            .btn {
+                padding: 5px 10px;
+                font-size: 0.85rem;
+            }
+
+            .progress-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-buttons {
+                margin-top: 10px;
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h2 class="loading-title">Your test will begin shortly</h2>
+            <p class="loading-subtitle">Please wait</p>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="startScreen" class="start-screen hidden">
+        <div class="start-content">
+            <h1 class="start-title">IELTSwithJurabek</h1>
+            <p class="start-subtitle">Ready to begin your reading test?</p>
+            <button class="start-button" onclick="startTest()">Start Test</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="testContainer">
+        <!-- Header -->
+        <header>
+            <div class="passage-info">
+                IELTSwithJurabek
+            </div>
+            <div class="logo" onclick="window.open('https://t.me/IELTSwithJurabek', '_blank')">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Click for more TESTS</span>
+            </div>
+            <div class="timer">
+                <i class="fas fa-clock"></i>
+                <span>20:00</span>
+            </div>
+        </header>
+
+        <!-- Highlight Buttons -->
+        <button id="highlight-btn" type="button">Highlight</button>
+        <button id="remove-highlight-btn" type="button">Remove Highlight</button>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Reading Passage -->
+            <div class="passage-container" role="region" aria-label="Reading Passage">
+                <h2 class="section-title">READING PASSAGE 2</h2>
+                <div class="passage-content" id="passage">
+                    <h3>Effects of changes in world population</h3>
+
+                    <div class="section-label">A</div>
+                    <p>Human fertility rates around the world are dropping for a variety of complex reasons. While the
+                        population itself continues to increase, the rate of increase is slowing, and sometime in the
+                        next 80 years, world population will peak somewhere in the vicinity of nine billion before
+                        contracting. That raises an important question: Is population contraction a bad thing? Some
+                        think not. There is a school of thought that argues that smaller populations are good.
+                        Population control proponents claim variously that (1) we do not have the food to sustain higher
+                        populations; (2) our planet already suffers from overcrowding; (3) the environmental impact of
+                        increased populations will bring catastrophe either through pollution or consumption of finite
+                        natural resources; or in contrast, this prolonged population will lead to higher wages and a
+                        better quality of life as available supplies exceed reduced demands. These arguments seem
+                        reasonable at first, but do not withstand scrutiny.</p>
+
+                    <div class="section-label">B</div>
+                    <p>Let's start with food. The worry about mass starvation is a remnant of Paul Ehrlich's 1968 book
+                        *The Population Bomb*. Ehrlich, Professor of Population Studies in the department of Biological
+                        Sciences at Stanford University in California, warned that in the face of expanding populations,
+                        "the world will undergo families - hundreds of millions of people are going to starve to death."
+                        As Ehrlich himself now admits, this prediction proved faulty. Instead, the availability of food
+                        has greatly increased, even with a growing population. Demographer Philip Longman notes that
+                        food shortages have become a political problem, related to fair distribution, not an issue of
+                        inadequate supply. How did this happen? In 1965, Danish economist Ester Boserup proposed that
+                        population increase fosters agricultural innovation, which in turn increases production. Her
+                        theories have been borne out by events, which show that some areas of the world may lack
+                        sufficient supplies while the world has an overall surplus.</p>
+
+                    <div class="section-label">C</div>
+                    <p>What about overcrowding? Everywhere you go today, you find traffic jams and sprawl, with people
+                        packed into crowded places. But this is a problem of density, not population. There's plenty of
+                        land available out there. The problem is that people who used to live in the rural areas have
+                        relocated to cities. This massive migration into cities has caused urbanization, which is
+                        different from overpopulation, and the problems associated with this include air pollution,
+                        lower wages, and limited access to healthcare and educational opportunities.</p>
+
+                    <div class="section-label">D</div>
+                    <p>Environmental concerns are more interesting, but such end-of-the-world warnings are not new.
+                        Global warming and the fact that the Earth has only finite amounts of natural resources that we
+                        will surely deplete, are the two main concerns of environmentalists. This, too, is an argument
+                        we have heard before. As Massimo Livi-Bacci, Professor of Demography at the University of
+                        Florence, Italy, explains in his *Concise History of World Population*, more than 100 years ago
+                        economists feared that coal supplies would be exhausted, and about 30 years ago the Club of Rome
+                        made similar predictions regarding other natural resources. Instead, innovation stepped in to
+                        provide greater efficiency. For instance, in the America of 1850, you needed an average of 4.6
+                        tons of petroleum equivalent to produce $1,000 of goods and services. By 1950, you needed only
+                        1.8 tons, and by 1978, 1.5 tons.</p>
+
+                    <div class="section-label">E</div>
+                    <p>This leaves us with the economy. In 1971, Simon Smith Kuznets won the Nobel Prize in Economics
+                        for his theory of 'tested knowledge'. Kuznets explained, 'More population means more creators
+                        and producers, both of goods along established production patterns and of new knowledge and
+                        inventions.' Kuznets was codifying what others had noticed before. Political economist Adam
+                        Smith remarked that 'the most decisive mark of the prosperity of any country is the increase of
+                        the number of its inhabitants.' As Livi-Bacci observes, 'All things being equal, population
+                        increase is followed by increased per capita production.' So the proposed 'benefits' of
+                        population decline are, at the very least, suspect. In addition, there are worrying potential
+                        effects of population decline. Of course, this worry is theoretical because we've never seen
+                        population decline on the massive scale that's coming our way. Or rather, we've never seen it in
+                        the modern world.</p>
+
+                    <div class="section-label">F</div>
+                    <p>There are, however, two historical examples. Between 400 BC and AD 1, world population increased
+                        from about 153 million to 252 million. For the next 200 years, growth slowed almost to a halt.
+                        Then, between AD 200 and AD 600, the population shrank from 257 million to 208 million. It took
+                        an additional 400 years for the population to recover to the level it had attained in AD 1. The
+                        other drop in population occurred between 1340 and 1400, when the Black Death, one of the most
+                        deadly pandemics in human history, ravaged the world. Global population fell from 442 million to
+                        375 million. Neither of these drops was a particularly pleasant period in human history. Or, as
+                        Canadian journalist Mark Steyn notes in America Alone, 'There is no precedent in human history
+                        for economic growth on declining human capital.' It is impossible to anticipate with certainty
+                        the effects of population decline. But there is good reason to believe it will be bad for us.
+                        Innovation will suffer as the demand for nearly everything slackens. Instead of producing
+                        windfalls of excess supply, economies will probably contract. As Livi-Bacci observes,
+                        'Historically, areas depopulated or in the process of losing population have almost always been
+                        characterized by backward economies.' The real question therefore is whether or not falling
+                        populations will lead to the demise of civilization as we know it.</p>
+                </div>
+            </div>
+
+            <!-- Resizer -->
+            <div class="resizer" id="resizer"></div>
+
+            <!-- Questions -->
+            <div class="questions-container" id="questions" role="region" aria-label="Questions">
+                <h2 class="section-title">Questions 14-26</h2>
+                <p>You should spend about 20 minutes on Questions 14-26, which are based on Reading Passage 2.</p>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 14-19</div>
+                    <p>Reading Passage 2 has six sections, A-F. Choose the correct heading for each section from the
+                        list of headings below.</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>List of Headings</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>i. Do we have sufficient resources to feed the human population?</td>
+                            </tr>
+                            <tr>
+                                <td>ii. Will population increase pose disaster for our supply of raw materials?</td>
+                            </tr>
+                            <tr>
+                                <td>iii. Would population decline benefit the world?</td>
+                            </tr>
+                            <tr>
+                                <td>iv. Is disease a key factor?</td>
+                            </tr>
+                            <tr>
+                                <td>v. Is population decrease good for productivity?</td>
+                            </tr>
+                            <tr>
+                                <td>vi. What is the impact of population movement?</td>
+                            </tr>
+                            <tr>
+                                <td>vii. What can past events tell us about the effects of population decline?</td>
+                            </tr>
+                            <tr>
+                                <td>viii. What can our governments do to guarantee supplies of food and resources?</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="question" data-question="14">
+                        <div class="question-text">14. Section A</div>
+                        <select name="q14" class="input-field">
+                            <option value="" disabled selected>Select a heading</option>
+                            <option value="i">i. Do we have sufficient resources to feed the human population?</option>
+                            <option value="ii">ii. Will population increase pose disaster for our supply of raw
+                                materials?</option>
+                            <option value="iii">iii. Would population decline benefit the world?</option>
+                            <option value="iv">iv. Is disease a key factor?</option>
+                            <option value="v">v. Is population decrease good for productivity?</option>
+                            <option value="vi">vi. What is the impact of population movement?</option>
+                            <option value="vii">vii. What can past events tell us about the effects of population
+                                decline?</option>
+                            <option value="viii">viii. What can our governments do to guarantee supplies of food and
+                                resources?</option>
+                        </select>
+                    </div>
+
+                    <div class="question" data-question="15">
+                        <div class="question-text">15. Section B</div>
+                        <select name="q15" class="input-field">
+                            <option value="" disabled selected>Select a heading</option>
+                            <option value="i">i. Do we have sufficient resources to feed the human population?</option>
+                            <option value="ii">ii. Will population increase pose disaster for our supply of raw
+                                materials?</option>
+                            <option value="iii">iii. Would population decline benefit the world?</option>
+                            <option value="iv">iv. Is disease a key factor?</option>
+                            <option value="v">v. Is population decrease good for productivity?</option>
+                            <option value="vi">vi. What is the impact of population movement?</option>
+                            <option value="vii">vii. What can past events tell us about the effects of population
+                                decline?</option>
+                            <option value="viii">viii. What can our governments do to guarantee supplies of food and
+                                resources?</option>
+                        </select>
+                    </div>
+
+                    <div class="question" data-question="16">
+                        <div class="question-text">16. Section C</div>
+                        <select name="q16" class="input-field">
+                            <option value="" disabled selected>Select a heading</option>
+                            <option value="i">i. Do we have sufficient resources to feed the human population?</option>
+                            <option value="ii">ii. Will population increase pose disaster for our supply of raw
+                                materials?</option>
+                            <option value="iii">iii. Would population decline benefit the world?</option>
+                            <option value="iv">iv. Is disease a key factor?</option>
+                            <option value="v">v. Is population decrease good for productivity?</option>
+                            <option value="vi">vi. What is the impact of population movement?</option>
+                            <option value="vii">vii. What can past events tell us about the effects of population
+                                decline?</option>
+                            <option value="viii">viii. What can our governments do to guarantee supplies of food and
+                                resources?</option>
+                        </select>
+                    </div>
+
+                    <div class="question" data-question="17">
+                        <div class="question-text">17. Section D</div>
+                        <select name="q17" class="input-field">
+                            <option value="" disabled selected>Select a heading</option>
+                            <option value="i">i. Do we have sufficient resources to feed the human population?</option>
+                            <option value="ii">ii. Will population increase pose disaster for our supply of raw
+                                materials?</option>
+                            <option value="iii">iii. Would population decline benefit the world?</option>
+                            <option value="iv">iv. Is disease a key factor?</option>
+                            <option value="v">v. Is population decrease good for productivity?</option>
+                            <option value="vi">vi. What is the impact of population movement?</option>
+                            <option value="vii">vii. What can past events tell us about the effects of population
+                                decline?</option>
+                            <option value="viii">viii. What can our governments do to guarantee supplies of food and
+                                resources?</option>
+                        </select>
+                    </div>
+
+                    <div class="question" data-question="18">
+                        <div class="question-text">18. Section E</div>
+                        <select name="q18" class="input-field">
+                            <option value="" disabled selected>Select a heading</option>
+                            <option value="i">i. Do we have sufficient resources to feed the human population?</option>
+                            <option value="ii">ii. Will population increase pose disaster for our supply of raw
+                                materials?</option>
+                            <option value="iii">iii. Would population decline benefit the world?</option>
+                            <option value="iv">iv. Is disease a key factor?</option>
+                            <option value="v">v. Is population decrease good for productivity?</option>
+                            <option value="vi">vi. What is the impact of population movement?</option>
+                            <option value="vii">vii. What can past events tell us about the effects of population
+                                decline?</option>
+                            <option value="viii">viii. What can our governments do to guarantee supplies of food and
+                                resources?</option>
+                        </select>
+                    </div>
+
+                    <div class="question" data-question="19">
+                        <div class="question-text">19. Section F</div>
+                        <select name="q19" class="input-field">
+                            <option value="" disabled selected>Select a heading</option>
+                            <option value="i">i. Do we have sufficient resources to feed the human population?</option>
+                            <option value="ii">ii. Will population increase pose disaster for our supply of raw
+                                materials?</option>
+                            <option value="iii">iii. Would population decline benefit the world?</option>
+                            <option value="iv">iv. Is disease a key factor?</option>
+                            <option value="v">v. Is population decrease good for productivity?</option>
+                            <option value="vi">vi. What is the impact of population movement?</option>
+                            <option value="vii">vii. What can past events tell us about the effects of population
+                                decline?</option>
+                            <option value="viii">viii. What can our governments do to guarantee supplies of food and
+                                resources?</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 20-22</div>
+                    <p>Complete the sentences below. Choose ONE WORD ONLY from the passage for each answer.</p>
+
+                    <div class="question" data-question="20">
+                        <div class="question-text">20. Boserup's ideas explain why overall, the world can have a
+                            food...... while some areas do not have enough.</div>
+                        <input type="text" name="q20" class="input-field" placeholder="Your answer">
+                    </div>
+
+                    <div class="question" data-question="21">
+                        <div class="question-text">21. In the last 100 years or so...... has led to a more efficient use
+                            of resources.</div>
+                        <input type="text" name="q21" class="input-field" placeholder="Your answer">
+                    </div>
+
+                    <div class="question" data-question="22">
+                        <div class="question-text">22. Adam Smith argued that a country's...... is caused by a growth in
+                            population.</div>
+                        <input type="text" name="q22" class="input-field" placeholder="Your answer">
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 23-24</div>
+                    <p>Choose TWO letters, A-E. Write the correct letters in boxes 23 and 24 on your answer sheet.</p>
+                    <p>Which TWO of the following statements agree with the views of the writer in Reading Passage 2?
+                    </p>
+
+                    <div class="options">
+                        <label class="option"><input type="checkbox" name="q23" value="A">A. The availability of food is
+                            greater now than previously.</label>
+                        <label class="option"><input type="checkbox" name="q23" value="B">B. A decrease in population
+                            will lead to a higher standard of education.</label>
+                        <label class="option"><input type="checkbox" name="q23" value="C">C. Smaller populations result
+                            in higher wages.</label>
+                        <label class="option"><input type="checkbox" name="q23" value="D">D. Cities will become
+                            overcrowded if they are unsuitably located.</label>
+                        <label class="option"><input type="checkbox" name="q23" value="E">E. People have moved from
+                            rural areas to urban centres.</label>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 25-26</div>
+                    <p>Choose TWO letters, A-E. Write the correct letters in boxes 25 and 26 on your answer sheet.</p>
+                    <p>Which TWO claims does the writer make about future population decline?</p>
+
+                    <div class="options">
+                        <label class="option"><input type="checkbox" name="q25" value="A">A. Recovery may take at least
+                            400 years.</label>
+                        <label class="option"><input type="checkbox" name="q25" value="B">B. It may be caused by
+                            disease.</label>
+                        <label class="option"><input type="checkbox" name="q25" value="C">C. It might mean a decrease in
+                            the number of new ideas.</label>
+                        <label class="option"><input type="checkbox" name="q25" value="D">D. There may be an
+                            overabundance of food as a result.</label>
+                        <label class="option"><input type="checkbox" name="q25" value="E">E. It could result in
+                            economies becoming smaller.</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-nav">
+                <div class="progress-items">
+                    <div class="progress-item current" data-question="14">14</div>
+                    <div class="progress-item" data-question="15">15</div>
+                    <div class="progress-item" data-question="16">16</div>
+                    <div class="progress-item" data-question="17">17</div>
+                    <div class="progress-item" data-question="18">18</div>
+                    <div class="progress-item" data-question="19">19</div>
+                    <div class="progress-item" data-question="20">20</div>
+                    <div class="progress-item" data-question="21">21</div>
+                    <div class="progress-item" data-question="22">22</div>
+                    <div class="progress-item" data-question="23">23</div>
+                    <div class="progress-item" data-question="24">24</div>
+                    <div class="progress-item" data-question="25">25</div>
+                    <div class="progress-item" data-question="26">26</div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" id="prev-btn">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn btn-secondary" id="next-btn">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button class="btn btn-submit" id="submit-btn">
+                        Submit Test <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div class="modal" id="results-modal">
+        <div class="modal-content">
+            <h2>Test Results</h2>
+            <div class="score-display" id="score-display">0/13</div>
+            <div class="score-breakdown">
+                <div class="score-item">
+                    <span>Passage 2:</span>
+                    <span id="passage2-score">0/13</span>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="close-modal">Close</button>
+                <button class="btn btn-primary" id="review-answers">Review Answers</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Correct answers
+        const correctAnswers = {
+            q14: 'iii', // Section A
+            q15: 'i',   // Section B
+            q16: 'vi',  // Section C
+            q17: 'ii',  // Section D
+            q18: 'v',   // Section E
+            q19: 'vii', // Section F
+            q20: 'surplus',
+            q21: 'innovation',
+            q22: 'prosperity',
+            q23: ['A', 'E'], // Checkbox answers for 23-24
+            q25: ['C', 'E']  // Checkbox answers for 25-26
+        };
+
+        // Initialize variables
+        const highlightBtn = document.getElementById('highlight-btn');
+        const removeHighlightBtn = document.getElementById('remove-highlight-btn');
+        const passagePanel = document.getElementById('passage');
+        const questionsPanel = document.getElementById('questions');
+        const submitBtn = document.getElementById('submit-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resultsModal = document.getElementById('results-modal');
+        const scoreDisplay = document.getElementById('score-display');
+        const passage2Score = document.getElementById('passage2-score');
+        const closeModalBtn = document.getElementById('close-modal');
+        const reviewBtn = document.getElementById('review-answers');
+        const resizer = document.getElementById('resizer');
+
+        let lastSelection = null;
+        let highlightTarget = null;
+        let currentPanel = null;
+        let submitted = false;
+        let currentQuestion = 14;
+        let isResizing = false;
+        let seconds = 20 * 60; // 20 minutes
+        let timerInterval;
+
+        // Timer functionality
+        const timerElement = document.querySelector('.timer span');
+        const timerContainer = document.querySelector('.timer');
+
+        function updateTimer() {
+            seconds--;
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+            if (seconds <= 2 * 60) {
+                timerContainer.classList.add('warning');
+            }
+
+            if (seconds <= 0) {
+                clearInterval(timerInterval);
+                if (!submitted) {
+                    alert('Time is up! Please submit your answers.');
+                    submitTest();
+                }
+            }
+        }
+
+        // Resizer functionality
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+
+            const container = document.querySelector('.main-content');
+            const containerRect = container.getBoundingClientRect();
+            const mouseX = e.clientX - containerRect.left;
+            const containerWidth = containerRect.width;
+
+            const leftPercentage = (mouseX / containerWidth) * 100;
+            const rightPercentage = 100 - leftPercentage;
+
+            if (leftPercentage >= 30 && leftPercentage <= 70) {
+                document.querySelector('.passage-container').style.flex = leftPercentage + '%';
+                document.querySelector('.questions-container').style.width = rightPercentage + '%';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            }
+        });
+
+        // Highlighting functionality
+        function getValidSelection() {
+            const sel = window.getSelection();
+            if (!sel.rangeCount || sel.isCollapsed) return null;
+            const range = sel.getRangeAt(0);
+
+            if (passagePanel.contains(range.commonAncestorContainer)) {
+                currentPanel = passagePanel;
+            } else if (questionsPanel.contains(range.commonAncestorContainer)) {
+                currentPanel = questionsPanel;
+            } else {
+                currentPanel = null;
+                return null;
+            }
+
+            return range;
+        }
+
+        function showHighlightBtn(range) {
+            const rect = range.getBoundingClientRect();
+            highlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            highlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            highlightBtn.style.display = 'block';
+        }
+
+        function hideHighlightBtn() {
+            highlightBtn.style.display = 'none';
+        }
+
+        function showRemoveBtn(span) {
+            const rect = span.getBoundingClientRect();
+            removeHighlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            removeHighlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            removeHighlightBtn.style.display = 'block';
+            highlightTarget = span;
+        }
+
+        function hideRemoveBtn() {
+            removeHighlightBtn.style.display = 'none';
+            highlightTarget = null;
+        }
+
+        // Highlight button events
+        highlightBtn.addEventListener('click', () => {
+            if (lastSelection) {
+                const span = document.createElement('span');
+                span.className = 'highlight';
+                span.appendChild(lastSelection.extractContents());
+                lastSelection.insertNode(span);
+                window.getSelection().removeAllRanges();
+                hideHighlightBtn();
+            }
+        });
+
+        removeHighlightBtn.addEventListener('click', () => {
+            if (highlightTarget) {
+                const parent = highlightTarget.parentNode;
+                while (highlightTarget.firstChild) {
+                    parent.insertBefore(highlightTarget.firstChild, highlightTarget);
+                }
+                parent.removeChild(highlightTarget);
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('selectionchange', () => {
+            hideHighlightBtn();
+            hideRemoveBtn();
+
+            const range = getValidSelection();
+            if (range) {
+                lastSelection = range;
+                showHighlightBtn(range);
+            } else {
+                lastSelection = null;
+            }
+        });
+
+        [passagePanel, questionsPanel].forEach(panel => {
+            panel.addEventListener('scroll', () => {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            });
+        });
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.target !== highlightBtn && e.target !== removeHighlightBtn) {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('highlight')) {
+                e.preventDefault();
+                showRemoveBtn(e.target);
+            }
+        });
+
+        // Question navigation
+        function scrollToQuestion(questionNumber) {
+            const questionElement = document.querySelector(`[data-question="${questionNumber}"]`);
+            if (questionElement) {
+                questionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                updateCurrentQuestion(questionNumber);
+            }
+        }
+
+        function updateCurrentQuestion(questionNumber) {
+            currentQuestion = questionNumber;
+            document.querySelectorAll('.progress-item').forEach(item => {
+                item.classList.remove('current');
+                if (item.dataset.question == questionNumber) {
+                    item.classList.add('current');
+                }
+            });
+
+            prevBtn.disabled = currentQuestion <= 14;
+            nextBtn.disabled = currentQuestion >= 26;
+        }
+
+        // Progress item clicks
+        document.querySelectorAll('.progress-item').forEach(item => {
+            item.addEventListener('click', function () {
+                const questionNumber = parseInt(this.dataset.question);
+                scrollToQuestion(questionNumber);
+            });
+        });
+
+        // Navigation buttons
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 14) {
+                scrollToQuestion(currentQuestion - 1);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestion < 26) {
+                scrollToQuestion(currentQuestion + 1);
+            }
+        });
+
+        // Mark questions as answered
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('change', () => {
+                if (submitted) return;
+
+                const questionNumber = input.closest('.question')?.dataset.question ||
+                    (input.name.startsWith('q') ? input.name.substring(1) : null);
+
+                if (questionNumber) {
+                    const progressItem = document.querySelector(`.progress-item[data-question="${questionNumber}"]`);
+                    if (progressItem && !progressItem.classList.contains('answered')) {
+                        progressItem.classList.add('answered');
+                    }
+                }
+            });
+        });
+
+        // Submit functionality
+        submitBtn.addEventListener('click', submitTest);
+
+        function submitTest() {
+            if (submitted) return;
+
+            if (!confirm('Are you sure you want to submit your answers? You won\'t be able to make changes after submission.')) {
+                return;
+            }
+
+            submitted = true;
+            clearInterval(timerInterval);
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Submitted';
+
+            // Calculate score
+            let score = 0;
+            const results = {};
+
+            // Questions 14-19: Dropdown selection
+            for (let i = 14; i <= 19; i++) {
+                const questionKey = `q${i}`;
+                const select = document.querySelector(`select[name="${questionKey}"]`);
+                const userAnswer = select ? select.value : '';
+                const correct = correctAnswers[questionKey];
+                const isCorrect = userAnswer === correct;
+
+                if (isCorrect) {
+                    score++;
+                }
+
+                results[questionKey] = {
+                    userAnswer,
+                    correct,
+                    isCorrect
+                };
+            }
+
+            // Questions 20-22: Text input
+            for (let i = 20; i <= 22; i++) {
+                const questionKey = `q${i}`;
+                const input = document.querySelector(`input[name="${questionKey}"]`);
+                const userAnswer = input ? input.value.trim().toLowerCase() : '';
+                const correct = correctAnswers[questionKey].toLowerCase();
+                const isCorrect = userAnswer === correct;
+
+                if (isCorrect) {
+                    score++;
+                }
+
+                results[questionKey] = {
+                    userAnswer,
+                    correct,
+                    isCorrect
+                };
+            }
+
+            // Questions 23-24: Multiple choice (TWO answers)
+            const q23Selected = Array.from(document.querySelectorAll('input[name="q23"]:checked')).map(el => el.value);
+            const q23Correct = correctAnswers['q23'];
+            const q23CorrectCount = q23Selected.filter(val => q23Correct.includes(val)).length;
+            const q23Score = q23CorrectCount === 2 ? 2 : q23CorrectCount === 1 ? 1 : 0;
+            score += q23Score;
+            results['q23'] = {
+                userAnswer: q23Selected,
+                correct: q23Correct,
+                score: q23Score
+            };
+
+            // Questions 25-26: Multiple choice (TWO answers)
+            const q25Selected = Array.from(document.querySelectorAll('input[name="q25"]:checked')).map(el => el.value);
+            const q25Correct = correctAnswers['q25'];
+            const q25CorrectCount = q25Selected.filter(val => q25Correct.includes(val)).length;
+            const q25Score = q25CorrectCount === 2 ? 2 : q25CorrectCount === 1 ? 1 : 0;
+            score += q25Score;
+            results['q25'] = {
+                userAnswer: q25Selected,
+                correct: q25Correct,
+                score: q25Score
+            };
+
+            // Update progress items
+            for (let i = 14; i <= 26; i++) {
+                const progressItem = document.querySelector(`.progress-item[data-question="${i}"]`);
+                if (progressItem) {
+                    progressItem.classList.remove('current', 'answered');
+
+                    if (i <= 22) {
+                        const result = results[`q${i}`];
+                        if (result && result.isCorrect) {
+                            progressItem.classList.add('correct');
+                        } else {
+                            progressItem.classList.add('incorrect');
+                        }
+                    }
+                    else if (i === 23 || i === 24) {
+                        if (results['q23'].score === 2) {
+                            progressItem.classList.add('correct');
+                        } else {
+                            progressItem.classList.add('incorrect');
+                        }
+                    }
+                    else if (i === 25 || i === 26) {
+                        if (results['q25'].score === 2) {
+                            progressItem.classList.add('correct');
+                        } else {
+                            progressItem.classList.add('incorrect');
+                        }
+                    }
+                }
+            }
+
+            // Store results globally for review
+            window.testResults = results;
+
+            // Display results
+            scoreDisplay.textContent = `${score}/13`;
+            passage2Score.textContent = `${score}/13`;
+
+            // Show modal
+            resultsModal.style.display = 'flex';
+        }
+
+        // Show correct answers after submission
+        function showCorrectAnswers() {
+            if (!submitted) return;
+
+            // Add correct answer indicators
+            for (let i = 14; i <= 26; i++) {
+                const questionKey = `q${i}`;
+                const result = window.testResults[questionKey];
+                const questionElement = document.querySelector(`[data-question="${i}"]`);
+
+                if (questionElement) {
+                    // Remove any existing answer indicators
+                    const existingIndicator = questionElement.querySelector('.answer-indicator');
+                    if (existingIndicator) {
+                        existingIndicator.remove();
+                    }
+
+                    // Create answer indicator
+                    const indicator = document.createElement('div');
+                    indicator.className = 'answer-indicator';
+
+                    if (i <= 19) {
+                        // Dropdown selection
+                        const headingText = {
+                            'i': 'Do we have sufficient resources to feed the human population?',
+                            'ii': 'Will population increase pose disaster for our supply of raw materials?',
+                            'iii': 'Would population decline benefit the world?',
+                            'iv': 'Is disease a key factor?',
+                            'v': 'Is population decrease good for productivity?',
+                            'vi': 'What is the impact of population movement?',
+                            'vii': 'What can past events tell us about the effects of population decline?',
+                            'viii': 'What can our governments do to guarantee supplies of food and resources?'
+                        };
+                        const userHeading = headingText[result.userAnswer] || 'No answer';
+                        const correctHeading = headingText[result.correct];
+                        if (result.isCorrect) {
+                            indicator.innerHTML = `<i class="fas fa-check"></i> <strong>Correct!</strong> Your answer: ${userHeading}`;
+                        } else {
+                            indicator.className += ' incorrect';
+                            indicator.innerHTML = `<i class="fas fa-times"></i> <strong>Incorrect.</strong> Your answer: ${userHeading}<br><strong>Correct answer:</strong> ${correctHeading}`;
+                        }
+                    } else if (i <= 22) {
+                        // Text input
+                        if (result.isCorrect) {
+                            indicator.innerHTML = `<i class="fas fa-check"></i> <strong>Correct!</strong> Your answer: ${result.userAnswer}`;
+                        } else {
+                            indicator.className += ' incorrect';
+                            indicator.innerHTML = `<i class="fas fa-times"></i> <strong>Incorrect.</strong> Your answer: ${result.userAnswer || 'No answer'}<br><strong>Correct answer:</strong> ${result.correct}`;
+                        }
+                    } else if (i === 23) {
+                        // Multiple choice 23-24
+                        const correctLetters = result.correct.join(', ');
+                        indicator.innerHTML = `<strong>Correct answers:</strong> ${correctLetters}`;
+                    } else if (i === 25) {
+                        // Multiple choice 25-26
+                        const correctLetters = result.correct.join(', ');
+                        indicator.innerHTML = `<strong>Correct answers:</strong> ${correctLetters}`;
+                    }
+
+                    if (i !== 24 && i !== 26) { // Don't duplicate for questions 24 and 26
+                        questionElement.appendChild(indicator);
+                    }
+                }
+            }
+        }
+
+        // Modal functionality
+        closeModalBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+        });
+
+        reviewBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+            showCorrectAnswers();
+            scrollToQuestion(14);
+        });
+
+        // Initialize
+        updateCurrentQuestion(14);
+
+        // Loading and Start Screen functionality
+        function showStartScreen() {
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }
+
+        function startTest() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('testContainer').classList.remove('hidden');
+
+            // Start the timer when test begins
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Show start screen after loading
+        setTimeout(showStartScreen, 2000); // 2 seconds loading time
+    </script>
+</body>
+
+</html>

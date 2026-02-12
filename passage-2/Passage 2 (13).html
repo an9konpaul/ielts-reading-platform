@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        .loading-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #2563eb;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-title {
+            font-size: 1.2rem;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .loading-subtitle {
+            font-size: 1rem;
+            color: #9ca3af;
+        }
+
+        .start-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9998;
+        }
+
+        .start-content {
+            text-align: center;
+        }
+
+        .start-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 24px;
+        }
+
+        .start-subtitle {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        .start-button {
+            padding: 12px 32px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .start-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            background-color: #ffffff;
+            color: #333;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .passage-info {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .timer {
+            background-color: rgba(255, 193, 193, 0.5);
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+            min-width: 80px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #c53030;
+            border: 1px solid rgba(255, 120, 120, 0.3);
+        }
+
+        .timer.warning {
+            color: #9b2c2c;
+            background-color: rgba(254, 178, 178, 0.7);
+            border-color: rgba(245, 101, 101, 0.5);
+        }
+
+        .logo-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+            cursor: pointer;
+        }
+
+        .logo-area:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+        }
+
+        .logo-area i {
+            font-size: 1.1rem;
+        }
+
+        .progress-container {
+            background-color: #f8f9fa;
+            padding: 4px 20px;
+            z-index: 100;
+            flex-shrink: 0;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .progress-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .progress-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            border: 1px solid #cbd5e0;
+        }
+
+        .progress-item.current {
+            background-color: #4299e1;
+            color: white;
+            transform: scale(1.1);
+            border-color: #2b6cb0;
+        }
+
+        .progress-item.answered {
+            background-color: #9ae6b4;
+            color: #22543d;
+            border-color: #68d391;
+        }
+
+        .progress-item.correct {
+            background-color: #48bb78;
+            color: white;
+            border-color: #38a169;
+        }
+
+        .progress-item.incorrect {
+            background-color: #fed7d7;
+            color: #c53030;
+            border-color: #feb2b2;
+        }
+
+        .progress-item:hover {
+            background-color: #cbd5e0;
+            transform: scale(1.05);
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.95rem;
+            background-color: #f7fafc;
+            color: #4a5568;
+        }
+
+        .btn i {
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-primary {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-primary:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-secondary {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-submit {
+            background-color: #48bb78;
+            color: white;
+            font-weight: 900;
+            border: 1px solid #38a169;
+        }
+
+        .btn-submit:hover {
+            background-color: #38a169;
+            border-color: #2f855a;
+        }
+
+        .btn-submit:disabled {
+            background-color: #9ae6b4;
+            color: #718096;
+            cursor: not-allowed;
+            border: 1px solid #68d391;
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .passage-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #fafafa;
+            position: relative;
+        }
+
+        .resizer {
+            width: 4px;
+            background-color: #cbd5e0;
+            cursor: col-resize;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .resizer:hover {
+            background-color: #a0aec0;
+        }
+
+        .resizer::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 60px;
+            background-color: rgba(203, 213, 224, 0.5);
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        .questions-container {
+            width: 40%;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: white;
+            border-left: 1px solid #e2e8f0;
+        }
+
+        .passage {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .passage h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage-content p {
+            margin-top: 15px;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .passage h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage p {
+            margin-top: 20px;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        .question-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 6px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background-color: #ffffff;
+            transition: box-shadow 0.2s;
+        }
+
+        .question:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #2d3748;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .option:hover {
+            background-color: #f7fafc;
+            border-color: #cbd5e0;
+        }
+
+        .option input {
+            margin-right: 2px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 20%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        .input-field:focus {
+            border-color: #4299e1;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+        }
+
+        select.input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 20%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .answer-indicator {
+            background-color: #e6fffa;
+            border: 1px solid #38b2ac;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .answer-indicator.correct {
+            background-color: #e6fffa;
+            border-color: #38b2ac;
+            color: #234e52;
+        }
+
+        .answer-indicator.incorrect {
+            background-color: #fed7d7;
+            border-color: #fc8181;
+            color: #742a2a;
+        }
+
+        .question-group {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-group-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+
+        .highlight {
+            background-color: #ffff00;
+            cursor: pointer;
+        }
+
+        #highlight-btn,
+        #remove-highlight-btn {
+            position: absolute;
+            z-index: 9999;
+            display: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            border: 1px solid #888;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .score-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2d3748;
+        }
+
+        .score-breakdown {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .questions-container {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid #e2e8f0;
+            }
+
+            .resizer {
+                width: 100%;
+                height: 4px;
+                cursor: row-resize;
+            }
+
+            .resizer::before {
+                width: 60px;
+                height: 30px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .logo-area {
+                order: 1;
+            }
+
+            .passage-info {
+                order: 2;
+            }
+
+            .timer {
+                order: 3;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h2 class="loading-title">Your test will begin shortly</h2>
+            <p class="loading-subtitle">Please wait</p>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="startScreen" class="start-screen hidden">
+        <div class="start-content">
+            <h1 class="start-title">IELTSwithJurabek</h1>
+            <p class="start-subtitle">Ready to begin your reading test?</p>
+            <button class="start-button" onclick="startTest()">Start Test</button>
+        </div>
+    </div>
+
+    <!-- Test Container -->
+    <div class="container hidden" id="testContainer">
+        <header>
+            <div class="passage-info">IELTSwithJurabek</div>
+            <div class="timer">
+                <i class="fas fa-clock"></i>
+                <span>20:00</span>
+            </div>
+            <div class="logo-area" onclick="window.open('https://t.me/IELTSwithJurabek', '_blank')">
+                <i class="fas fa-paper-plane"></i>
+                <span>Click for more TESTS</span>
+            </div>
+            <div class="passage-info">Passage 2 of 3</div>
+        </header>
+
+        <button id="highlight-btn" type="button">Highlight</button>
+        <button id="remove-highlight-btn" type="button">Remove Highlight</button>
+
+        <div class="main-content">
+            <!-- Reading Passage -->
+            <div class="passage-container" role="region" aria-label="Reading Passage">
+                <h2 class="section-title">READING PASSAGE 2</h2>
+                <div class="passage-content" id="passage2">
+                    <h3>The Myth of the Eight-hour Sleep</h3>
+                    <p id="P1"><span class="label">A</span> We often worry about lying awake in the middle of the night
+                        – but it could be good for you. Indications from both science and history suggest that the
+                        eight-hour sleep may not be a natural or inborn pattern for humans. In the early 1990s,
+                        psychiatrist Thomas Wehr conducted research which implies just that. Wehr kept a group of people
+                        in a darkened room for 14 hours a day for a month. It took some time for their sleep to
+                        regulate, but by the fourth week the subjects had settled into a very distinct sleeping pattern.
+                        Firstly, they slept four hours, then woke for one or two hours before falling into a second
+                        four-hour sleep. Though sleep scientists were impressed by the implications of the study, the
+                        idea that we must sleep for eight consecutive hours persists amongst the general public.</p>
+                    <p id="P2"><span class="label">B</span> In 2001, historian Roger Ekirch of Virginia Tech University
+                        in the US published a paper drawn from 16 years of research, revealing historical evidence that
+                        humans used to sleep in two distinct periods of time each night. Ekirch's research found more
+                        than 500 references to a segmented sleeping pattern – in diaries, court recorders, medical books
+                        and literature, from the ancient Greeks to tribes in Nigeria. Much like Wehr's findings, these
+                        references describe a first sleep which began not long following sunset. Then there was a waking
+                        period of one or two hours and after that a second sleep. During the waking period, people could
+                        be quite active. They sometimes got up and moved around the house, although most people stayed
+                        in bed, and perhaps read or wrote if they had enough money for candles. In many historic
+                        accounts, Ekirch found that people used the time that they were awake between periods of sleep
+                        to think about and attempt to analyse their dreams.</p>
+                    <p id="P3"><span class="label">C</span> In his book, Evening's Empire, historian Craig Koslofsky
+                        suggested an explanation for this divided sleep pattern in Europe. 'Associations with night
+                        before the 17th century were not good,' he writes. He goes on to explain that the streets of
+                        cities and towns at night were often populated by thieves or worse. The streets at night
+                        consequently scared many people. Even the wealthy, who could afford to light their way, had
+                        better things to spend their money on. There was no prestige or social value with going out or
+                        staying up late at night.</p>
+                    <p id="P4"><span class="label">D</span> Ekirch found that references to the first and second sleep
+                        started to disappear during the late 17th century. The pattern began to alter first among the
+                        urban upper classes changing amongst the rest of Western society. By the 1920s, the idea of a
+                        first and second sleep had receded entirely from our social consciousness. Ekirch attributes the
+                        initial shift to improvements in street and home lighting. As the night became a time for all
+                        kinds of activity, the length of time people used for rest declined. In 1667, Paris became the
+                        first city in the world to light its streets, using wax candles in glass lamps. It was followed
+                        by another French city, Lille, in the same year and by Amsterdam in Holland two years later,
+                        where a much more efficient oil-powered lamp was developed. London didn't light its streets
+                        until 1684, but by the end of the 17th century, more than 50 of Europe's major towns and cities
+                        were lit at night. Coffee houses emerged as a fashionable phenomenon and many were open
+                        virtually around the clock. Going out at night became commonplace, and spending hours lying in
+                        bed was considered a waste of time. ‘People were becoming increasingly time-conscious and
+                        sensitive to efficiency, certainly before the 19th century,’ says Ekirch. ‘But the Industrial
+                        Revolution intensified that attitude considerably.’ Strong evidence of this shifting attitude is
+                        contained in a medical journal from 1829 which urged parents to force their children out of the
+                        pattern of first and second sleep.</p>
+                    <p id="P5"><span class="label">E</span> Today, most people seem to have adapted quite well to the
+                        eight-hour sleep, but Ekirch believes many sleeping problems may have roots in the human body's
+                        natural preference for divided sleep, as well as in difficulties caused by extended exposure to
+                        artificial light in the modern world. This could be the cause of a condition called sleep
+                        maintenance insomnia, where people wake during the night and have trouble getting back to sleep.
+                        The condition first appears in literature at the end of the 19th century, at the same time as
+                        accounts of interrupted sleep disappear. Sleep psychologist, Gregg Jacobs, says that the idea
+                        that we must sleep for an extended period of time could be changing. If it makes people who wake
+                        up in the night anxious, as this anxiety can itself discourage sleep and is likely to affect
+                        waking life too. Jacobs suggests that the waking period between sleeping, when people simply
+                        rested and relaxed, could have played an important part in the human capacity to regulate stress
+                        naturally. Russell Foster, a professor of circadian (body clock) neuroscience at Oxford
+                        University in the UK, shares this point of view. 'Over 30% of the medical problems that doctors
+                        are faced with stem directly or indirectly from sleep. But sleep has been ignored in medical
+                        training, and there are very few countries where sleep is studied,' Foster says. He feels this
+                        needs to change.</p>
+                </div>
+            </div>
+
+            <div class="resizer" id="resizer"></div>
+
+            <!-- Questions -->
+            <div class="questions-container" id="questions" role="region" aria-label="Questions">
+                <h2 class="section-title">Questions 14-26</h2>
+                <p>You should spend about 20 minutes on Questions 14–26, which are based on Reading Passage 2.</p>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 14-18</div>
+                    <p>Reading Passage 2 has five sections. Choose the correct heading for each section from the list of
+                        headings below. Choose the correct number, i-vii, in boxes <strong>14-18</strong> on your answer
+                        sheet.</p>
+                    <p><strong>List of Headings</strong></p>
+                    <ol>
+                        <li>i. Historical reasons why interrupted sleep became uncommon</li>
+                        <li>ii. Brain structures involved in sleep patterns</li>
+                        <li>iii. Potential health issues related to sleep</li>
+                        <li>iv. Famous cases in literature of sleep</li>
+                        <li>v. An analysis of old documents to discover deep patterns</li>
+                        <li>vi. Biological and environmental factors preventing people from falling asleep again</li>
+                        <li>vii. Scientific evidence that divided sleep is a natural phenomenon</li>
+                    </ol>
+                    <div class="question" data-question="14">
+                        <div class="question-text">14. Section A</div>
+                        <select name="q14">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="i">i</option>
+                            <option value="ii">ii</option>
+                            <option value="iii">iii</option>
+                            <option value="iv">iv</option>
+                            <option value="v">v</option>
+                            <option value="vi">vi</option>
+                            <option value="vii">vii</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="15">
+                        <div class="question-text">15. Section B</div>
+                        <select name="q15">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="i">i</option>
+                            <option value="ii">ii</option>
+                            <option value="iii">iii</option>
+                            <option value="iv">iv</option>
+                            <option value="v">v</option>
+                            <option value="vi">vi</option>
+                            <option value="vii">vii</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="16">
+                        <div class="question-text">16. Section C</div>
+                        <select name="q16">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="i">i</option>
+                            <option value="ii">ii</option>
+                            <option value="iii">iii</option>
+                            <option value="iv">iv</option>
+                            <option value="v">v</option>
+                            <option value="vi">vi</option>
+                            <option value="vii">vii</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="17">
+                        <div class="question-text">17. Section D</div>
+                        <select name="q17">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="i">i</option>
+                            <option value="ii">ii</option>
+                            <option value="iii">iii</option>
+                            <option value="iv">iv</option>
+                            <option value="v">v</option>
+                            <option value="vi">vi</option>
+                            <option value="vii">vii</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="18">
+                        <div class="question-text">18. Section E</div>
+                        <select name="q18">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="i">i</option>
+                            <option value="ii">ii</option>
+                            <option value="iii">iii</option>
+                            <option value="iv">iv</option>
+                            <option value="v">v</option>
+                            <option value="vi">vi</option>
+                            <option value="vii">vii</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 19-23</div>
+                    <p>Look at the following statements (Questions 19-23) and the list of researchers below. Match each
+                        statement with the correct researcher, A-E. Choose the correct letter, A-E, in boxes
+                        <strong>19-23</strong> on your answer sheet. NB you may use any letter more than once.
+                    </p>
+                    <p><strong>List of Academics</strong></p>
+                    <p>A. Thomas Wehr<br>B. Roger Ekirch<br>C. Craig Koslofsky<br>D. Gregg Jacobs<br>E. Russell Foster
+                    </p>
+                    <div class="question" data-question="19">
+                        <div class="question-text">19. In certain historical periods, the threat of criminal danger led
+                            to segmented sleep.</div>
+                        <select name="q19">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="20">
+                        <div class="question-text">20. Physicians should learn more about treating people with sleeping
+                            difficulties.</div>
+                        <select name="q20">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="21">
+                        <div class="question-text">21. Historically, when people experienced interrupted sleep, they
+                            used the waking period at night for different activities.</div>
+                        <select name="q21">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="22">
+                        <div class="question-text">22. Technological changes in Europe made people more likely to sleep
+                            throughout the night.</div>
+                        <select name="q22">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="23">
+                        <div class="question-text">23. The belief that humans should have a long continuous sleep can be
+                            psychologically harmful.</div>
+                        <select name="q23">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 24-26</div>
+                    <p>Complete the summary below. Write <strong>ONE WORD ONLY</strong> from the passage for each
+                        answer.</p>
+                    <p><strong>Historical patterns of interrupted sleep</strong></p>
+                    <div class="question" data-question="24">
+                        <div class="question-text">24. Historical evidence seems to show that humans had common sleep
+                            patterns which were quite unlike today's eight hours of unbroken sleep each night. People
+                            habitually went to bed early, soon after <input type="text" name="q24" maxlength="20">,
+                            slept for a while,</div>
+                    </div>
+                    <div class="question" data-question="25">
+                        <div class="question-text">25. then woke up for a few hours of activity or perhaps to consider,
+                            for example, the meaning of <input type="text" name="q25" maxlength="20">.</div>
+                    </div>
+                    <div class="question" data-question="26">
+                        <div class="question-text">26. There was little else to do at home in the dark, since what
+                            little means of lighting they had, such as using candles, was costly. In 16th-century
+                            Europe, people tended to stay at home at night because they feared <input type="text"
+                                name="q26" maxlength="20"> on large unlit city streets.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-nav">
+                <div class="progress-items">
+                    <div class="progress-item current" data-question="14">14</div>
+                    <div class="progress-item" data-question="15">15</div>
+                    <div class="progress-item" data-question="16">16</div>
+                    <div class="progress-item" data-question="17">17</div>
+                    <div class="progress-item" data-question="18">18</div>
+                    <div class="progress-item" data-question="19">19</div>
+                    <div class="progress-item" data-question="20">20</div>
+                    <div class="progress-item" data-question="21">21</div>
+                    <div class="progress-item" data-question="22">22</div>
+                    <div class="progress-item" data-question="23">23</div>
+                    <div class="progress-item" data-question="24">24</div>
+                    <div class="progress-item" data-question="25">25</div>
+                    <div class="progress-item" data-question="26">26</div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" id="prev-btn" disabled><i class="fas fa-arrow-left"></i>
+                        Previous</button>
+                    <button class="btn btn-secondary" id="next-btn">Next <i class="fas fa-arrow-right"></i></button>
+                    <button class="btn btn-submit" id="submit-btn">Submit Test <i
+                            class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div class="modal" id="results-modal">
+        <div class="modal-content">
+            <h2>Test Results</h2>
+            <div class="score-display" id="score-display">0/13</div>
+            <div class="score-breakdown">
+                <div class="score-item">
+                    <span>Passage 2:</span>
+                    <span id="passage2-score">0/13</span>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="close-modal">Close</button>
+                <button class="btn btn-primary" id="review-answers">Review Answers</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Correct Answers for Questions 14-26
+        const correctAnswers = {
+            q14: "vii", // Scientific evidence that divided sleep is a natural phenomenon
+            q15: "v", // An analysis of old documents to discover deep patterns
+            q16: "i", // Historical reasons why interrupted sleep became uncommon
+            q17: "vi", // Biological and environmental factors preventing people from falling asleep again
+            q18: "iii", // Potential health issues related to sleep
+            q19: "C", // Craig Koslofsky
+            q20: "E", // Russell Foster
+            q21: "B", // Roger Ekirch
+            q22: "B", // Roger Ekirch
+            q23: "D", // Gregg Jacobs
+            q24: "sunset",
+            q25: "dreams",
+            q26: "thieves"
+        };
+
+        let lastSelection = null;
+        let highlightTarget = null;
+        let currentPanel = null;
+        let submitted = false;
+        let currentQuestion = 14;
+        let isResizing = false;
+        let seconds = 20 * 60; // 20 minutes for Passage 2
+        let timerInterval;
+
+        const highlightBtn = document.getElementById('highlight-btn');
+        const removeHighlightBtn = document.getElementById('remove-highlight-btn');
+        const passagePanel = document.querySelector('.passage-container');
+        const questionsPanel = document.getElementById('questions');
+        const resizer = document.getElementById('resizer');
+        const submitBtn = document.getElementById('submit-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resultsModal = document.getElementById('results-modal');
+        const scoreDisplay = document.getElementById('score-display');
+        const passage2Score = document.getElementById('passage2-score');
+        const closeModalBtn = document.getElementById('close-modal');
+        const reviewBtn = document.getElementById('review-answers');
+        const timerElement = document.querySelector('.timer span');
+        const timerContainer = document.querySelector('.timer');
+
+        // Timer
+        function updateTimer() {
+            seconds--;
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            if (seconds <= 2 * 60) {
+                timerContainer.classList.add('warning');
+            }
+            if (seconds <= 0) {
+                clearInterval(timerInterval);
+                if (!submitted) {
+                    alert('Time is up! Submitting your test.');
+                    submitTest();
+                }
+            }
+        }
+
+        // Highlight functionality
+        function getValidSelection() {
+            const sel = window.getSelection();
+            if (!sel.rangeCount || sel.isCollapsed) return null;
+            const range = sel.getRangeAt(0);
+            if (passagePanel.contains(range.commonAncestorContainer)) {
+                currentPanel = passagePanel;
+            } else if (questionsPanel.contains(range.commonAncestorContainer)) {
+                currentPanel = questionsPanel;
+            } else {
+                return null;
+            }
+            return range;
+        }
+
+        function showHighlightBtn(range) {
+            const rect = range.getBoundingClientRect();
+            highlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            highlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            highlightBtn.style.display = 'block';
+        }
+
+        function hideHighlightBtn() {
+            highlightBtn.style.display = 'none';
+        }
+
+        function showRemoveBtn(span) {
+            const rect = span.getBoundingClientRect();
+            removeHighlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            removeHighlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            removeHighlightBtn.style.display = 'block';
+            highlightTarget = span;
+        }
+
+        function hideRemoveBtn() {
+            removeHighlightBtn.style.display = 'none';
+            highlightTarget = null;
+        }
+
+        highlightBtn.addEventListener('click', () => {
+            if (lastSelection) {
+                const span = document.createElement('span');
+                span.className = 'highlight';
+                span.appendChild(lastSelection.extractContents());
+                lastSelection.insertNode(span);
+                window.getSelection().removeAllRanges();
+                hideHighlightBtn();
+            }
+        });
+
+        removeHighlightBtn.addEventListener('click', () => {
+            if (highlightTarget) {
+                const parent = highlightTarget.parentNode;
+                while (highlightTarget.firstChild) {
+                    parent.insertBefore(highlightTarget.firstChild, highlightTarget);
+                }
+                parent.removeChild(highlightTarget);
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('selectionchange', () => {
+            hideHighlightBtn();
+            hideRemoveBtn();
+            const range = getValidSelection();
+            if (range) {
+                lastSelection = range;
+                showHighlightBtn(range);
+            } else {
+                lastSelection = null;
+            }
+        });
+
+        [passagePanel, questionsPanel].forEach(panel => {
+            panel.addEventListener('scroll', () => {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            });
+        });
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.target !== highlightBtn && e.target !== removeHighlightBtn) {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('highlight')) {
+                e.preventDefault();
+                showRemoveBtn(e.target);
+            }
+        });
+
+        // Resizer
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const container = document.querySelector('.main-content');
+            const containerRect = container.getBoundingClientRect();
+            const mouseX = e.clientX - containerRect.left;
+            const containerWidth = containerRect.width;
+            const leftPercentage = (mouseX / containerWidth) * 100;
+            const rightPercentage = 100 - leftPercentage;
+            if (leftPercentage >= 30 && leftPercentage <= 70) {
+                document.querySelector('.passage-container').style.flex = leftPercentage + '%';
+                document.querySelector('.questions-container').style.width = rightPercentage + '%';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            }
+        });
+
+        // Navigation
+        function scrollToQuestion(num) {
+            const el = document.querySelector(`[data-question="${num}"]`) || document.querySelector(`select[name="q${num}"]`) || document.querySelector(`input[name="q${num}"]`);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            updateCurrentQuestion(num);
+        }
+
+        function updateCurrentQuestion(num) {
+            currentQuestion = num;
+            document.querySelectorAll('.progress-item').forEach(item => {
+                item.classList.remove('current');
+                if (item.dataset.question == num) item.classList.add('current');
+            });
+            prevBtn.disabled = num <= 14;
+            nextBtn.disabled = num >= 26;
+        }
+
+        document.querySelectorAll('.progress-item').forEach(item => {
+            item.addEventListener('click', () => {
+                scrollToQuestion(parseInt(item.dataset.question));
+            });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 14) scrollToQuestion(currentQuestion - 1);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestion < 26) scrollToQuestion(currentQuestion + 1);
+        });
+
+        // Event listener for marking questions as answered
+        document.querySelectorAll('select, input[type="text"]').forEach(input => {
+            input.addEventListener('change', () => {
+                if (submitted) return;
+                const qNumMatch = input.name.match(/^q(\d+)$/);
+                if (qNumMatch) {
+                    const qNum = parseInt(qNumMatch[1]);
+                    const item = document.querySelector(`.progress-item[data-question="${qNum}"]`);
+                    if (item && !item.classList.contains('answered')) {
+                        const value = input.value;
+                        if (value) {
+                            item.classList.add('answered');
+                        }
+                    }
+                }
+            });
+        });
+
+        submitBtn.addEventListener('click', submitTest);
+
+        function submitTest() {
+            if (submitted) return;
+            if (!confirm('Are you sure you want to submit?')) return;
+            submitted = true;
+            clearInterval(timerInterval);
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Submitted';
+            let score = 0;
+            const results = {};
+
+            // Process questions 14-23 (dropdowns)
+            for (let i = 14; i <= 23; i++) {
+                const key = `q${i}`;
+                const selectEl = document.querySelector(`select[name="${key}"]`);
+                let userAnswer = '';
+                let isCorrect = false;
+                if (selectEl && selectEl.value !== '') {
+                    userAnswer = selectEl.value;
+                    isCorrect = userAnswer === correctAnswers[key];
+                    selectEl.disabled = true;
+                }
+                if (isCorrect) score++;
+                results[key] = { userAnswer, correct: correctAnswers[key], isCorrect };
+            }
+
+            // Process questions 24-26 (text inputs)
+            for (let i = 24; i <= 26; i++) {
+                const key = `q${i}`;
+                const inputEl = document.querySelector(`input[name="${key}"]`);
+                let userAnswer = '';
+                let isCorrect = false;
+                if (inputEl && inputEl.value.trim() !== '') {
+                    userAnswer = inputEl.value.trim().toLowerCase();
+                    isCorrect = userAnswer === correctAnswers[key].toLowerCase();
+                    inputEl.disabled = true;
+                }
+                if (isCorrect) score++;
+                results[key] = { userAnswer, correct: correctAnswers[key], isCorrect };
+            }
+
+            scoreDisplay.textContent = `${score}/13`;
+            passage2Score.textContent = `${score}/13`;
+            for (let i = 14; i <= 26; i++) {
+                const item = document.querySelector(`.progress-item[data-question="${i}"]`);
+                const res = results[`q${i}`];
+                if (item && res) {
+                    item.classList.remove('current', 'answered');
+                    item.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+                }
+            }
+            window.testResults = results;
+            resultsModal.style.display = 'flex';
+        }
+
+        function showCorrectAnswers() {
+            if (!submitted) return;
+            document.querySelectorAll('.answer-indicator').forEach(el => el.remove());
+
+            // Process questions 14-23 (dropdowns)
+            for (let i = 14; i <= 23; i++) {
+                const key = `q${i}`;
+                const res = window.testResults[key];
+                if (!res) continue;
+                const selectEl = document.querySelector(`select[name="${key}"]`);
+                if (!selectEl) continue;
+                const targetElement = selectEl.parentNode;
+                const div = document.createElement('div');
+                div.className = 'answer-indicator';
+                div.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+                div.style.display = 'inline-block';
+                div.style.marginLeft = '10px';
+                if (res.isCorrect) {
+                    div.innerHTML = `<i class="fas fa-check"></i> Correct! You chose: <strong>${res.userAnswer || 'No answer'}</strong>`;
+                } else {
+                    const userDisplay = res.userAnswer || 'No answer';
+                    div.innerHTML = `<i class="fas fa-times"></i> Incorrect. You chose: <strong>${userDisplay}</strong><br><strong>Correct:</strong> ${res.correct}`;
+                }
+                targetElement.appendChild(div);
+            }
+
+            // Process questions 24-26 (text inputs)
+            for (let i = 24; i <= 26; i++) {
+                const key = `q${i}`;
+                const res = window.testResults[key];
+                if (!res) continue;
+                const inputEl = document.querySelector(`input[name="${key}"]`);
+                if (!inputEl) continue;
+                const targetElement = inputEl.parentNode;
+                const div = document.createElement('div');
+                div.className = 'answer-indicator';
+                div.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+                div.style.display = 'inline-block';
+                div.style.marginLeft = '10px';
+                if (res.isCorrect) {
+                    div.innerHTML = `<i class="fas fa-check"></i> Correct! You chose: <strong>${res.userAnswer || 'No answer'}</strong>`;
+                } else {
+                    const userDisplay = res.userAnswer || 'No answer';
+                    div.innerHTML = `<i class="fas fa-times"></i> Incorrect. You chose: <strong>${userDisplay}</strong><br><strong>Correct:</strong> ${res.correct}`;
+                }
+                targetElement.appendChild(div);
+            }
+        }
+
+        closeModalBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+        });
+
+        reviewBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+            showCorrectAnswers();
+            scrollToQuestion(14);
+        });
+
+        function startTest() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('testContainer').classList.remove('hidden');
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        setTimeout(() => {
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }, 2000);
+    </script>
+</body>
+
+</html>

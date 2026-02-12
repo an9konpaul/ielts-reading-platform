@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        .loading-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #2563eb;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-title {
+            font-size: 1.2rem;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .loading-subtitle {
+            font-size: 1rem;
+            color: #9ca3af;
+        }
+
+        .start-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9998;
+        }
+
+        .start-content {
+            text-align: center;
+        }
+
+        .start-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 24px;
+        }
+
+        .start-subtitle {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        .start-button {
+            padding: 12px 32px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .start-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            background-color: #ffffff;
+            color: #333;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .passage-info {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .timer {
+            background-color: rgba(255, 193, 193, 0.5);
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+            min-width: 80px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #c53030;
+            border: 1px solid rgba(255, 120, 120, 0.3);
+        }
+
+        .timer.warning {
+            color: #9b2c2c;
+            background-color: rgba(254, 178, 178, 0.7);
+            border-color: rgba(245, 101, 101, 0.5);
+        }
+
+        .logo-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+            cursor: pointer;
+        }
+
+        .logo-area:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+        }
+
+        .logo-area i {
+            font-size: 1.1rem;
+        }
+
+        .progress-container {
+            background-color: #f8f9fa;
+            padding: 4px 20px;
+            z-index: 100;
+            flex-shrink: 0;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .progress-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .progress-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            border: 1px solid #cbd5e0;
+        }
+
+        .progress-item.current {
+            background-color: #4299e1;
+            color: white;
+            transform: scale(1.1);
+            border-color: #2b6cb0;
+        }
+
+        .progress-item.answered {
+            background-color: #9ae6b4;
+            color: #22543d;
+            border-color: #68d391;
+        }
+
+        .progress-item.correct {
+            background-color: #48bb78;
+            color: white;
+            border-color: #38a169;
+        }
+
+        .progress-item.incorrect {
+            background-color: #fed7d7;
+            color: #c53030;
+            border-color: #feb2b2;
+        }
+
+        .progress-item:hover {
+            background-color: #cbd5e0;
+            transform: scale(1.05);
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.95rem;
+            background-color: #f7fafc;
+            color: #4a5568;
+        }
+
+        .btn i {
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-primary {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-primary:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-secondary {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #edf2f7;
+            border-color: #a0aec0;
+        }
+
+        .btn-submit {
+            background-color: #48bb78;
+            color: white;
+            font-weight: 900;
+            border: 1px solid #38a169;
+        }
+
+        .btn-submit:hover {
+            background-color: #38a169;
+            border-color: #2f855a;
+        }
+
+        .btn-submit:disabled {
+            background-color: #9ae6b4;
+            color: #718096;
+            cursor: not-allowed;
+            border: 1px solid #68d391;
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .passage-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #fafafa;
+            position: relative;
+        }
+
+        .resizer {
+            width: 4px;
+            background-color: #cbd5e0;
+            cursor: col-resize;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .resizer:hover {
+            background-color: #a0aec0;
+        }
+
+        .resizer::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 60px;
+            background-color: rgba(203, 213, 224, 0.5);
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        .questions-container {
+            width: 40%;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: white;
+            border-left: 1px solid #e2e8f0;
+        }
+
+        .passage {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .passage h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage-content p {
+            margin-top: 15px;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .passage h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .passage p {
+            margin-top: 20px;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        .question-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 6px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background-color: #ffffff;
+            transition: box-shadow 0.2s;
+        }
+
+        .question:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #2d3748;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .option:hover {
+            background-color: #f7fafc;
+            border-color: #cbd5e0;
+        }
+
+        .option input {
+            margin-right: 2px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 20%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        .input-field:focus {
+            border-color: #4299e1;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+        }
+
+        select.input-field {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            width: 20%;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .answer-indicator {
+            background-color: #e6fffa;
+            border: 1px solid #38b2ac;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .answer-indicator.correct {
+            background-color: #e6fffa;
+            border-color: #38b2ac;
+            color: #234e52;
+        }
+
+        .answer-indicator.incorrect {
+            background-color: #fed7d7;
+            border-color: #fc8181;
+            color: #742a2a;
+        }
+
+        .question-group {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-group-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+
+        .highlight {
+            background-color: #ffff00;
+            cursor: pointer;
+        }
+
+        #highlight-btn,
+        #remove-highlight-btn {
+            position: absolute;
+            z-index: 9999;
+            display: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            border: 1px solid #888;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .score-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2d3748;
+        }
+
+        .score-breakdown {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .questions-container {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid #e2e8f0;
+            }
+
+            .resizer {
+                width: 100%;
+                height: 4px;
+                cursor: row-resize;
+            }
+
+            .resizer::before {
+                width: 60px;
+                height: 30px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .logo-area {
+                order: 1;
+            }
+
+            .passage-info {
+                order: 2;
+            }
+
+            .timer {
+                order: 3;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .progress-item {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .passage-info {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h2 class="loading-title">Your test will begin shortly</h2>
+            <p class="loading-subtitle">Please wait</p>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="startScreen" class="start-screen hidden">
+        <div class="start-content">
+            <h1 class="start-title">IELTSwithJurabek</h1>
+            <p class="start-subtitle">Ready to begin your reading test?</p>
+            <button class="start-button" onclick="startTest()">Start Test</button>
+        </div>
+    </div>
+
+    <!-- Test Container -->
+    <div class="container hidden" id="testContainer">
+        <header>
+            <div class="passage-info">IELTSwithJurabek</div>
+            <div class="timer">
+                <i class="fas fa-clock"></i>
+                <span>20:00</span>
+            </div>
+            <div class="logo-area" onclick="window.open('https://t.me/IELTSwithJurabek', '_blank')">
+                <i class="fas fa-paper-plane"></i>
+                <span>Click for more TESTS</span>
+            </div>
+            <div class="passage-info">Passage 2 of 3</div>
+        </header>
+
+        <button id="highlight-btn" type="button">Highlight</button>
+        <button id="remove-highlight-btn" type="button">Remove Highlight</button>
+
+        <div class="main-content">
+            <!-- Reading Passage -->
+            <div class="passage-container" role="region" aria-label="Reading Passage">
+                <h2 class="section-title">READING PASSAGE 2</h2>
+                <div class="passage-content" id="passage2">
+                    <h3>Corporate Social Responsibility</h3>
+                    <p>Broadly speaking, proponents of CSR have used four arguments to make their case: moral
+                        obligation, sustainability, license to operate, and reputation. The moral appeal—arguing that
+                        companies have a duty to be good citizens and to “do the right thing”—is prominent in the goal
+                        of Business for Social Responsibility, the leading nonprofit CSR business association in the
+                        United States. It asks that its members “achieve commercial success in ways that honor ethical
+                        values and respect people, communities, and the natural environment.” Sustainability emphasizes
+                        environmental and community stewardship.</p>
+                    <p id="A"><span class="label">A</span> An excellent definition was developed in the 1980s by
+                        Norwegian Prime Minister Gro Harlem Brundtland and used by the World Business Council for
+                        Sustainable Development: “Meeting the needs of the present without compromising the ability of
+                        future generations to meet their own needs.” The notion of license to operate derives from the
+                        fact that every company needs tacit or explicit permission from governments, communities, and
+                        numerous other stakeholders to do business. Finally, reputation is used by many companies to
+                        justify CSR initiatives on the grounds that they will improve a company’s image, strengthen its
+                        brand, enliven morale, and even raise the value of its stock.</p>
+                    <p id="B"><span class="label">B</span> To advance CSR, we must root it in a broad understanding of
+                        the interrelationship between a corporation and society while at the same time anchoring it in
+                        the strategies and activities of specific companies. To say broadly that business and society
+                        need each other might seem like a cliché, but it is also the basic truth that will pull
+                        companies out of the muddle that their current corporate-responsibility thinking has created.
+                        Successful corporations need a healthy society. Education, health care, and equal opportunity
+                        are essential to a productive workforce. Safe products and working conditions not only attract
+                        customers but lower the internal costs of accidents. Efficient utilization of land, water,
+                        energy, and other natural resources makes business more productive. Good government, the rule of
+                        law, and property rights are essential for efficiency and innovation. Strong regulatory
+                        standards protect both consumers and competitive companies from exploitation. Ultimately, a
+                        healthy society creates expanding demand for business, as more human needs are met and
+                        aspirations grow. Any business that pursues its ends at the expense of the society in which it
+                        operates will find its success to be illusory and ultimately temporary. At the same time, a
+                        healthy society needs successful companies. No social program can rival the business sector when
+                        it comes to creating the jobs, wealth, and innovation that improve standards of living and
+                        social conditions over time.</p>
+                    <p id="C"><span class="label">C</span> A company’s impact on society also changes over time, as
+                        social standards evolve and science progresses. Asbestos, now understood as a serious health
+                        risk, was thought to be safe in the early 1900s, given the scientific knowledge then available.
+                        Evidence of its risks gradually mounted for more than 50 years before any company was held
+                        liable for the harms it can cause. Many firms that failed to anticipate the consequences of this
+                        evolving body of research have been bankrupted by the results. No longer can companies be
+                        content to monitor only the obvious social impacts of today. Without a careful process for
+                        identifying evolving social effects of tomorrow, firms may risk their very survival.</p>
+                    <p id="D"><span class="label">D</span> No business can solve all of society’s problems or bear the
+                        cost of doing so. Instead, each company must select issues that intersect with its particular
+                        business. Other social agendas are best left to those companies in other industries, NGOs, or
+                        government institutions that are better positioned to address them. The essential test that
+                        should guide CSR is not whether a cause is worthy but whether it presents an opportunity to
+                        create shared value—that is, a meaningful benefit for society that is also valuable to the
+                        business. However, Corporations are not responsible for all the world’s problems, nor do they
+                        have the resources to solve them all. Each company can identify the particular set of societal
+                        problems that it is best equipped to help resolve and from which it can gain the greatest
+                        competitive benefit. Addressing social issues by creating shared value will lead to
+                        self-sustaining solutions that do not depend on private or government subsidies. When a well-run
+                        business applies its vast resources, expertise, and management talent to problems that it
+                        understands and in which it has a stake, it can have a greater impact on social good than any
+                        other institution or philanthropic organization.</p>
+                    <p id="E"><span class="label">E</span> The best corporate citizenship initiatives involve far more
+                        than writing a check: They specify clear, measurable goals and track results over time. A good
+                        example is GE’s program to adopt underperforming public high schools near several of its major
+                        U.S. facilities. The company contributes between $250,000 and $1 million over a five-year period
+                        to each school and makes in-kind donations as well. GE managers and employees take an active
+                        role by working with school administrators to assess needs and mentor or tutor students. In an
+                        independent study of ten schools in the program between 1989 and 1999, nearly all showed
+                        significant improvement, while the graduation rate in four of the five worst-performing schools
+                        doubled from an average of 30% to 60%. Effective corporate citizenship initiatives such as this
+                        one create goodwill and improve relations with local governments and other important
+                        constituencies. What’s more, GE’s employees feel great pride in their participation. Their
+                        effect is inherently limited, however. No matter how beneficial the program is, it remains
+                        incidental to the company’s business, and the direct effect on GE’s recruiting and retention is
+                        modest.</p>
+                    <p id="F"><span class="label">F</span> Microsoft’s Working Connections partnership with the American
+                        Association of Community Colleges (AACC) is a good example of a shared-value opportunity arising
+                        from investments in context. The shortage of information technology workers is a significant
+                        constraint on Microsoft’s growth; currently, there are more than 450,000 unfilled IT positions
+                        in the United States alone. Community colleges, with an enrollment of 11.6 million students,
+                        representing 45% of all U.S. undergraduates, could be a major solution. Microsoft recognizes,
+                        however, that community colleges face special challenges: IT curricula are not standardized,
+                        technology used in classrooms is often outdated, and there are no systematic professional
+                        development programs to keep faculty up to date. Microsoft’s $50 million five-year initiative
+                        was aimed at all three problems. In addition to contributing money and products, Microsoft sent
+                        employee volunteers to colleges to assess needs, contribute to curriculum development, and
+                        create faculty development institutes. Note that in this case, volunteers and assigned staff
+                        were able to use their core professional skills to address a social need, a far cry from typical
+                        volunteer programs. Microsoft has achieved results that have benefited many communities while
+                        having a direct—and potentially significant—impact on the company.</p>
+                    <p id="G"><span class="label">G</span> At the heart of any strategy is a unique value proposition: a
+                        set of needs a company can meet for its chosen customers that others cannot. The most strategic
+                        CSR occurs when a company adds a social dimension to its value proposition, making social impact
+                        integral to the overall strategy. Consider Whole Foods Market, whose value proposition is to
+                        sell organic, natural, and healthy food products to customers who are passionate about food and
+                        the environment. The company’s sourcing emphasizes purchases from local farmers through each
+                        store’s procurement process. Buyers screen out foods containing any of nearly 100 common
+                        ingredients that the company considers unhealthy or environmentally damaging. The same standards
+                        apply to products made internally. Whole Foods’ commitment to natural and environmentally
+                        friendly operating practices extends well beyond sourcing. Stores are constructed using a
+                        minimum of virgin raw materials. Recently, the company purchased renewable wind energy credits
+                        equal to 100% of its electricity use in all of its stores and facilities, the only Fortune 500
+                        company to offset its electricity consumption entirely. Spoiled produce and biodegradable waste
+                        are trucked to regional centers for composting. Whole Foods’ vehicles are being converted to run
+                        on biofuels. Even the cleaning products used in its stores are environmentally friendly. And
+                        through its philanthropy, the company has created the Animal Compassion Foundation to develop
+                        more natural and humane ways of raising farm animals. In short, nearly every aspect of the
+                        company’s value chain reinforces the social dimensions of its value proposition, distinguishing
+                        Whole Foods from its competitors.</p>
+                </div>
+            </div>
+
+            <div class="resizer" id="resizer"></div>
+
+            <!-- Questions -->
+            <div class="questions-container" id="questions" role="region" aria-label="Questions">
+                <h2 class="section-title">Questions 14-26</h2>
+                <p>You should spend about 20 minutes on Questions 14–26, which are based on Reading Passage 2.</p>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 14-20</div>
+                    <p>The reading passage has seven paragraphs, <strong>A–G</strong>. Choose the correct heading for
+                        paragraphs <strong>A–G</strong> from the list below. Write the correct number,
+                        <strong>i–xi</strong>, in boxes <strong>14–20</strong> on your answer sheet.
+                    </p>
+                    <p><strong>List of Headings</strong><br>
+                        i. How CSR may help one business to expand<br>
+                        ii. CSR in many aspects of a company’s business<br>
+                        iii. A CSR initiative without a financial gain<br>
+                        iv. Lack of action by the state of social issues<br>
+                        v. Drives or pressures motivate companies to address CSR<br>
+                        vi. The past illustrates business are responsible for future outcomes<br>
+                        vii. Companies applying CSR should be selective<br>
+                        viii. Reasons that business and society benefit each other<br>
+                    </p>
+                    <div class="question" data-question="14">
+                        <div class="question-text">14. Paragraph A</div>
+                        <select name="q14">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="i">i. How CSR may help one business to expand</option>
+                            <option value="ii">ii. CSR in many aspects of a company’s business</option>
+                            <option value="iii">iii. A CSR initiative without a financial gain</option>
+                            <option value="iv">iv. Lack of action by the state of social issues</option>
+                            <option value="v">v. Drives or pressures motivate companies to address CSR</option>
+                            <option value="vi">vi. The past illustrates business are responsible for future outcomes
+                            </option>
+                            <option value="vii">vii. Companies applying CSR should be selective</option>
+                            <option value="viii">viii. Reasons that business and society benefit each other</option>
+                            <option value="ix">ix. A contrast between different styles of CSR</option>
+                            <option value="x">x. CSR and the benefits to the community</option>
+                            <option value="xi">xi. The problems with current methods of CSR</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="15">
+                        <div class="question-text">15. Paragraph B</div>
+                        <select name="q15">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="i">i. How CSR may help one business to expand</option>
+                            <option value="ii">ii. CSR in many aspects of a company’s business</option>
+                            <option value="iii">iii. A CSR initiative without a financial gain</option>
+                            <option value="iv">iv. Lack of action by the state of social issues</option>
+                            <option value="v">v. Drives or pressures motivate companies to address CSR</option>
+                            <option value="vi">vi. The past illustrates business are responsible for future outcomes
+                            </option>
+                            <option value="vii">vii. Companies applying CSR should be selective</option>
+                            <option value="viii">viii. Reasons that business and society benefit each other</option>
+                            <option value="ix">ix. A contrast between different styles of CSR</option>
+                            <option value="x">x. CSR and the benefits to the community</option>
+                            <option value="xi">xi. The problems with current methods of CSR</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="16">
+                        <div class="question-text">16. Paragraph C</div>
+                        <select name="q16">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="i">i. How CSR may help one business to expand</option>
+                            <option value="ii">ii. CSR in many aspects of a company’s business</option>
+                            <option value="iii">iii. A CSR initiative without a financial gain</option>
+                            <option value="iv">iv. Lack of action by the state of social issues</option>
+                            <option value="v">v. Drives or pressures motivate companies to address CSR</option>
+                            <option value="vi">vi. The past illustrates business are responsible for future outcomes
+                            </option>
+                            <option value="vii">vii. Companies applying CSR should be selective</option>
+                            <option value="viii">viii. Reasons that business and society benefit each other</option>
+                            <option value="ix">ix. A contrast between different styles of CSR</option>
+                            <option value="x">x. CSR and the benefits to the community</option>
+                            <option value="xi">xi. The problems with current methods of CSR</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="17">
+                        <div class="question-text">17. Paragraph D</div>
+                        <select name="q17">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="i">i. How CSR may help one business to expand</option>
+                            <option value="ii">ii. CSR in many aspects of a company’s business</option>
+                            <option value="iii">iii. A CSR initiative without a financial gain</option>
+                            <option value="iv">iv. Lack of action by the state of social issues</option>
+                            <option value="v">v. Drives or pressures motivate companies to address CSR</option>
+                            <option value="vi">vi. The past illustrates business are responsible for future outcomes
+                            </option>
+                            <option value="vii">vii. Companies applying CSR should be selective</option>
+                            <option value="viii">viii. Reasons that business and society benefit each other</option>
+                            <option value="ix">ix. A contrast between different styles of CSR</option>
+                            <option value="x">x. CSR and the benefits to the community</option>
+                            <option value="xi">xi. The problems with current methods of CSR</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="18">
+                        <div class="question-text">18. Paragraph E</div>
+                        <select name="q18">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="i">i. How CSR may help one business to expand</option>
+                            <option value="ii">ii. CSR in many aspects of a company’s business</option>
+                            <option value="iii">iii. A CSR initiative without a financial gain</option>
+                            <option value="iv">iv. Lack of action by the state of social issues</option>
+                            <option value="v">v. Drives or pressures motivate companies to address CSR</option>
+                            <option value="vi">vi. The past illustrates business are responsible for future outcomes
+                            </option>
+                            <option value="vii">vii. Companies applying CSR should be selective</option>
+                            <option value="viii">viii. Reasons that business and society benefit each other</option>
+                            <option value="ix">ix. A contrast between different styles of CSR</option>
+                            <option value="x">x. CSR and the benefits to the community</option>
+                            <option value="xi">xi. The problems with current methods of CSR</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="19">
+                        <div class="question-text">19. Paragraph F</div>
+                        <select name="q19">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="i">i. How CSR may help one business to expand</option>
+                            <option value="ii">ii. CSR in many aspects of a company’s business</option>
+                            <option value="iii">iii. A CSR initiative without a financial gain</option>
+                            <option value="iv">iv. Lack of action by the state of social issues</option>
+                            <option value="v">v. Drives or pressures motivate companies to address CSR</option>
+                            <option value="vi">vi. The past illustrates business are responsible for future outcomes
+                            </option>
+                            <option value="vii">vii. Companies applying CSR should be selective</option>
+                            <option value="viii">viii. Reasons that business and society benefit each other</option>
+                            <option value="ix">ix. A contrast between different styles of CSR</option>
+                            <option value="x">x. CSR and the benefits to the community</option>
+                            <option value="xi">xi. The problems with current methods of CSR</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="20">
+                        <div class="question-text">20. Paragraph G</div>
+                        <select name="q20">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="i">i. How CSR may help one business to expand</option>
+                            <option value="ii">ii. CSR in many aspects of a company’s business</option>
+                            <option value="iii">iii. A CSR initiative without a financial gain</option>
+                            <option value="iv">iv. Lack of action by the state of social issues</option>
+                            <option value="v">v. Drives or pressures motivate companies to address CSR</option>
+                            <option value="vi">vi. The past illustrates business are responsible for future outcomes
+                            </option>
+                            <option value="vii">vii. Companies applying CSR should be selective</option>
+                            <option value="viii">viii. Reasons that business and society benefit each other</option>
+                            <option value="ix">ix. A contrast between different styles of CSR</option>
+                            <option value="x">x. CSR and the benefits to the community</option>
+                            <option value="xi">xi. The problems with current methods of CSR</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 21-22</div>
+                    <p>Complete the summary below. Choose <strong>NO MORE THAN TWO WORDS</strong> from the passage for
+                        each answer. Write your answers in boxes <strong>21–22</strong> on your answer sheet.</p>
+                    <p><strong>The implement of CSR, HOW?</strong><br>
+                        Promotion of CSR requires the understanding of interdependence between business and society.
+                        Corporations workers’ productivity generally needs health care, Education, and given <span
+                            class="question-text">21</span> <input type="text" name="q21" maxlength="30">. Restrictions
+                        imposed by government and companies both protect consumers from being treated unfairly.
+                        Improvement of the safety standard can reduce the <span class="question-text">22</span> <input
+                            type="text" name="q22" maxlength="30"> of accidents in the workplace. Similarly, society
+                        becomes pool of more human needs and aspirations.</p>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">Questions 23-26</div>
+                    <p>Look at the statements (Questions 23–26) and the list of companies below. Match each statement
+                        with the correct company, <strong>A–C</strong>. Write the appropriate letter
+                        <strong>A–C</strong> in boxes <strong>23–26</strong> on your answer sheet. <strong>NB:</strong>
+                        You may use any letter more than once.
+                    </p>
+                    <div class="question" data-question="23">
+                        <div class="question-text">23. The disposable waste</div>
+                        <select name="q23">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="A">A. General Electronics</option>
+                            <option value="B">B. Microsoft</option>
+                            <option value="C">C. Whole Foods Market</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="24">
+                        <div class="question-text">24. The way company purchases as goods</div>
+                        <select name="q24">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="A">A. General Electronics</option>
+                            <option value="B">B. Microsoft</option>
+                            <option value="C">C. Whole Foods Market</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="25">
+                        <div class="question-text">25. Helping the undeveloped</div>
+                        <select name="q25">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="A">A. General Electronics</option>
+                            <option value="B">B. Microsoft</option>
+                            <option value="C">C. Whole Foods Market</option>
+                        </select>
+                    </div>
+                    <div class="question" data-question="26">
+                        <div class="question-text">26. Ensuring the people have the latest information</div>
+                        <select name="q26">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="A">A. General Electronics</option>
+                            <option value="B">B. Microsoft</option>
+                            <option value="C">C. Whole Foods Market</option>
+                        </select>
+                    </div>
+                    <p><strong>List of Companies:</strong><br>
+                        A. General Electronics<br>
+                        B. Microsoft<br>
+                        C. Whole Foods Market</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-nav">
+                <div class="progress-items">
+                    <div class="progress-item current" data-question="14">14</div>
+                    <div class="progress-item" data-question="15">15</div>
+                    <div class="progress-item" data-question="16">16</div>
+                    <div class="progress-item" data-question="17">17</div>
+                    <div class="progress-item" data-question="18">18</div>
+                    <div class="progress-item" data-question="19">19</div>
+                    <div class="progress-item" data-question="20">20</div>
+                    <div class="progress-item" data-question="21">21</div>
+                    <div class="progress-item" data-question="22">22</div>
+                    <div class="progress-item" data-question="23">23</div>
+                    <div class="progress-item" data-question="24">24</div>
+                    <div class="progress-item" data-question="25">25</div>
+                    <div class="progress-item" data-question="26">26</div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" id="prev-btn" disabled><i class="fas fa-arrow-left"></i>
+                        Previous</button>
+                    <button class="btn btn-secondary" id="next-btn">Next <i class="fas fa-arrow-right"></i></button>
+                    <button class="btn btn-submit" id="submit-btn">Submit Test <i
+                            class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div class="modal" id="results-modal">
+        <div class="modal-content">
+            <h2>Test Results</h2>
+            <div class="score-display" id="score-display">0/13</div>
+            <div class="score-breakdown">
+                <div class="score-item">
+                    <span>Passage 2:</span>
+                    <span id="passage2-score">0/13</span>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="close-modal">Close</button>
+                <button class="btn btn-primary" id="review-answers">Review Answers</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Correct Answers for Questions 14-26
+        const correctAnswers = {
+            q14: "v",
+            q15: "viii",
+            q16: "vi",
+            q17: "vii",
+            q18: "iii",
+            q19: "i",
+            q20: "ii",
+            q21: "equal opportunities",
+            q22: "internal costs",
+            q23: "C",
+            q24: "C",
+            q25: "A",
+            q26: "B"
+        };
+
+        let lastSelection = null;
+        let highlightTarget = null;
+        let currentPanel = null;
+        let submitted = false;
+        let currentQuestion = 14;
+        let isResizing = false;
+        let seconds = 20 * 60; // 20 minutes for one passage
+        let timerInterval;
+
+        const highlightBtn = document.getElementById('highlight-btn');
+        const removeHighlightBtn = document.getElementById('remove-highlight-btn');
+        const passagePanel = document.querySelector('.passage-container');
+        const questionsPanel = document.getElementById('questions');
+        const resizer = document.getElementById('resizer');
+        const submitBtn = document.getElementById('submit-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resultsModal = document.getElementById('results-modal');
+        const scoreDisplay = document.getElementById('score-display');
+        const passage2Score = document.getElementById('passage2-score');
+        const closeModalBtn = document.getElementById('close-modal');
+        const reviewBtn = document.getElementById('review-answers');
+        const timerElement = document.querySelector('.timer span');
+        const timerContainer = document.querySelector('.timer');
+
+        // Timer
+        function updateTimer() {
+            seconds--;
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            if (seconds <= 2 * 60) {
+                timerContainer.classList.add('warning');
+            }
+            if (seconds <= 0) {
+                clearInterval(timerInterval);
+                if (!submitted) {
+                    alert('Time is up! Submitting your test.');
+                    submitTest();
+                }
+            }
+        }
+
+        // Highlight functionality
+        function getValidSelection() {
+            const sel = window.getSelection();
+            if (!sel.rangeCount || sel.isCollapsed) return null;
+            const range = sel.getRangeAt(0);
+            if (passagePanel.contains(range.commonAncestorContainer)) {
+                currentPanel = passagePanel;
+            } else if (questionsPanel.contains(range.commonAncestorContainer)) {
+                currentPanel = questionsPanel;
+            } else {
+                return null;
+            }
+            return range;
+        }
+
+        function showHighlightBtn(range) {
+            const rect = range.getBoundingClientRect();
+            highlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            highlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            highlightBtn.style.display = 'block';
+        }
+
+        function hideHighlightBtn() {
+            highlightBtn.style.display = 'none';
+        }
+
+        function showRemoveBtn(span) {
+            const rect = span.getBoundingClientRect();
+            removeHighlightBtn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            removeHighlightBtn.style.left = (window.scrollX + rect.left) + 'px';
+            removeHighlightBtn.style.display = 'block';
+            highlightTarget = span;
+        }
+
+        function hideRemoveBtn() {
+            removeHighlightBtn.style.display = 'none';
+            highlightTarget = null;
+        }
+
+        highlightBtn.addEventListener('click', () => {
+            if (lastSelection) {
+                const span = document.createElement('span');
+                span.className = 'highlight';
+                span.appendChild(lastSelection.extractContents());
+                lastSelection.insertNode(span);
+                window.getSelection().removeAllRanges();
+                hideHighlightBtn();
+            }
+        });
+
+        removeHighlightBtn.addEventListener('click', () => {
+            if (highlightTarget) {
+                const parent = highlightTarget.parentNode;
+                while (highlightTarget.firstChild) {
+                    parent.insertBefore(highlightTarget.firstChild, highlightTarget);
+                }
+                parent.removeChild(highlightTarget);
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('selectionchange', () => {
+            hideHighlightBtn();
+            hideRemoveBtn();
+            const range = getValidSelection();
+            if (range) {
+                lastSelection = range;
+                showHighlightBtn(range);
+            } else {
+                lastSelection = null;
+            }
+        });
+
+        [passagePanel, questionsPanel].forEach(panel => {
+            panel.addEventListener('scroll', () => {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            });
+        });
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.target !== highlightBtn && e.target !== removeHighlightBtn) {
+                hideHighlightBtn();
+                hideRemoveBtn();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('highlight')) {
+                e.preventDefault();
+                showRemoveBtn(e.target);
+            }
+        });
+
+        // Resizer
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const container = document.querySelector('.main-content');
+            const containerRect = container.getBoundingClientRect();
+            const mouseX = e.clientX - containerRect.left;
+            const containerWidth = containerRect.width;
+            const leftPercentage = (mouseX / containerWidth) * 100;
+            const rightPercentage = 100 - leftPercentage;
+            if (leftPercentage >= 30 && leftPercentage <= 70) {
+                document.querySelector('.passage-container').style.flex = leftPercentage + '%';
+                document.querySelector('.questions-container').style.width = rightPercentage + '%';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            }
+        });
+
+        // Navigation
+        function scrollToQuestion(num) {
+            const el = document.querySelector(`[data-question="${num}"]`) || document.querySelector(`select[name="q${num}"]`) || document.querySelector(`input[name="q${num}"]`);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            updateCurrentQuestion(num);
+        }
+
+        function updateCurrentQuestion(num) {
+            currentQuestion = num;
+            document.querySelectorAll('.progress-item').forEach(item => {
+                item.classList.remove('current');
+                if (item.dataset.question == num) item.classList.add('current');
+            });
+            prevBtn.disabled = num <= 14;
+            nextBtn.disabled = num >= 26;
+        }
+
+        document.querySelectorAll('.progress-item').forEach(item => {
+            item.addEventListener('click', () => {
+                scrollToQuestion(parseInt(item.dataset.question));
+            });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 14) scrollToQuestion(currentQuestion - 1);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestion < 26) scrollToQuestion(currentQuestion + 1);
+        });
+
+        // Event listener for marking questions as answered
+        document.querySelectorAll('select, input[type="text"]').forEach(input => {
+            input.addEventListener('change', () => {
+                if (submitted) return;
+                const qNumMatch = input.name.match(/^q(\d+)$/);
+                if (qNumMatch) {
+                    const qNum = parseInt(qNumMatch[1]);
+                    const item = document.querySelector(`.progress-item[data-question="${qNum}"]`);
+                    if (item && !item.classList.contains('answered')) {
+                        const value = input.value;
+                        if (value.trim() !== '') {
+                            item.classList.add('answered');
+                        }
+                    }
+                }
+            });
+        });
+
+        submitBtn.addEventListener('click', submitTest);
+
+        function submitTest() {
+            if (submitted) return;
+            if (!confirm('Are you sure you want to submit?')) return;
+            submitted = true;
+            clearInterval(timerInterval);
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Submitted';
+            let score = 0;
+            const results = {};
+
+            // Process questions 14-20, 23-26 (dropdowns)
+            for (let i of [14, 15, 16, 17, 18, 19, 20, 23, 24, 25, 26]) {
+                const key = `q${i}`;
+                let userAnswer = '';
+                let isCorrect = false;
+                const selectEl = document.querySelector(`select[name="${key}"]`);
+                if (selectEl && selectEl.value !== '') {
+                    userAnswer = selectEl.value;
+                    isCorrect = userAnswer === correctAnswers[key];
+                    selectEl.disabled = true;
+                }
+                if (isCorrect) score++;
+                results[key] = { userAnswer, correct: correctAnswers[key], isCorrect };
+            }
+
+            // Process questions 21-22 (text inputs)
+            for (let i of [21, 22]) {
+                const key = `q${i}`;
+                let userAnswer = '';
+                let isCorrect = false;
+                const inputEl = document.querySelector(`input[name="${key}"]`);
+                if (inputEl && inputEl.value.trim() !== '') {
+                    userAnswer = inputEl.value.trim().toLowerCase();
+                    isCorrect = userAnswer === correctAnswers[key].toLowerCase();
+                    inputEl.disabled = true;
+                }
+                if (isCorrect) score++;
+                results[key] = { userAnswer, correct: correctAnswers[key], isCorrect };
+            }
+
+            scoreDisplay.textContent = `${score}/13`;
+            passage2Score.textContent = `${score}/13`;
+            for (let i = 14; i <= 26; i++) {
+                const item = document.querySelector(`.progress-item[data-question="${i}"]`);
+                const res = results[`q${i}`];
+                if (item && res) {
+                    item.classList.remove('current', 'answered');
+                    item.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+                }
+            }
+            window.testResults = results;
+            resultsModal.style.display = 'flex';
+        }
+
+        function showCorrectAnswers() {
+            if (!submitted) return;
+            document.querySelectorAll('.answer-indicator').forEach(el => el.remove());
+
+            // Process questions 14-20, 23-26 (dropdowns)
+            for (let i of [14, 15, 16, 17, 18, 19, 20, 23, 24, 25, 26]) {
+                const key = `q${i}`;
+                const res = window.testResults[key];
+                if (!res) continue;
+                const selectEl = document.querySelector(`select[name="${key}"]`);
+                if (!selectEl) continue;
+                const targetElement = selectEl.parentNode;
+                const div = document.createElement('div');
+                div.className = 'answer-indicator';
+                div.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+                div.style.display = 'inline-block';
+                div.style.marginLeft = '10px';
+                if (res.isCorrect) {
+                    div.innerHTML = `<i class="fas fa-check"></i> Correct! You chose: <strong>${res.userAnswer || 'No answer'}</strong>`;
+                } else {
+                    const userDisplay = res.userAnswer || 'No answer';
+                    div.innerHTML = `<i class="fas fa-times"></i> Incorrect. You chose: <strong>${userDisplay}</strong><br><strong>Correct:</strong> ${res.correct}`;
+                }
+                targetElement.appendChild(div);
+            }
+
+            // Process questions 21-22 (text inputs)
+            for (let i of [21, 22]) {
+                const key = `q${i}`;
+                const res = window.testResults[key];
+                if (!res) continue;
+                const inputEl = document.querySelector(`input[name="${key}"]`);
+                if (!inputEl) continue;
+                const targetElement = inputEl.parentNode;
+                const div = document.createElement('div');
+                div.className = 'answer-indicator';
+                div.classList.add(res.isCorrect ? 'correct' : 'incorrect');
+                div.style.display = 'inline-block';
+                div.style.marginLeft = '10px';
+                if (res.isCorrect) {
+                    div.innerHTML = `<i class="fas fa-check"></i> Correct! You chose: <strong>${res.userAnswer || 'No answer'}</strong>`;
+                } else {
+                    const userDisplay = res.userAnswer || 'No answer';
+                    div.innerHTML = `<i class="fas fa-times"></i> Incorrect. You chose: <strong>${userDisplay}</strong><br><strong>Correct:</strong> ${res.correct}`;
+                }
+                targetElement.appendChild(div);
+            }
+        }
+
+        closeModalBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+        });
+
+        reviewBtn.addEventListener('click', () => {
+            resultsModal.style.display = 'none';
+            showCorrectAnswers();
+            scrollToQuestion(14);
+        });
+
+        function startTest() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('testContainer').classList.remove('hidden');
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        setTimeout(() => {
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }, 2000);
+    </script>
+</body>
+
+</html>
